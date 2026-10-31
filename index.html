@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#090d16">
+  <meta name="description" content="Neo Arcade Vault - A premium collection of 10 playable retro and cyber arcade mini-games.">
+  <title>Neo Arcade Vault - 10 Playable Mini-Games</title>
+
+  <!-- Google Fonts: Outfit & Luckiest Guy for Arcade Styling -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/arcade.css">
+</head>
+<body>
+  <!-- Ambient Background Grids and Flares -->
+  <div class="arcade-background">
+    <div class="arcade-grid"></div>
+    <div class="ambient-flare flare-1"></div>
+    <div class="ambient-flare flare-2"></div>
+  </div>
+
+  <!-- Primary Arcade Portal Application Container -->
+  <div id="portal-app">
+    <!-- Home Portal View: Navigation, Hero, Filters, Catalog -->
+    <div id="home-portal-view"></div>
+
+    <!-- Dedicated Game View: Top bar, Viewport, Controls guide -->
+    <div id="game-portal-view" class="hidden"></div>
+  </div>
+
+  <!-- Template / Mount Container for Fruit Slice (Preserves exact IDs for automated tests and standalone runs) -->
+  <template id="fruit-slice-template">
+    <main id="game-container">
+      <!-- Heads-Up Display (HUD) -->
+      <header id="hud">
+        <div class="hud-left">
+          <div class="hud-pill score-pill" title="Current Score">
+            <span class="hud-icon">🍉</span>
+            <span id="current-score" class="score-counter">0</span>
+          </div>
+          <div class="hud-pill best-score-pill" title="Personal Best Score">
+            <span>BEST</span>
+            <span id="hud-best-score" class="best-val">0</span>
+          </div>
+        </div>
+
+        <div class="hud-center">
+          <div id="timer-pill" class="hud-pill timer-pill" title="Time Remaining">
+            <span class="hud-icon">⏱️</span>
+            <span id="time-left" class="timer-counter">60s</span>
+          </div>
+        </div>
+
+        <div class="hud-right">
+          <button id="btn-bomb-toggle" class="icon-btn" aria-label="Toggle Bombs" title="Toggle Hazard Bombs">
+            💣
+          </button>
+          <button id="btn-sound" class="icon-btn" aria-label="Toggle Sound" title="Sound Mute/Unmute">
+            🔊
+          </button>
+          <button id="btn-pause" class="icon-btn" aria-label="Pause Game" title="Pause Game (Esc/P)">
+            ⏸️
+          </button>
+        </div>
+      </header>
+
+      <!-- Canvas Play Area -->
+      <div id="canvas-wrapper">
+        <canvas id="gameCanvas"></canvas>
+        <div id="combo-banner">3x TRIPLE! +5</div>
+      </div>
+
+      <!-- Start Screen Overlay -->
+      <section id="start-overlay" class="overlay">
+        <div class="overlay-content">
+          <h1 class="game-title">FRUIT SLICE</h1>
+          <p class="game-subtitle">Arcade 60-Second Blitz</p>
+
+          <div class="fruit-preview-row">
+            <span>🍉</span>
+            <span>🍊</span>
+            <span>🍓</span>
+            <span>🍌</span>
+            <span>🍍</span>
+          </div>
+
+          <div class="hud-pill best-score-pill">
+            <span>ALL-TIME RECORD:</span>
+            <span id="start-high-score-val" class="best-val" style="font-size: 1.4rem;">0</span>
+          </div>
+
+          <div class="mode-selectors">
+            <div id="toggle-bombs-option" class="toggle-option checked" role="checkbox" aria-checked="true" tabindex="0">
+              <div class="toggle-label">
+                <span style="font-size: 1.3rem;">💣</span>
+                <div>
+                  <div>Hazard Bombs</div>
+                  <small style="color: var(--text-muted); font-size: 0.78rem;">Avoid bombs (-10 pts, -5s)</small>
+                </div>
+              </div>
+              <div class="toggle-switch"></div>
+            </div>
+
+            <div class="blade-picker">
+              <span style="font-size: 0.88rem; font-weight: 600;">Blade Glow:</span>
+              <div class="blade-dots">
+                <div class="blade-dot blade-cyan selected" data-color="#00d2d3" title="Electric Cyan"></div>
+                <div class="blade-dot blade-flame" data-color="#ff4757" title="Flame Red"></div>
+                <div class="blade-dot blade-gold" data-color="#ffa502" title="Golden Sun"></div>
+                <div class="blade-dot blade-neon" data-color="#a55eea" title="Neon Purple"></div>
+              </div>
+            </div>
+          </div>
+
+          <button id="btn-play" class="btn-primary">
+            <span>⚔️</span> PLAY NOW
+          </button>
+
+          <button id="btn-how-to-play" class="btn-secondary">
+            <span>📖</span> How to Play
+          </button>
+        </div>
+      </section>
+
+      <!-- How to Play Modal Overlay -->
+      <section id="instructions-modal" class="overlay hidden">
+        <div class="overlay-content">
+          <h2 class="game-title" style="font-size: 2.2rem;">HOW TO PLAY</h2>
+
+          <div class="instructions-list">
+            <div class="instruction-item">
+              <div class="inst-icon">👆</div>
+              <div class="inst-text">
+                <h4>Swipe to Slice</h4>
+                <p>Drag your mouse or swipe your finger across fruits to slice them into halves.</p>
+              </div>
+            </div>
+
+            <div class="instruction-item">
+              <div class="inst-icon">⚡</div>
+              <div class="inst-text">
+                <h4>Slice Combos</h4>
+                <p>Slice 2 or more fruits in a single swipe for massive bonus combo multipliers!</p>
+              </div>
+            </div>
+
+            <div class="instruction-item">
+              <div class="inst-icon">💣</div>
+              <div class="inst-text">
+                <h4>Dodge Bombs</h4>
+                <p>Do NOT slice the skull bombs! Slicing a bomb costs 10 points and 5 seconds.</p>
+              </div>
+            </div>
+
+            <div class="instruction-item">
+              <div class="inst-icon">⏱️</div>
+              <div class="inst-text">
+                <h4>Beat the 60s Clock</h4>
+                <p>Rack up as many points as possible before the timer reaches zero.</p>
+              </div>
+            </div>
+          </div>
+
+          <button id="btn-close-instructions" class="btn-primary" style="font-size: 1.2rem; padding: 12px 20px;">
+            GOT IT, LET'S SLICE!
+          </button>
+        </div>
+      </section>
+
+      <!-- Pause Overlay -->
+      <section id="pause-overlay" class="overlay hidden">
+        <div class="overlay-content">
+          <h2 class="game-title" style="font-size: 2.4rem;">PAUSED</h2>
+          <p style="color: var(--text-muted); font-size: 0.95rem;">Take a breath, blade master.</p>
+
+          <button id="btn-resume" class="btn-primary">
+            <span>▶️</span> RESUME
+          </button>
+
+          <div class="btn-group">
+            <button id="btn-restart-pause" class="btn-secondary">
+              <span>🔄</span> Restart
+            </button>
+            <button id="btn-menu-pause" class="btn-secondary">
+              <span>🏠</span> Menu
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Game Over Screen Overlay -->
+      <section id="game-over-overlay" class="overlay hidden">
+        <div class="overlay-content">
+          <div id="new-record-ribbon" class="new-record-ribbon">🏆 NEW HIGH SCORE!</div>
+
+          <h2 class="game-title" style="font-size: 2.8rem;">TIME'S UP!</h2>
+
+          <div style="margin-top: -6px;">
+            <div style="font-size: 0.85rem; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase;">Final Score</div>
+            <div id="final-score-val" class="score-counter" style="font-size: 3.4rem; color: #ffca28; margin: 4px 0;">0</div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <span class="stat-label">Fruits Sliced</span>
+              <span id="stat-sliced-val" class="stat-value">0</span>
+            </div>
+            <div class="stat-card highlight">
+              <span class="stat-label">Max Combo</span>
+              <span id="stat-combo-val" class="stat-value">None</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">Bombs Hit</span>
+              <span id="stat-bombs-val" class="stat-value">0</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">Game Time</span>
+              <span class="stat-value">60s</span>
+            </div>
+          </div>
+
+          <button id="btn-play-again" class="btn-primary">
+            <span>🔄</span> PLAY AGAIN
+          </button>
+
+          <button id="btn-menu-game-over" class="btn-secondary">
+            <span>🏠</span> Main Menu
+          </button>
+        </div>
+      </section>
+    </main>
+  </template>
+
+  <!-- Audio and Game Scripts -->
+  <script src="js/audio.js"></script>
+  <script src="js/fruit.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/games/snake.js"></script>
+  <script src="js/games/brick-breaker.js"></script>
+  <script src="js/games/space-shooter.js"></script>
+  <script src="js/games/puzzle-2048.js"></script>
+  <script src="js/games/tic-tac-toe.js"></script>
+  <script src="js/games/memory-match.js"></script>
+  <script src="js/games/endless-runner.js"></script>
+  <script src="js/games/block-puzzle.js"></script>
+  <script src="js/games/whack-a-mole.js"></script>
+  <script src="js/arcade.js"></script>
+</body>
+</html>
