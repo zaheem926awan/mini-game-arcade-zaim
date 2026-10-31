@@ -179,6 +179,23 @@ class ArcadePortal {
     this.handleHashChange();
   }
 
+  /** Shared site navigation strip (links to Games / About / Contact). */
+  shellSubnav(current) {
+    return (typeof SiteShell !== 'undefined') ? SiteShell.subnavHTML(current) : '';
+  }
+
+  /** Shared footer with links to every site page. */
+  shellFooter() {
+    return (typeof SiteShell !== 'undefined') ? SiteShell.footerHTML() : '';
+  }
+
+  /** Keeps the browser tab title meaningful as hash routes change. */
+  setPageTitle(title) {
+    if (typeof document !== 'undefined') {
+      document.title = title;
+    }
+  }
+
   handleHashChange() {
     const hash = window.location.hash || '#';
 
@@ -234,6 +251,7 @@ class ArcadePortal {
       this.activeGameInstance = null;
     }
     this.currentGameId = null;
+    this.setPageTitle('Neo Arcade Vault | 10 Free Online Mini-Games');
 
     if (window.location.hash !== '#' && !window.location.hash.startsWith('#/category/') && window.location.hash !== '#/favorites') {
       window.location.hash = '#';
@@ -278,6 +296,9 @@ class ArcadePortal {
           <button id="nav-btn-sound" class="nav-icon-btn" title="Toggle Sound">${this.sound.enabled ? '🔊' : '🔇'}</button>
         </div>
       </nav>
+
+      <!-- Site navigation (shared with About / Contact / legal pages) -->
+      ${this.shellSubnav('/')}
 
       <!-- Hero Section with Featured Showcase -->
       <section class="arcade-hero">
@@ -341,16 +362,8 @@ class ArcadePortal {
         <div id="games-grid" class="games-grid"></div>
       </section>
 
-      <!-- Footer -->
-      <footer class="arcade-footer">
-        <div class="footer-brand">
-          <span class="brand-bolt">⚡</span> NEO ARCADE
-        </div>
-        <p>100% Free, Vanilla Web-Powered Arcade. 10 Original Playable Games.</p>
-        <div class="footer-links">
-          <span>Responsive Design</span> • <span>Web Audio API</span> • <span>No Framework Overheads</span>
-        </div>
-      </footer>
+      <!-- Footer (shared with every page) -->
+      ${this.shellFooter()}
     `;
 
     // Bind search and filter events
@@ -518,6 +531,7 @@ class ArcadePortal {
 
     this.currentRoute = 'game';
     this.currentGameId = gameId;
+    this.setPageTitle(`Play ${game.title} Free Online | Neo Arcade Vault`);
     this.recordPlay(gameId);
 
     // Stop previous game if active
@@ -546,6 +560,8 @@ class ArcadePortal {
     const isFav = this.favorites.includes(game.id);
 
     gameView.innerHTML = `
+      ${this.shellSubnav(null)}
+
       <!-- Game Top Bar / Breadcrumbs -->
       <div class="game-view-header">
         <div class="gv-left">
@@ -620,6 +636,8 @@ class ArcadePortal {
           `).join('')}
         </div>
       </div>
+
+      ${this.shellFooter()}
     `;
 
     // Bind Top Bar controls

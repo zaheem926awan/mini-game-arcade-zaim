@@ -40,6 +40,8 @@ Zero frameworks, zero external image assets, zero build step overheads. Instant 
 
 Because this project is built entirely with vanilla static web technologies, no build step or package installations are required.
 
+> **Note:** the site uses clean URLs (`/about`, `/contact`, ...) and root-relative asset paths. Use **Method 2 (`npm start` / `npx serve`)** or `npx vercel dev` for local testing so these resolve correctly. A plain `python -m http.server` or opening `index.html` directly will not resolve `/about` etc.
+
 ### Method 1: Using Python (Built-in)
 
 ```bash
@@ -72,7 +74,7 @@ Start-Process "index.html"
 
 ## 🧪 Automated Testing
 
-The project includes three automated test suites covering physics, math, AI Minimax, rules, rendering, and DOM integrity:
+The project includes four automated test suites covering physics, math, AI Minimax, rules, rendering, and DOM integrity:
 
 ```bash
 npm test
@@ -93,6 +95,8 @@ npm test
    - Block Puzzle tetromino definitions, collision, and line clears.
    - Whack-a-Mole scoring, combo multipliers, and bomb penalties.
    - Arcade Portal search filtering and favorites persistence.
+
+4. `tests/site-structure.test.js`: Pages exist, unique titles/descriptions, one `<h1>` per page, canonical + Open Graph tags, shared nav/footer, working internal links and anchors, contact form fields, privacy-policy storage-key audit, sitemap/robots, and a list of placeholders still to fill in.
 
 ---
 
@@ -123,34 +127,56 @@ npm test
 ## 📁 Project Architecture
 
 ```
-d:\mini-game-arcade/
-├── index.html                     # Main arcade hub & game viewport container
-├── vercel.json                    # Vercel deployment configuration
-├── package.json                   # Test script definitions (npm test)
-├── README.md                      # Documentation & user guide
+mini-game-arcade/
+├── index.html                     # Arcade hub (JS-rendered) + SEO tags + no-JS fallback
+├── games.html                     # Crawlable list of all 10 games
+├── about.html                     # About Us
+├── contact.html                   # Contact form (static-hosting friendly)
+├── privacy-policy.html            # Privacy Policy (contains placeholders)
+├── terms.html                     # Terms & Conditions (contains placeholders)
+├── 404.html                       # Custom not-found page
+├── robots.txt                     # Crawler rules + sitemap location
+├── sitemap.xml                    # Sitemap of the 6 indexable pages
+├── vercel.json                    # Clean URLs + security headers
+├── package.json                   # npm test / npm start / npm run set-domain
+├── README.md
 ├── css/
 │   ├── style.css                  # Base arcade styles & Fruit Slice graphics
-│   └── arcade.css                 # Arcade portal, hero, catalog, and game viewports
+│   ├── arcade.css                 # Arcade portal, hero, catalog, game viewports
+│   └── pages.css                  # Content pages, shared nav/footer, forms, responsive rules
 ├── js/
-│   ├── audio.js                   # Universal Web Audio API sound synthesizer
+│   ├── site-shell.js              # Shared nav + footer markup used by the portal
+│   ├── contact.js                 # Contact form submit handler (fetch to form service)
+│   ├── audio.js                   # Web Audio API sound synthesizer
 │   ├── fruit.js                   # Fruit Slice procedural canvas entities
 │   ├── game.js                    # Fruit Slice arcade engine
 │   ├── arcade.js                  # Arcade portal: router, catalog, favorites, UI
-│   └── games/
-│       ├── snake.js               # Neon Snake game engine
-│       ├── brick-breaker.js       # Brick Breaker game engine
-│       ├── space-shooter.js       # Space Shooter game engine
-│       ├── puzzle-2048.js         # 2048 Puzzle game engine
-│       ├── tic-tac-toe.js         # Tic-Tac-Toe with Minimax AI
-│       ├── memory-match.js        # Memory Match game engine
-│       ├── endless-runner.js      # Endless Runner game engine
-│       ├── block-puzzle.js        # Block Puzzle (Tetris) game engine
-│       └── whack-a-mole.js        # Whack-a-Mole game engine
+│   └── games/                     # The other 9 game engines (unchanged)
+├── scripts/
+│   └── set-domain.js              # Replaces YOUR-DOMAIN.example with your real domain
 └── tests/
     ├── game.test.js               # Fruit Slice unit & integration tests
     ├── render.test.js             # Procedural canvas rendering tests
-    └── arcade-games.test.js       # Test suite for all 10 games & portal
+    ├── arcade-games.test.js       # Test suite for all 10 games & portal
+    └── site-structure.test.js     # Pages, SEO tags, links, nav/footer, storage-key audit
 ```
+
+---
+
+## 🧾 Site Pages, Placeholders & AdSense Checklist
+
+The legal and contact pages deliberately contain **highlighted placeholders** (`[PLACEHOLDER: ...]`) wherever real information is required. Nothing about the operator, address, email or data practices has been invented. Before going live:
+
+1. **Domain** - `npm run set-domain -- https://your-site.vercel.app` (updates canonical, Open Graph, sitemap, robots).
+2. **Contact form** - create a free form at [formspree.io](https://formspree.io) (or a compatible service), then replace `YOUR_FORM_ID` in the `action` attribute of `contact.html`. Until then the form shows a "not connected" notice and never pretends to send.
+3. **Placeholders** - search all `.html` files for `PLACEHOLDER:` and replace each with true information (operator name, contact email, jurisdiction, retention period, children's policy, etc.).
+4. **Privacy statements** - the policy states that the site sets no cookies, has no analytics and only requests Google Fonts. Re-verify this whenever you add analytics, ads or other third-party scripts. `npm test` fails if the code starts using `document.cookie` or new `localStorage` keys that the policy does not list.
+5. **Advertising** - if you enable AdSense, keep and complete the advertising block in the Privacy Policy, update About/Terms wording, and add a consent banner (CMP) for visitors in the EEA/UK/Switzerland.
+6. Have the Privacy Policy and Terms reviewed by a qualified professional for your jurisdiction.
+
+`npm test` prints a "[TODO]" list of everything still unfilled.
+
+---
 
 ---
 

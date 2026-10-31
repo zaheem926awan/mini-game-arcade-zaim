@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090d16">
+  <title>Contact Us | Neo Arcade Vault</title>
+  <meta name="description" content="Contact Neo Arcade Vault to report a bug, suggest a game, ask a question or make a privacy request. Use our contact form.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mini-game-arcade-zaim.vercel.app/contact">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Neo Arcade Vault">
+  <meta property="og:title" content="Contact Us | Neo Arcade Vault">
+  <meta property="og:description" content="Contact Neo Arcade Vault to report a bug, suggest a game, ask a question or make a privacy request. Use our contact form.">
+  <meta property="og:url" content="https://mini-game-arcade-zaim.vercel.app/contact">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Contact Us | Neo Arcade Vault">
+  <meta name="twitter:description" content="Contact Neo Arcade Vault to report a bug, suggest a game, ask a question or make a privacy request. Use our contact form.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/arcade.css">
+  <link rel="stylesheet" href="/css/pages.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <div class="arcade-background" aria-hidden="true">
+    <div class="arcade-grid"></div>
+    <div class="ambient-flare flare-1"></div>
+    <div class="ambient-flare flare-2"></div>
+  </div>
+
+  <div id="portal-app">
+    <header>
+      <nav class="arcade-navbar" aria-label="Main navigation">
+        <a class="nav-brand" href="/" aria-label="Neo Arcade Vault - home">
+          <span class="brand-bolt">⚡</span>
+          <span class="brand-text">NEO ARCADE</span>
+          <span class="brand-badge">VAULT</span>
+        </a>
+        <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/games">Games</a>
+        <a href="/about">About</a>
+        <a href="/contact" aria-current="page">Contact</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="main-content" class="page-main">
+      <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a> &rsaquo; <span>Contact</span></nav>
+
+      <section class="page-hero">
+        <div class="hero-tag">✉️ CONTACT US</div>
+        <h1 class="page-title">Contact Us</h1>
+        <p class="page-lead">Questions, bug reports, game ideas or privacy requests &mdash; send us a message using the form below. Please do not include passwords or other sensitive personal information.</p>
+      </section>
+
+      <div class="contact-layout">
+        <section class="content-card" aria-labelledby="form-title">
+          <h2 id="form-title" style="font-size:1.35rem;margin-bottom:16px;">Send a message</h2>
+
+          <div id="form-status" class="notice hidden" role="status" aria-live="polite" tabindex="-1"></div>
+
+          <!-- Replace YOUR_FORM_ID with the ID from your form service (e.g. Formspree). See README. -->
+          <form id="contact-form" class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST" style="margin-top:16px;">
+            <div class="form-row">
+              <label for="cf-name">Your name</label>
+              <input id="cf-name" name="name" type="text" autocomplete="name" maxlength="100" required>
+            </div>
+
+            <div class="form-row">
+              <label for="cf-email">Email address</label>
+              <input id="cf-email" name="email" type="email" autocomplete="email" maxlength="200" required>
+              <span class="hint">We will only use this to reply to you.</span>
+            </div>
+
+            <div class="form-row">
+              <label for="cf-topic">Topic</label>
+              <select id="cf-topic" name="topic" required>
+                <option value="" disabled selected>Choose a topic</option>
+                <option value="General question">General question</option>
+                <option value="Bug report">Bug report</option>
+                <option value="Game suggestion">Game suggestion</option>
+                <option value="Privacy request">Privacy request</option>
+                <option value="Business or advertising">Business or advertising</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <label for="cf-message">Message</label>
+              <textarea id="cf-message" name="message" maxlength="3000" required></textarea>
+              <span class="hint">For bug reports, please include the game, your device and your browser.</span>
+            </div>
+
+            <!-- Honeypot field to reduce spam; leave empty -->
+            <div class="hp-field" aria-hidden="true">
+              <label for="cf-website">Leave this field empty</label>
+              <input id="cf-website" name="_gotcha" type="text" tabindex="-1" autocomplete="off">
+            </div>
+
+            <input type="hidden" name="_subject" value="New message from Neo Arcade Vault contact form">
+
+            <div class="form-row consent-row">
+              <input id="cf-consent" name="consent" type="checkbox" value="yes" required>
+              <label for="cf-consent">I have read the <a href="/privacy-policy">Privacy Policy</a> and agree that my details may be used to respond to my message.</label>
+            </div>
+
+            <div>
+              <button id="contact-submit" class="btn-link" type="submit">Send message</button>
+            </div>
+          </form>
+        </section>
+
+        <aside class="content-card prose" aria-labelledby="other-ways">
+          <h2 id="other-ways" style="font-size:1.2rem;">Other ways to reach us</h2>
+          <p><strong>Email:</strong><br><mark class="placeholder">[PLACEHOLDER: contact email address]</mark></p>
+          <p><strong>Typical response time:</strong><br><mark class="placeholder">[PLACEHOLDER: for example "within 3 business days" - only if you can keep it]</mark></p>
+          <p><strong>Postal address:</strong><br><mark class="placeholder">[PLACEHOLDER: mailing address, optional - publish only a real address you are comfortable sharing]</mark></p>
+          <p style="font-size:0.9rem;">Your message is handled as described in our <a href="/privacy-policy">Privacy Policy</a>.</p>
+        </aside>
+      </div>
+
+      <section class="content-card prose" aria-labelledby="faq">
+        <h2 id="faq">Before you write</h2>
+        <div class="faq-item">
+          <h3>How do I report a bug?</h3>
+          <p>Choose &ldquo;Bug report&rdquo; as the topic and tell us which game you were playing, what you expected to happen, what happened instead, and which device and browser you use.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can I suggest a new game?</h3>
+          <p>Yes. Choose &ldquo;Game suggestion&rdquo; and describe the idea. We cannot promise that every suggestion will be built, but we read them.</p>
+        </div>
+        <div class="faq-item">
+          <h3>My high scores disappeared. What happened?</h3>
+          <p>Scores and favorites are stored in your browser on your device. They can be removed if you clear your browser&rsquo;s site data, use private browsing, or switch devices. See the <a href="/privacy-policy#local-storage">Privacy Policy</a> for details.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How do I make a privacy request?</h3>
+          <p>Choose &ldquo;Privacy request&rdquo; as the topic. Our <a href="/privacy-policy#your-rights">Privacy Policy</a> explains what we can help with.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="arcade-footer site-footer">
+      <div class="footer-brand"><span class="brand-bolt">⚡</span> NEO ARCADE</div>
+      <p>A free collection of 10 browser mini-games. No downloads, no sign-up.</p>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="/">Home</a>
+        <a href="/games">Games</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        <a href="/privacy-policy">Privacy Policy</a>
+        <a href="/terms">Terms &amp; Conditions</a>
+      </nav>
+      <p class="footer-copy">&copy; <span data-year>2026</span> Neo Arcade Vault. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <script src="/js/site-shell.js"></script>
+  <script src="/js/contact.js"></script>
+</body>
+</html>

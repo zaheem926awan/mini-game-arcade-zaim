@@ -4,8 +4,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#090d16">
-  <meta name="description" content="Neo Arcade Vault - A premium collection of 10 playable retro and cyber arcade mini-games.">
-  <title>Neo Arcade Vault - 10 Playable Mini-Games</title>
+  <meta name="description" content="Play 10 free online mini-games at Neo Arcade Vault: Fruit Slice, Neon Snake, Brick Breaker, Space Shooter, 2048 and more. No download, no sign-up.">
+  <meta name="robots" content="index, follow">
+  <title>Neo Arcade Vault | 10 Free Online Mini-Games</title>
+  <link rel="canonical" href="https://mini-game-arcade-zaim.vercel.app/">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E">
+
+  <!-- Open Graph / social sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Neo Arcade Vault">
+  <meta property="og:title" content="Neo Arcade Vault | 10 Free Online Mini-Games">
+  <meta property="og:description" content="Play 10 free online mini-games in your browser. No download, no sign-up.">
+  <meta property="og:url" content="https://mini-game-arcade-zaim.vercel.app/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Neo Arcade Vault | 10 Free Online Mini-Games">
+  <meta name="twitter:description" content="Play 10 free online mini-games in your browser. No download, no sign-up.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Neo Arcade Vault",
+    "url": "https://mini-game-arcade-zaim.vercel.app/",
+    "description": "A free collection of 10 browser mini-games."
+  }
+  </script>
 
   <!-- Google Fonts: Outfit & Luckiest Guy for Arcade Styling -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,6 +37,7 @@
 
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/arcade.css">
+  <link rel="stylesheet" href="css/pages.css">
 </head>
 <body>
   <!-- Ambient Background Grids and Flares -->
@@ -26,7 +50,16 @@
   <!-- Primary Arcade Portal Application Container -->
   <div id="portal-app">
     <!-- Home Portal View: Navigation, Hero, Filters, Catalog -->
-    <div id="home-portal-view"></div>
+    <div id="home-portal-view">
+      <!-- Static fallback: replaced by the JavaScript-rendered arcade. Gives crawlers and
+           no-JS visitors real content and working links to every page. -->
+      <div class="js-fallback">
+        <h1>Neo Arcade Vault</h1>
+        <p>Play 10 free browser mini-games: Fruit Slice, Neon Snake, Brick Breaker, Space Shooter, 2048 Puzzle, Tic-Tac-Toe, Memory Match, Endless Runner, Block Puzzle and Whack-a-Mole. No downloads and no sign-up.</p>
+        <p>The arcade needs JavaScript. Please enable it in your browser, or read more on our <a href="/games">Games</a>, <a href="/about">About</a> and <a href="/contact">Contact</a> pages.</p>
+        <p><a href="/privacy-policy">Privacy Policy</a> &middot; <a href="/terms">Terms &amp; Conditions</a></p>
+      </div>
+    </div>
 
     <!-- Dedicated Game View: Top bar, Viewport, Controls guide -->
     <div id="game-portal-view" class="hidden"></div>
@@ -236,6 +269,7 @@
   </template>
 
   <!-- Audio and Game Scripts -->
+  <script src="js/site-shell.js"></script>
   <script src="js/audio.js"></script>
   <script src="js/fruit.js"></script>
   <script src="js/game.js"></script>
