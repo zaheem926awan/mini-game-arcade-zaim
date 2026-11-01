@@ -1,948 +1,853 @@
-/**
- * Arcade Portal Architecture & Game Registry
- * Coordinates routing, game discovery, search/filtering, favorites,
- * recents, and modular game lifecycles.
- */
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Sans:wght@400;500;700&display=swap');
+/* ==========================================================================
+   NEO ARCADE VAULT - SITE PAGES (About, Contact, Privacy, Terms, Games, 404)
+   Shared navigation / footer additions used by the arcade portal as well.
+   Loaded AFTER style.css and arcade.css. Reuses their design tokens.
+   ========================================================================== */
 
-const ARCADE_GAMES = [
-  {
-    id: 'fruit-slice',
-    title: 'Fruit Slice',
-    category: 'action',
-    badge: 'REFLEX',
-    icon: '🍉',
-    gradient: 'linear-gradient(135deg, #ff4757 0%, #ffa502 100%)',
-    description: 'Swift blade slashing arcade! Slice juicy watermelons, oranges, and pineapples in 60 seconds while avoiding hazard skull bombs.',
-    featured: true,
-    tags: ['blade', 'fruits', 'slicing', 'reflex'],
-    controls: 'Mouse Drag or Touch Swipe across flying fruits.',
-    scoreKey: 'fruit_arcade_high_score',
-    scoreLabel: 'Best score',
-    scoreUnit: ''
-  },
-  {
-    id: 'snake',
-    title: 'Neon Snake',
-    category: 'arcade',
-    badge: 'CLASSIC',
-    icon: '🐍',
-    gradient: 'linear-gradient(135deg, #00d2d3 0%, #10ac84 100%)',
-    description: 'Cybernetic slither game! Eat glowing apples, track down golden stars for 50-point bonuses, and conquer the cyber grid.',
-    featured: true,
-    tags: ['retro', 'grid', 'cyber', 'classic'],
-    controls: 'Arrow Keys / WASD, Swipe, or Virtual D-Pad.',
-    scoreKey: 'arcade_snake_highscore',
-    scoreLabel: 'Best score',
-    scoreUnit: ''
-  },
-  {
-    id: 'brick-breaker',
-    title: 'Brick Breaker',
-    category: 'arcade',
-    badge: 'BREAKOUT',
-    icon: '🧱',
-    gradient: 'linear-gradient(135deg, #ffa502 0%, #ff4757 100%)',
-    description: 'High-octane breakout action with angle deflections, multi-ball capsules, paddle expanders, and 3 progressive stages.',
-    featured: false,
-    tags: ['breakout', 'paddle', 'ball', 'powerups'],
-    controls: 'Mouse Drag, Left/Right Arrows, or Touch Screen.',
-    scoreKey: 'arcade_bricks_highscore',
-    scoreLabel: 'Best score',
-    scoreUnit: ''
-  },
-  {
-    id: 'space-shooter',
-    title: 'Space Shooter',
-    category: 'action',
-    badge: 'SHOOTER',
-    icon: '🚀',
-    gradient: 'linear-gradient(135deg, #5f27cd 0%, #00d2d3 100%)',
-    description: 'Vertical parallax space combat! Blast alien drones, dodge laser cruisers, crack tumbling asteroids, and trigger smart bombs.',
-    featured: true,
-    tags: ['space', 'aliens', 'lasers', 'shooter'],
-    controls: 'Arrow Keys / Mouse / Drag to fly + Spacebar or Fire button.',
-    scoreKey: 'arcade_space_highscore',
-    scoreLabel: 'Best score',
-    scoreUnit: ''
-  },
-  {
-    id: 'puzzle-2048',
-    title: '2048 Puzzle',
-    category: 'puzzle',
-    badge: 'BRAIN',
-    icon: '🔢',
-    gradient: 'linear-gradient(135deg, #ff9f43 0%, #ee5253 100%)',
-    description: 'Smooth 4x4 tile-sliding puzzle. Merge matching powers of 2, plan with Undo, and engineer the mythical 2048 core!',
-    featured: false,
-    tags: ['numbers', 'merge', 'logic', 'strategy'],
-    controls: 'Arrow Keys / WASD, Swipe, or Touch D-Pad.',
-    scoreKey: 'arcade_2048_highscore',
-    scoreLabel: 'Best score',
-    scoreUnit: ''
-  },
-  {
-    id: 'tic-tac-toe',
-    title: 'Tic-Tac-Toe',
-    category: 'strategy',
-    badge: 'VERSUS',
-    icon: '✕◯',
-    gradient: 'linear-gradient(135deg, #0abde3 0%, #ee5253 100%)',
-    description: 'Cyber neon battle of wits! Challenge the unbeatable Minimax AI or pass-and-play locally with a friend on the same device.',
-    featured: false,
-    tags: ['minimax', 'ai', 'pvp', 'turn-based'],
-    controls: 'Click or Tap cells to place X and O.',
-    scoreKey: null,
-    scoreLabel: 'Best score',
-    scoreUnit: ''
-  },
-  {
-    id: 'memory-match',
-    title: 'Memory Match',
-    category: 'casual',
-    badge: 'NEW',
-    icon: '🃏',
-    gradient: 'linear-gradient(135deg, #10ac84 0%, #1dd1a1 100%)',
-    description: 'Interactive 3D card-flipping brain teaser with 8 pairs of arcade relics, match streaks, timer, and 3-star ratings.',
-    featured: false,
-    tags: ['cards', 'flip', 'pairs', 'memory'],
-    controls: 'Click or Tap cards to reveal matching pairs.',
-    scoreKey: 'arcade_memory_best',
-    scoreLabel: 'Fewest moves',
-    scoreUnit: ' moves',
-    scoreLowerIsBetter: true
-  },
-  {
-    id: 'endless-runner',
-    title: 'Endless Runner',
-    category: 'action',
-    badge: 'RUNNER',
-    icon: '🏃',
-    gradient: 'linear-gradient(135deg, #2e86de 0%, #ff9f43 100%)',
-    description: 'Sprint across neon rooftops! Leap spikes with double-jump and duck under laser drones with fluid slide maneuvers.',
-    featured: false,
-    tags: ['ninja', 'parkour', 'jump', 'slide'],
-    controls: 'Space / Up Arrow to Jump, Down Arrow to Slide.',
-    scoreKey: 'arcade_runner_highscore',
-    scoreLabel: 'Best score',
-    scoreUnit: ''
-  },
-  {
-    id: 'block-puzzle',
-    title: 'Block Puzzle',
-    category: 'puzzle',
-    badge: 'RETRO',
-    icon: '🟦',
-    gradient: 'linear-gradient(135deg, #341f97 0%, #00d2d3 100%)',
-    description: 'Timeless falling polyominoes arcade with 7 tetrominoes, ghost landing projection, next preview queue, hold piece, and hard drop.',
-    featured: true,
-    tags: ['tetris', 'blocks', 'lines', 'retro'],
-    controls: 'Left/Right, Up to Rotate, Space for Hard Drop, C to Hold.',
-    scoreKey: 'arcade_blocks_highscore',
-    scoreLabel: 'Best score',
-    scoreUnit: ''
-  },
-  {
-    id: 'whack-a-mole',
-    title: 'Whack-a-Mole',
-    category: 'casual',
-    badge: 'NEW',
-    icon: '🔨',
-    gradient: 'linear-gradient(135deg, #ff6b6b 0%, #feca57 100%)',
-    description: 'Rapid-fire cyber reflex test! Whack pop-up moles, rack up combo multipliers, bag golden stars, and dodge ticking hazard bombs.',
-    featured: false,
-    tags: ['reflex', 'hammer', 'whack', 'combo'],
-    controls: 'Click or Tap moles as fast as they appear.',
-    scoreKey: 'arcade_mole_highscore',
-    scoreLabel: 'Best score',
-    scoreUnit: ''
+.page-main,
+.page-main *,
+.site-footer,
+.site-footer * {
+  user-select: text;
+  -webkit-user-select: text;
+  -webkit-touch-callout: default;
+}
+.page-main button,
+.page-main .btn-link {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -60px;
+  z-index: 200;
+  background: var(--cyan);
+  color: #04121a;
+  font-weight: 800;
+  padding: 10px 16px;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: top 0.15s ease;
+}
+.skip-link:focus {
+  top: 12px;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: 2px;
+}
+
+a.nav-brand {
+  color: inherit;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.nav-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.92rem;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.nav-links a:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.nav-links a[aria-current="page"] {
+  color: #fff;
+  background: rgba(0, 210, 211, 0.12);
+  border-color: var(--portal-border-glow);
+}
+
+.nav-links a.nav-cta {
+  background: linear-gradient(135deg, var(--coral), var(--gold));
+  color: #fff;
+}
+
+.site-subnav {
+  width: 100%;
+  background: rgba(9, 13, 22, 0.75);
+  border-bottom: 1px solid var(--portal-border);
+  padding: 6px 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.site-footer {
+  align-items: center;
+  gap: 12px;
+  padding: 32px 24px 28px;
+}
+
+.site-footer p {
+  max-width: 640px;
+  line-height: 1.55;
+}
+
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 18px;
+}
+
+.footer-nav a {
+  color: var(--text-main);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 4px 2px;
+  border-bottom: 1px solid transparent;
+}
+
+.footer-nav a:hover {
+  color: var(--cyan);
+  border-bottom-color: var(--cyan);
+}
+
+.footer-copy {
+  font-size: 0.8rem;
+  opacity: 0.85;
+}
+
+.page-main {
+  flex: 1;
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 36px 20px 56px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.breadcrumbs {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+.breadcrumbs a {
+  color: var(--cyan);
+  text-decoration: none;
+}
+.breadcrumbs a:hover {
+  text-decoration: underline;
+}
+
+.page-hero {
+  background: var(--portal-surface);
+  border: 1px solid var(--portal-border);
+  border-radius: 22px;
+  padding: 34px 30px;
+  box-shadow: 0 0 40px rgba(0, 210, 211, 0.08);
+}
+
+.page-hero .hero-tag {
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.page-title {
+  font-family: var(--font-arcade);
+  font-size: clamp(2rem, 6vw, 3.2rem);
+  letter-spacing: 1.5px;
+  line-height: 1.1;
+  margin: 0 0 12px;
+  background: linear-gradient(135deg, #fff 0%, var(--cyan) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.page-lead {
+  font-size: 1.08rem;
+  line-height: 1.65;
+  color: var(--text-main);
+  max-width: 70ch;
+}
+
+.page-meta {
+  margin-top: 14px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.content-card {
+  background: var(--portal-surface);
+  border: 1px solid var(--portal-border);
+  border-radius: 18px;
+  padding: 26px 28px;
+}
+
+.prose h2 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin: 30px 0 10px;
+  color: #fff;
+  scroll-margin-top: 90px;
+}
+.prose h2:first-child {
+  margin-top: 0;
+}
+.prose h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 20px 0 8px;
+  color: var(--cyan);
+}
+.prose p,
+.prose li {
+  line-height: 1.7;
+  color: #d5deea;
+  font-size: 1rem;
+}
+.prose p {
+  margin: 0 0 14px;
+}
+.prose ul,
+.prose ol {
+  margin: 0 0 16px 22px;
+  padding: 0;
+}
+.prose li {
+  margin-bottom: 6px;
+}
+.prose a {
+  color: var(--cyan);
+}
+.prose a:hover {
+  color: var(--yellow);
+}
+.prose code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+.toc {
+  background: rgba(0, 210, 211, 0.06);
+  border: 1px solid var(--portal-border-glow);
+  border-radius: 14px;
+  padding: 18px 22px;
+}
+.toc h2 {
+  font-size: 0.85rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0 0 10px;
+}
+.toc ol {
+  margin: 0 0 0 20px;
+  columns: 2;
+  column-gap: 32px;
+}
+.toc li {
+  margin-bottom: 4px;
+  break-inside: avoid;
+}
+.toc a {
+  color: var(--text-main);
+  text-decoration: none;
+}
+.toc a:hover {
+  color: var(--cyan);
+  text-decoration: underline;
+}
+
+.table-scroll {
+  overflow-x: auto;
+  margin: 0 0 16px;
+  border: 1px solid var(--portal-border);
+  border-radius: 12px;
+}
+.table-scroll table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 520px;
+}
+.table-scroll th,
+.table-scroll td {
+  text-align: left;
+  padding: 10px 14px;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  border-bottom: 1px solid var(--portal-border);
+  color: #d5deea;
+  vertical-align: top;
+}
+.table-scroll th {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  font-weight: 700;
+}
+.table-scroll tr:last-child td {
+  border-bottom: none;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+.info-card {
+  background: var(--portal-surface);
+  border: 1px solid var(--portal-border);
+  border-radius: 16px;
+  padding: 20px 20px 18px;
+}
+.info-card .info-icon {
+  font-size: 1.8rem;
+  display: block;
+  margin-bottom: 8px;
+}
+.info-card h3 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin: 0 0 6px;
+  color: #fff;
+}
+.info-card p {
+  margin: 0;
+  line-height: 1.6;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.games-list-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 18px;
+}
+.page-game-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--portal-surface);
+  border: 1px solid var(--portal-border);
+  border-radius: 18px;
+  overflow: hidden;
+  transition: transform 0.18s ease, border-color 0.18s ease;
+}
+.page-game-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--portal-border-glow);
+}
+.pgc-art {
+  font-size: 2.6rem;
+  text-align: center;
+  padding: 22px 12px;
+}
+.pgc-body {
+  padding: 16px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+.pgc-body h2 {
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin: 0;
+}
+.pgc-cat {
+  align-self: flex-start;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgba(0, 210, 211, 0.15);
+  color: var(--cyan);
+}
+.pgc-body p {
+  margin: 0;
+  font-size: 0.93rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+.pgc-controls strong {
+  color: #fff;
+}
+.pgc-play {
+  margin-top: auto;
+  align-self: flex-start;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: #fff;
+  background: linear-gradient(135deg, var(--coral), var(--gold));
+  padding: 9px 18px;
+  border-radius: 999px;
+}
+.pgc-play:hover {
+  filter: brightness(1.1);
+}
+
+.btn-link {
+  display: inline-block;
+  text-decoration: none;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 1rem;
+  color: #fff;
+  background: linear-gradient(135deg, var(--coral), var(--gold));
+  padding: 12px 24px;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.btn-link:hover {
+  filter: brightness(1.1);
+}
+.btn-link.secondary {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid var(--portal-border);
+}
+.btn-link[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+mark.placeholder {
+  background: rgba(255, 165, 2, 0.18);
+  color: var(--yellow);
+  border: 1px dashed var(--gold);
+  border-radius: 6px;
+  padding: 1px 6px;
+  font-weight: 600;
+}
+
+.placeholder-block {
+  background: rgba(255, 165, 2, 0.07);
+  border: 1px dashed var(--gold);
+  border-radius: 12px;
+  padding: 16px 18px 4px;
+  margin: 0 0 16px;
+}
+
+.notice {
+  border-radius: 12px;
+  padding: 14px 16px;
+  line-height: 1.55;
+  font-size: 0.95rem;
+  border: 1px solid var(--portal-border);
+  background: rgba(255, 255, 255, 0.05);
+}
+.notice.success {
+  border-color: rgba(46, 213, 115, 0.6);
+  background: rgba(46, 213, 115, 0.1);
+  color: #b9f5d0;
+}
+.notice.error {
+  border-color: rgba(255, 71, 87, 0.6);
+  background: rgba(255, 71, 87, 0.1);
+  color: #ffc9ce;
+}
+.notice.warning {
+  border-color: var(--gold);
+  background: rgba(255, 165, 2, 0.1);
+  color: var(--yellow);
+}
+
+.contact-layout {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 22px;
+  align-items: start;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.form-row label {
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: #fff;
+}
+.form-row .hint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+.contact-form input,
+.contact-form select,
+.contact-form textarea {
+  width: 100%;
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--portal-border);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+.contact-form select option {
+  color: #0b1220;
+}
+.contact-form textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+.contact-form input:focus,
+.contact-form select:focus,
+.contact-form textarea:focus {
+  border-color: var(--cyan);
+}
+.contact-form .consent-row {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 10px;
+}
+.contact-form .consent-row input {
+  width: 20px;
+  height: 20px;
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+.contact-form .consent-row label {
+  font-weight: 500;
+  color: #d5deea;
+  line-height: 1.5;
+}
+.contact-form .consent-row a {
+  color: var(--cyan);
+}
+
+.hp-field {
+  position: absolute !important;
+  left: -9999px !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--portal-border);
+  padding: 14px 0;
+}
+.faq-item:last-child {
+  border-bottom: none;
+}
+.faq-item h3 {
+  margin: 0 0 6px;
+  font-size: 1.02rem;
+  color: #fff;
+}
+.faq-item p {
+  margin: 0;
+}
+
+.js-fallback {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 48px 20px;
+  text-align: center;
+}
+.js-fallback h1 {
+  font-family: var(--font-arcade);
+  font-size: clamp(2rem, 6vw, 3rem);
+  margin-bottom: 12px;
+}
+.js-fallback p {
+  color: var(--text-muted);
+  line-height: 1.65;
+  margin-bottom: 14px;
+}
+.js-fallback a {
+  color: var(--cyan);
+}
+
+@media (max-width: 900px) {
+  .contact-layout {
+    grid-template-columns: 1fr;
   }
-];
-
-/**
- * Reads the player's real best result for a game from browser storage.
- * Returns a positive whole number, or null when nothing has been saved yet
- * (or when the game does not track a score). Nothing is invented: the value
- * comes only from the score the game itself saved on this device.
- */
-function getBestScoreForGame(game, storage) {
-  if (!game || !game.scoreKey || !storage) return null;
-  try {
-    const raw = storage.getItem(game.scoreKey);
-    const n = parseInt(raw, 10);
-    if (!Number.isFinite(n) || n <= 0) return null;
-    // Memory Match uses 999 as its "no record yet" value (fewer moves is better)
-    if (game.scoreLowerIsBetter && n >= 999) return null;
-    return n;
-  } catch (e) {
-    return null;
+  .toc ol {
+    columns: 1;
   }
 }
 
-/** Formats a best score for display, e.g. "1,250" or "14 moves". */
-function formatBestScore(game, value) {
-  return value.toLocaleString('en-US') + (game.scoreUnit || '');
-}
-
-/** "action" -> "Action" */
-function categoryLabel(game) {
-  return game.category.charAt(0).toUpperCase() + game.category.slice(1);
-}
-
-class ArcadePortal {
-  constructor() {
-    this.sound = new SoundManager();
-    this.games = ARCADE_GAMES;
-
-    // State
-    this.currentRoute = 'home';
-    this.currentGameId = null;
-    this.activeGameInstance = null;
-    this.searchQuery = '';
-    this.selectedCategory = 'all';
-
-    // LocalStorage
-    this.favKey = 'arcade_favorites';
-    this.recentKey = 'arcade_recently_played';
-    this.favorites = JSON.parse(localStorage.getItem(this.favKey) || '["fruit-slice", "snake"]');
-    this.recentlyPlayed = JSON.parse(localStorage.getItem(this.recentKey) || '["fruit-slice"]');
-
-    // Bindings
-    this.handleHashChange = this.handleHashChange.bind(this);
+@media (max-width: 650px) {
+  .site-subnav {
+    padding: 6px 10px;
+    justify-content: flex-start;
+    overflow-x: auto;
   }
-
-  init() {
-    window.ArcadePortal = this;
-
-    // Listen for hash route navigation
-    window.addEventListener('hashchange', this.handleHashChange);
-
-    // Initial route check
-    this.handleHashChange();
+  .site-subnav .nav-links {
+    flex-wrap: nowrap;
+    white-space: nowrap;
   }
-
-  /** Shared site navigation strip (links to Games / About / Contact). */
-  shellSubnav(current) {
-    return (typeof SiteShell !== 'undefined') ? SiteShell.subnavHTML(current) : '';
+  .page-main {
+    padding: 22px 14px 40px;
+    gap: 20px;
   }
-
-  /** Shared footer with links to every site page. */
-  shellFooter() {
-    return (typeof SiteShell !== 'undefined') ? SiteShell.footerHTML() : '';
+  .page-hero {
+    padding: 24px 18px;
   }
-
-  /** Keeps the browser tab title meaningful as hash routes change. */
-  setPageTitle(title) {
-    if (typeof document !== 'undefined') {
-      document.title = title;
-    }
+  .content-card {
+    padding: 20px 16px;
   }
-
-  /** The player's real best result for a game (number) or null. */
-  getBestScore(game) {
-    return getBestScoreForGame(game, typeof localStorage !== 'undefined' ? localStorage : null);
+  .arcade-navbar .nav-links {
+    width: 100%;
+    gap: 4px;
   }
-
-  /** Text for the "your best" display in the game details panel. */
-  bestScoreText(game) {
-    if (!game.scoreKey) return 'Not tracked';
-    const best = this.getBestScore(game);
-    return best === null ? 'No score yet' : formatBestScore(game, best);
+  .nav-links a {
+    padding: 7px 11px;
+    font-size: 0.86rem;
   }
-
-  /** Keeps the game-details best score current while a game is being played. */
-  startBestScoreRefresh(game) {
-    this.stopBestScoreRefresh();
-    if (!game.scoreKey || typeof document === 'undefined') return;
-    this.bestScoreTimer = setInterval(() => {
-      const el = document.getElementById('gd-best-score');
-      if (el) el.textContent = this.bestScoreText(game);
-    }, 1500);
-    if (this.bestScoreTimer && typeof this.bestScoreTimer.unref === 'function') {
-      this.bestScoreTimer.unref();
-    }
-  }
-
-  stopBestScoreRefresh() {
-    if (this.bestScoreTimer) {
-      clearInterval(this.bestScoreTimer);
-      this.bestScoreTimer = null;
-    }
-  }
-
-  handleHashChange() {
-    const hash = window.location.hash || '#';
-
-    if (hash.startsWith('#/game/')) {
-      const gameId = hash.replace('#/game/', '').trim();
-      this.openGame(gameId);
-    } else if (hash.startsWith('#/category/')) {
-      const cat = hash.replace('#/category/', '').trim();
-      this.selectedCategory = cat;
-      this.showHomeView();
-    } else if (hash === '#/favorites') {
-      this.selectedCategory = 'favorites';
-      this.showHomeView();
-    } else {
-      this.showHomeView();
-    }
-  }
-
-  navigate(route) {
-    window.location.hash = route;
-  }
-
-  toggleFavorite(gameId) {
-    if (this.favorites.includes(gameId)) {
-      this.favorites = this.favorites.filter(id => id !== gameId);
-    } else {
-      this.favorites.push(gameId);
-    }
-    localStorage.setItem(this.favKey, JSON.stringify(this.favorites));
-    this.sound?.playClick();
-
-    // Re-render favorites if on home or update game view button
-    if (this.currentRoute === 'home') {
-      this.renderCatalog();
-    } else {
-      this.updateGameViewFavBtn();
-    }
-  }
-
-  recordPlay(gameId) {
-    this.recentlyPlayed = [gameId, ...this.recentlyPlayed.filter(id => id !== gameId)].slice(0, 6);
-    localStorage.setItem(this.recentKey, JSON.stringify(this.recentlyPlayed));
-  }
-
-  showHomeView() {
-    this.currentRoute = 'home';
-    this.stopBestScoreRefresh();
-
-    // Clean up any active running game
-    if (this.activeGameInstance) {
-      if (typeof this.activeGameInstance.destroy === 'function') {
-        this.activeGameInstance.destroy();
-      }
-      this.activeGameInstance = null;
-    }
-    this.currentGameId = null;
-    this.setPageTitle('Neo Arcade Vault | 10 Free Online Mini-Games');
-
-    if (window.location.hash !== '#' && !window.location.hash.startsWith('#/category/') && window.location.hash !== '#/favorites') {
-      window.location.hash = '#';
-    }
-
-    const gamePortalView = document.getElementById('game-portal-view');
-    const homePortalView = document.getElementById('home-portal-view');
-
-    if (gamePortalView) gamePortalView.classList.add('hidden');
-    if (homePortalView) homePortalView.classList.remove('hidden');
-
-    window.scrollTo({ top: 0, behavior: 'instant' });
-
-    this.renderHome();
-  }
-
-  renderHome() {
-    const homeView = document.getElementById('home-portal-view');
-    if (!homeView) return;
-
-    const featuredGame = this.games.find(g => g.id === 'fruit-slice') || this.games[0];
-    const isFeatFav = this.favorites.includes(featuredGame.id);
-    const featuredBest = this.getBestScore(featuredGame);
-
-    homeView.innerHTML = `
-      <!-- Arcade Navigation Header -->
-      <nav class="arcade-navbar">
-        <div class="nav-brand" onclick="window.location.hash = '#'">
-          <span class="brand-bolt">⚡</span>
-          <span class="brand-text">NEO ARCADE</span>
-          <span class="brand-badge">VAULT</span>
-        </div>
-
-        <div class="nav-search-bar">
-          <span class="search-icon">🔍</span>
-          <input type="text" id="arcade-search-input" placeholder="Search 10 games, genres, tags..." value="${this.searchQuery}">
-          ${this.searchQuery ? '<button id="arcade-search-clear" class="search-clear-btn">✕</button>' : ''}
-        </div>
-
-        <div class="nav-actions">
-          <button id="nav-btn-random" class="nav-icon-btn" title="Surprise Me! Launch Random Game">🎲 Random</button>
-          <button id="nav-btn-favs" class="nav-icon-btn ${this.selectedCategory === 'favorites' ? 'active' : ''}" title="View Favorites">❤️ Favs (${this.favorites.length})</button>
-          <button id="nav-btn-sound" class="nav-icon-btn" title="Toggle Sound">${this.sound.enabled ? '🔊' : '🔇'}</button>
-        </div>
-      </nav>
-
-      <!-- Site navigation (shared with About / Contact / legal pages) -->
-      ${this.shellSubnav('/')}
-
-      <!-- Hero Section with Featured Showcase -->
-      <section class="arcade-hero">
-        <div class="hero-content">
-          <div class="hero-tag">🌟 FEATURED GAME</div>
-          <h1 class="hero-title">${featuredGame.title.toUpperCase()}</h1>
-          <p class="hero-description">${featuredGame.description}</p>
-          <div class="hero-meta">
-            <span class="meta-item">🕹️ ${categoryLabel(featuredGame)}</span>
-            <span class="meta-item">🏆 ${featuredBest === null ? 'Play to set a score' : 'Your best: ' + formatBestScore(featuredGame, featuredBest)}</span>
-            <span class="meta-item">🆓 Free to play</span>
-          </div>
-          <div class="hero-actions">
-            <button class="hero-play-btn" onclick="window.ArcadePortal.openGame('${featuredGame.id}')">
-              <span>⚔️</span> PLAY NOW
-            </button>
-            <button class="hero-fav-btn ${isFeatFav ? 'favorited' : ''}" onclick="window.ArcadePortal.toggleFavorite('${featuredGame.id}')">
-              ${isFeatFav ? '❤️ Favorited' : '🤍 Add to Favorites'}
-            </button>
-          </div>
-        </div>
-        <div class="hero-visual">
-          <div class="hero-badge-card" style="background: ${featuredGame.gradient}">
-            <span class="hero-large-icon">${featuredGame.icon}</span>
-            <div class="hero-visual-ribbon">ARCADE BLITZ</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Platform Features Strip -->
-      <section class="platform-features-strip">
-        <div class="feat-badge"><span class="feat-icon">⚡</span> <span>10 Playable Arcade Mini-Games</span></div>
-        <div class="feat-badge"><span class="feat-icon">🔊</span> <span>Web Audio Synth • Zero Downloads</span></div>
-        <div class="feat-badge"><span class="feat-icon">📱</span> <span>Desktop & Mobile Touch Controls</span></div>
-        <div class="feat-badge"><span class="feat-icon">🏆</span> <span>High Scores & Favorites Saved</span></div>
-      </section>
-
-      <!-- Category Filter Tabs -->
-      <section class="catalog-header-section">
-        <div class="section-title-wrap">
-          <h2 class="section-title">GAME VAULT</h2>
-          <span class="section-counter" id="catalog-game-count">10 Games Ready</span>
-        </div>
-
-        <div class="category-pills-bar">
-          <button class="cat-pill ${this.selectedCategory === 'all' ? 'active' : ''}" data-cat="all">🎮 All Games (10)</button>
-          <button class="cat-pill ${this.selectedCategory === 'action' ? 'active' : ''}" data-cat="action">⚔️ Action</button>
-          <button class="cat-pill ${this.selectedCategory === 'arcade' ? 'active' : ''}" data-cat="arcade">🕹️ Arcade</button>
-          <button class="cat-pill ${this.selectedCategory === 'puzzle' ? 'active' : ''}" data-cat="puzzle">🧩 Puzzle</button>
-          <button class="cat-pill ${this.selectedCategory === 'strategy' ? 'active' : ''}" data-cat="strategy">♟️ Strategy</button>
-          <button class="cat-pill ${this.selectedCategory === 'casual' ? 'active' : ''}" data-cat="casual">🎯 Casual</button>
-          <button class="cat-pill ${this.selectedCategory === 'favorites' ? 'active' : ''}" data-cat="favorites">❤️ Favorites (${this.favorites.length})</button>
-        </div>
-      </section>
-
-      <!-- Recently Played Bar if exists -->
-      ${this.renderRecentGamesSection()}
-
-      <!-- Main Game Cards Catalog Grid -->
-      <section class="catalog-grid-section">
-        <div id="games-grid" class="games-grid"></div>
-      </section>
-
-      <!-- Footer (shared with every page) -->
-      ${this.shellFooter()}
-    `;
-
-    // Bind search and filter events
-    const searchInput = document.getElementById('arcade-search-input');
-    const searchClear = document.getElementById('arcade-search-clear');
-
-    searchInput?.addEventListener('input', (e) => {
-      this.searchQuery = e.target.value.toLowerCase().trim();
-      this.renderCatalog();
-    });
-
-    searchClear?.addEventListener('click', () => {
-      this.searchQuery = '';
-      if (searchInput) searchInput.value = '';
-      this.renderCatalog();
-    });
-
-    document.getElementById('nav-btn-random')?.addEventListener('click', () => {
-      this.sound?.playClick();
-      const randomGame = this.games[Math.floor(Math.random() * this.games.length)];
-      this.navigate(`#/game/${randomGame.id}`);
-    });
-
-    document.getElementById('nav-btn-favs')?.addEventListener('click', () => {
-      this.sound?.playClick();
-      this.selectedCategory = 'favorites';
-      this.renderHome();
-    });
-
-    document.getElementById('nav-btn-sound')?.addEventListener('click', (e) => {
-      this.sound.toggle();
-      e.target.textContent = this.sound.enabled ? '🔊' : '🔇';
-    });
-
-    // Category pills click
-    homeView.querySelectorAll('.cat-pill').forEach(pill => {
-      pill.addEventListener('click', () => {
-        this.sound?.playClick();
-        this.selectedCategory = pill.getAttribute('data-cat');
-        homeView.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
-        pill.classList.add('active');
-        this.renderCatalog();
-      });
-    });
-
-    this.renderCatalog();
-  }
-
-  renderRecentGamesSection() {
-    if (this.recentlyPlayed.length === 0) return '';
-    const recentGames = this.recentlyPlayed
-      .map(id => this.games.find(g => g.id === id))
-      .filter(Boolean);
-
-    if (recentGames.length === 0) return '';
-
-    return `
-      <section class="recent-bar-section">
-        <div class="recent-bar-header">
-          <span class="recent-label">⏱️ RECENTLY PLAYED</span>
-        </div>
-        <div class="recent-chips-row">
-          ${recentGames.map(g => `
-            <div class="recent-chip" onclick="window.ArcadePortal.openGame('${g.id}')">
-              <span class="chip-icon">${g.icon}</span>
-              <span class="chip-title">${g.title}</span>
-            </div>
-          `).join('')}
-        </div>
-      </section>
-    `;
-  }
-
-  getFilteredGames() {
-    return this.games.filter(game => {
-      // Category filter
-      if (this.selectedCategory === 'favorites') {
-        if (!this.favorites.includes(game.id)) return false;
-      } else if (this.selectedCategory !== 'all') {
-        if (game.category !== this.selectedCategory) return false;
-      }
-
-      // Search query filter
-      if (this.searchQuery) {
-        const matchesTitle = game.title.toLowerCase().includes(this.searchQuery);
-        const matchesDesc = game.description.toLowerCase().includes(this.searchQuery);
-        const matchesCategory = game.category.toLowerCase().includes(this.searchQuery);
-        const matchesTags = game.tags.some(t => t.toLowerCase().includes(this.searchQuery));
-        if (!matchesTitle && !matchesDesc && !matchesCategory && !matchesTags) return false;
-      }
-
-      return true;
-    });
-  }
-
-  renderCatalog() {
-    const grid = document.getElementById('games-grid');
-    const countEl = document.getElementById('catalog-game-count');
-    if (!grid) return;
-
-    const filtered = this.getFilteredGames();
-    if (countEl) {
-      countEl.textContent = `${filtered.length} Game${filtered.length === 1 ? '' : 's'} Found`;
-    }
-
-    if (filtered.length === 0) {
-      grid.innerHTML = `
-        <div class="empty-catalog-box">
-          <span class="empty-icon">🔍</span>
-          <h3>No Games Found</h3>
-          <p>No games matched your search "${this.searchQuery}" or category filter.</p>
-          <button class="arcade-btn-primary" onclick="window.ArcadePortal.resetFilters()">Reset All Filters</button>
-        </div>
-      `;
-      return;
-    }
-
-    grid.innerHTML = filtered.map(game => {
-      const isFav = this.favorites.includes(game.id);
-      const best = this.getBestScore(game);
-      return `
-        <div class="game-card" data-id="${game.id}" onclick="window.ArcadePortal.openGame('${game.id}')">
-          <div class="card-art" style="background: ${game.gradient};">
-            <span class="card-art-icon">${game.icon}</span>
-            <span class="card-badge">${game.badge}</span>
-            <button class="card-fav-btn ${isFav ? 'active' : ''}" 
-                    title="${isFav ? 'Remove from favorites' : 'Add to favorites'}"
-                    onclick="event.stopPropagation(); window.ArcadePortal.toggleFavorite('${game.id}')">
-              ${isFav ? '❤️' : '🤍'}
-            </button>
-          </div>
-          <div class="card-info">
-            <div class="card-header-row">
-              <h3 class="card-title">${game.title}</h3>
-              ${best === null ? '' : `<span class="card-rating" title="Your best on this device">🏆 ${formatBestScore(game, best)}</span>`}
-            </div>
-            <p class="card-desc">${game.description}</p>
-            <div class="card-footer-row">
-              <span class="card-cat-tag">${game.category.toUpperCase()}</span>
-              <button class="card-play-btn" onclick="event.stopPropagation(); window.ArcadePortal.openGame('${game.id}')">
-                <span>▶️</span> PLAY NOW
-              </button>
-            </div>
-          </div>
-        </div>
-      `;
-    }).join('');
-  }
-
-  resetFilters() {
-    this.searchQuery = '';
-    this.selectedCategory = 'all';
-    this.renderHome();
-  }
-
-  openGame(gameId) {
-    const game = this.games.find(g => g.id === gameId);
-    if (!game) {
-      this.navigate('#');
-      return;
-    }
-
-    if (window.location.hash !== `#/game/${gameId}`) {
-      window.location.hash = `#/game/${gameId}`;
-    }
-
-    this.currentRoute = 'game';
-    this.stopBestScoreRefresh();
-    this.currentGameId = gameId;
-    this.setPageTitle(`Play ${game.title} Free Online | Neo Arcade Vault`);
-    this.recordPlay(gameId);
-
-    // Stop previous game if active
-    if (this.activeGameInstance) {
-      if (typeof this.activeGameInstance.destroy === 'function') {
-        this.activeGameInstance.destroy();
-      }
-      this.activeGameInstance = null;
-    }
-
-    const homePortalView = document.getElementById('home-portal-view');
-    const gamePortalView = document.getElementById('game-portal-view');
-
-    if (homePortalView) homePortalView.classList.add('hidden');
-    if (gamePortalView) gamePortalView.classList.remove('hidden');
-
-    window.scrollTo({ top: 0, behavior: 'instant' });
-
-    this.renderGameView(game);
-  }
-
-  renderGameView(game) {
-    const gameView = document.getElementById('game-portal-view');
-    if (!gameView) return;
-
-    const isFav = this.favorites.includes(game.id);
-
-    gameView.innerHTML = `
-      ${this.shellSubnav(null)}
-
-      <!-- Game Top Bar / Breadcrumbs -->
-      <div class="game-view-header">
-        <div class="gv-left">
-          <button class="btn-back-arcade" onclick="window.ArcadePortal.showHomeView()">
-            <span>←</span> BACK TO ARCADE
-          </button>
-          <div class="gv-title-meta">
-            <h2 class="gv-title">${game.icon} ${game.title}</h2>
-            <span class="gv-cat-badge">${game.category.toUpperCase()}</span>
-          </div>
-        </div>
-
-        <div class="gv-actions">
-          <button id="gv-btn-fav" class="gv-btn ${isFav ? 'active' : ''}" title="Favorite Game">
-            ${isFav ? '❤️' : '🤍'}
-          </button>
-          <button id="gv-btn-restart" class="gv-btn" title="Restart Game">
-            🔄
-          </button>
-          <button id="gv-btn-sound" class="gv-btn" title="Toggle Sound">
-            ${this.sound.enabled ? '🔊' : '🔇'}
-          </button>
-          <button id="gv-btn-fullscreen" class="gv-btn" title="Toggle Fullscreen">
-            ⛶
-          </button>
-          <button id="gv-btn-help" class="gv-btn" title="Instructions">
-            ❓
-          </button>
-        </div>
-      </div>
-
-      <!-- Active Game Viewport Container -->
-      <div id="game-viewport" class="game-viewport">
-        <!-- Game mounts here -->
-      </div>
-
-      <!-- Below Game Details & Controls Guide -->
-      <div class="game-details-box">
-        <div class="gd-col">
-          <h3>🎮 HOW TO PLAY & CONTROLS</h3>
-          <p>${game.controls}</p>
-          <p style="margin-top: 8px; color: var(--text-muted); font-size: 0.88rem;">
-            ${game.description}
-          </p>
-        </div>
-        <div class="gd-col stats-box">
-          <h3>🏆 YOUR RECORDS</h3>
-          <div class="gd-stat-row">
-            <span>CATEGORY</span>
-            <span style="color: #fffa65;">${categoryLabel(game)}</span>
-          </div>
-          <div class="gd-stat-row">
-            <span>${game.scoreLabel.toUpperCase()}</span>
-            <span id="gd-best-score" style="color: #00d2d3;">${this.bestScoreText(game)}</span>
-          </div>
-          <div class="gd-stat-row">
-            <span>SAVED</span>
-            <span>This device only</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Suggested Other Games Carousel -->
-      <div class="gv-suggested-section">
-        <h3 class="gv-suggested-title">🕹️ EXPLORE MORE GAMES</h3>
-        <div class="gv-suggested-grid">
-          ${this.games.filter(g => g.id !== game.id).slice(0, 4).map(other => `
-            <div class="suggested-card" onclick="window.ArcadePortal.openGame('${other.id}')">
-              <span class="sc-icon">${other.icon}</span>
-              <div class="sc-info">
-                <span class="sc-title">${other.title}</span>
-                <span class="sc-cat">${other.category.toUpperCase()}</span>
-              </div>
-              <button class="sc-btn">PLAY ▶</button>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-
-      ${this.shellFooter()}
-    `;
-
-    // Bind Top Bar controls
-    document.getElementById('gv-btn-fav')?.addEventListener('click', () => {
-      this.toggleFavorite(game.id);
-    });
-
-    document.getElementById('gv-btn-restart')?.addEventListener('click', () => {
-      this.sound?.playClick();
-      if (this.activeGameInstance?.restart) {
-        this.activeGameInstance.restart();
-      } else if (this.activeGameInstance?.start) {
-        this.activeGameInstance.start();
-      } else {
-        this.mountGame(game.id, document.getElementById('game-viewport'));
-      }
-    });
-
-    document.getElementById('gv-btn-sound')?.addEventListener('click', (e) => {
-      this.sound.toggle();
-      e.target.textContent = this.sound.enabled ? '🔊' : '🔇';
-    });
-
-    document.getElementById('gv-btn-fullscreen')?.addEventListener('click', () => {
-      const vp = document.getElementById('game-viewport');
-      if (!document.fullscreenElement) {
-        vp?.requestFullscreen?.().catch(() => {});
-      } else {
-        document.exitFullscreen?.().catch(() => {});
-      }
-    });
-
-    document.getElementById('gv-btn-help')?.addEventListener('click', () => {
-      alert(`Instructions for ${game.title}:\n\n${game.description}\n\nControls:\n${game.controls}`);
-    });
-
-    // Mount Game Instance
-    const viewport = document.getElementById('game-viewport');
-    this.mountGame(game.id, viewport);
-    this.startBestScoreRefresh(game);
-  }
-
-  updateGameViewFavBtn() {
-    const btn = document.getElementById('gv-btn-fav');
-    if (btn && this.currentGameId) {
-      const isFav = this.favorites.includes(this.currentGameId);
-      btn.textContent = isFav ? '❤️' : '🤍';
-      if (isFav) btn.classList.add('active');
-      else btn.classList.remove('active');
-    }
-  }
-
-  mountGame(gameId, viewport) {
-    if (!viewport) return;
-
-    if (gameId === 'fruit-slice') {
-      // Render Fruit Slice structure preserving original DOM elements required by tests
-      viewport.innerHTML = `
-        <div id="game-container">
-          <header id="hud">
-            <div class="hud-left">
-              <div class="hud-pill score-pill" title="Current Score">
-                <span class="hud-icon">🍉</span>
-                <span id="current-score" class="score-counter">0</span>
-              </div>
-              <div class="hud-pill best-score-pill" title="Personal Best Score">
-                <span>BEST</span>
-                <span id="hud-best-score" class="best-val">0</span>
-              </div>
-            </div>
-
-            <div class="hud-center">
-              <div id="timer-pill" class="hud-pill timer-pill" title="Time Remaining">
-                <span class="hud-icon">⏱️</span>
-                <span id="time-left" class="timer-counter">60s</span>
-              </div>
-            </div>
-
-            <div class="hud-right">
-              <button id="btn-bomb-toggle" class="icon-btn active" aria-label="Toggle Bombs" title="Toggle Hazard Bombs">
-                💣
-              </button>
-              <button id="btn-sound" class="icon-btn" aria-label="Toggle Sound" title="Sound Mute/Unmute">
-                ${this.sound.enabled ? '🔊' : '🔇'}
-              </button>
-              <button id="btn-pause" class="icon-btn" aria-label="Pause Game" title="Pause Game (Esc/P)">
-                ⏸️
-              </button>
-            </div>
-          </header>
-
-          <div id="canvas-wrapper">
-            <canvas id="gameCanvas"></canvas>
-            <div id="combo-banner">3x TRIPLE! +5</div>
-          </div>
-
-          <section id="start-overlay" class="overlay">
-            <div class="overlay-content">
-              <h1 class="game-title">FRUIT SLICE</h1>
-              <p class="game-subtitle">Arcade 60-Second Blitz</p>
-              <div class="fruit-preview-row">
-                <span>🍉</span><span>🍊</span><span>🍓</span><span>🍌</span><span>🍍</span>
-              </div>
-              <div class="hud-pill best-score-pill">
-                <span>ALL-TIME RECORD:</span>
-                <span id="start-high-score-val" class="best-val" style="font-size: 1.4rem;">0</span>
-              </div>
-              <div class="mode-selectors">
-                <div id="toggle-bombs-option" class="toggle-option checked" role="checkbox" aria-checked="true" tabindex="0">
-                  <div class="toggle-label">
-                    <span style="font-size: 1.3rem;">💣</span>
-                    <div>
-                      <div>Hazard Bombs</div>
-                      <small style="color: var(--text-muted); font-size: 0.78rem;">Avoid bombs (-10 pts, -5s)</small>
-                    </div>
-                  </div>
-                  <div class="toggle-switch"></div>
-                </div>
-                <div class="blade-picker">
-                  <span style="font-size: 0.88rem; font-weight: 600;">Blade Glow:</span>
-                  <div class="blade-dots">
-                    <div class="blade-dot blade-cyan selected" data-color="#00d2d3" title="Electric Cyan"></div>
-                    <div class="blade-dot blade-flame" data-color="#ff4757" title="Flame Red"></div>
-                    <div class="blade-dot blade-gold" data-color="#ffa502" title="Golden Sun"></div>
-                    <div class="blade-dot blade-neon" data-color="#a55eea" title="Neon Purple"></div>
-                  </div>
-                </div>
-              </div>
-              <button id="btn-play" class="btn-primary"><span>⚔️</span> PLAY NOW</button>
-              <button id="btn-how-to-play" class="btn-secondary"><span>📖</span> How to Play</button>
-            </div>
-          </section>
-
-          <section id="instructions-modal" class="overlay hidden">
-            <div class="overlay-content">
-              <h2 class="game-title" style="font-size: 2.2rem;">HOW TO PLAY</h2>
-              <div class="instructions-list">
-                <div class="instruction-item"><div class="inst-icon">👆</div><div class="inst-text"><h4>Swipe to Slice</h4><p>Drag mouse or swipe finger across fruits.</p></div></div>
-                <div class="instruction-item"><div class="inst-icon">⚡</div><div class="inst-text"><h4>Slice Combos</h4><p>Slice 2+ fruits in one swipe for bonus multipliers!</p></div></div>
-                <div class="instruction-item"><div class="inst-icon">💣</div><div class="inst-text"><h4>Dodge Bombs</h4><p>Do NOT slice skull bombs! Deducts 10 pts & 5s.</p></div></div>
-                <div class="instruction-item"><div class="inst-icon">⏱️</div><div class="inst-text"><h4>Beat the 60s Clock</h4><p>Score as many points as possible before time expires.</p></div></div>
-              </div>
-              <button id="btn-close-instructions" class="btn-primary" style="font-size: 1.2rem; padding: 12px 20px;">GOT IT, LET'S SLICE!</button>
-            </div>
-          </section>
-
-          <section id="pause-overlay" class="overlay hidden">
-            <div class="overlay-content">
-              <h2 class="game-title" style="font-size: 2.4rem;">PAUSED</h2>
-              <p style="color: var(--text-muted); font-size: 0.95rem;">Take a breath, blade master.</p>
-              <button id="btn-resume" class="btn-primary"><span>▶️</span> RESUME</button>
-              <div class="btn-group">
-                <button id="btn-restart-pause" class="btn-secondary"><span>🔄</span> Restart</button>
-                <button id="btn-menu-pause" class="btn-secondary"><span>🏠</span> Menu</button>
-              </div>
-            </div>
-          </section>
-
-          <section id="game-over-overlay" class="overlay hidden">
-            <div class="overlay-content">
-              <div id="new-record-ribbon" class="new-record-ribbon">🏆 NEW HIGH SCORE!</div>
-              <h2 class="game-title" style="font-size: 2.8rem;">TIME'S UP!</h2>
-              <div style="margin-top: -6px;">
-                <div style="font-size: 0.85rem; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase;">Final Score</div>
-                <div id="final-score-val" class="score-counter" style="font-size: 3.4rem; color: #ffca28; margin: 4px 0;">0</div>
-              </div>
-              <div class="stats-grid">
-                <div class="stat-card"><span class="stat-label">Fruits Sliced</span><span id="stat-sliced-val" class="stat-value">0</span></div>
-                <div class="stat-card highlight"><span class="stat-label">Max Combo</span><span id="stat-combo-val" class="stat-value">None</span></div>
-                <div class="stat-card"><span class="stat-label">Bombs Hit</span><span id="stat-bombs-val" class="stat-value">0</span></div>
-                <div class="stat-card"><span class="stat-label">Game Time</span><span class="stat-value">60s</span></div>
-              </div>
-              <button id="btn-play-again" class="btn-primary"><span>🔄</span> PLAY AGAIN</button>
-              <button id="btn-menu-game-over" class="btn-secondary"><span>🏠</span> Main Menu</button>
-            </div>
-          </section>
-        </div>
-      `;
-
-      this.activeGameInstance = new FruitArcadeGame();
-      setTimeout(() => {
-        if (this.activeGameInstance?.resizeCanvas) {
-          this.activeGameInstance.resizeCanvas();
-        }
-      }, 50);
-    } else if (gameId === 'snake') {
-      this.activeGameInstance = new NeonSnakeGame(viewport, this.sound);
-      this.activeGameInstance.init();
-    } else if (gameId === 'brick-breaker') {
-      this.activeGameInstance = new BrickBreakerGame(viewport, this.sound);
-      this.activeGameInstance.init();
-    } else if (gameId === 'space-shooter') {
-      this.activeGameInstance = new SpaceShooterGame(viewport, this.sound);
-      this.activeGameInstance.init();
-    } else if (gameId === 'puzzle-2048') {
-      this.activeGameInstance = new Puzzle2048Game(viewport, this.sound);
-      this.activeGameInstance.init();
-    } else if (gameId === 'tic-tac-toe') {
-      this.activeGameInstance = new TicTacToeGame(viewport, this.sound);
-      this.activeGameInstance.init();
-    } else if (gameId === 'memory-match') {
-      this.activeGameInstance = new MemoryMatchGame(viewport, this.sound);
-      this.activeGameInstance.init();
-    } else if (gameId === 'endless-runner') {
-      this.activeGameInstance = new EndlessRunnerGame(viewport, this.sound);
-      this.activeGameInstance.init();
-    } else if (gameId === 'block-puzzle') {
-      this.activeGameInstance = new BlockPuzzleGame(viewport, this.sound);
-      this.activeGameInstance.init();
-    } else if (gameId === 'whack-a-mole') {
-      this.activeGameInstance = new WhackAMoleGame(viewport, this.sound);
-      this.activeGameInstance.init();
-    }
+  .btn-row .btn-link {
+    flex: 1 1 100%;
+    text-align: center;
   }
 }
 
-// Bootstrap Arcade Portal
-if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
-  window.addEventListener('DOMContentLoaded', () => {
-    const portal = new ArcadePortal();
-    portal.init();
-  });
+@media (max-width: 650px) {
+  .game-view-header {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px 12px;
+  }
+  .game-view-header .gv-left {
+    flex-wrap: wrap;
+    gap: 10px;
+    min-width: 0;
+  }
+  .game-view-header .gv-actions {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .game-view-header .gv-title {
+    font-size: 1.25rem;
+  }
 }
 
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { ARCADE_GAMES, ArcadePortal, getBestScoreForGame, formatBestScore, categoryLabel };
+@media (prefers-reduced-motion: reduce) {
+  .skip-link,
+  .page-game-card,
+  .nav-links a {
+    transition: none;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================================================================
+   NEW LOOK (appended to pages.css, overrides everything above).
+   Charcoal base, warm white text, one yellow accent, poster-style game cards.
+   ========================================================================== */
+:root {
+  --portal-bg: #101115;
+  --portal-surface: #1a1c22;
+  --portal-surface-hover: #22252d;
+  --portal-border: #2a2d36;
+  --portal-border-glow: rgba(255, 210, 63, 0.55);
+  --cyan: #ffd23f;            /* legacy name = main accent (links, tags, focus) */
+  --neon-blue: #ffd23f;
+  --yellow: #ffd23f;
+  --accent-ink: #15161a;
+  --text-main: #f4f1ea;
+  --text-muted: #9aa0ae;
+  --font-portal: 'DM Sans', system-ui, sans-serif;
+  --font-family: var(--font-portal);
+  --font-arcade: 'Bricolage Grotesque', 'DM Sans', system-ui, sans-serif;
+}
+body { background: var(--portal-bg); font-family: var(--font-portal); }
+.arcade-background { display: none; }
+#portal-app { background: var(--portal-bg); }
+
+.brand-text, .hero-title, .section-title, .card-title, .gv-title, .neon-title, .page-title,
+.game-title, .footer-brand, .stat-value, .score-counter, .timer-counter, .hud-stat .val,
+.stat-box .num, .ttt-status-banner, .gd-col h3, .gv-suggested-title, .js-fallback h1 {
+  font-family: var(--font-arcade); font-weight: 800; letter-spacing: -0.025em;
+}
+
+/* Header */
+.arcade-navbar { background: rgba(16,17,21,.9); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); padding: 12px 32px; border-bottom-color: var(--portal-border); }
+.brand-bolt { animation: none; filter: none; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 10px; background: var(--cyan); color: var(--accent-ink); font-size: 1.05rem; }
+.brand-text { background: none; -webkit-text-fill-color: #fff; color: #fff; font-size: 1.3rem; letter-spacing: -0.02em; }
+.brand-badge { display: none; }
+.nav-search-bar input { height: 44px; border-radius: 999px; background: var(--portal-surface); border-color: var(--portal-border); }
+.nav-search-bar input:focus { border-color: var(--cyan); box-shadow: none; }
+.nav-icon-btn { border-radius: 999px; background: var(--portal-surface); }
+.nav-icon-btn:hover, .nav-icon-btn.active { background: var(--cyan); border-color: var(--cyan); color: var(--accent-ink); transform: none; }
+.nav-links a { font-weight: 500; border-radius: 999px; }
+.nav-links a:hover { background: var(--portal-surface); }
+.nav-links a[aria-current="page"] { background: var(--portal-surface); color: #fff; border-color: transparent; box-shadow: inset 0 -2px 0 var(--cyan); }
+
+/* Buttons: one yellow pill style */
+.hero-play-btn, .card-play-btn, .arcade-btn-primary, .btn-primary, .btn-link, .pgc-play, .sc-btn, .b-btn.action, .nav-links a.nav-cta {
+  background: var(--cyan); color: var(--accent-ink); font-family: var(--font-portal); font-weight: 700;
+  letter-spacing: 0; text-shadow: none; box-shadow: none; animation: none; border: none; border-radius: 999px;
+}
+.btn-primary::before { display: none; }
+.hero-play-btn { font-size: 1.05rem; padding: 14px 30px; }
+.arcade-btn-primary, .btn-primary { font-size: 1.05rem; }
+.hero-play-btn:hover, .card-play-btn:hover, .arcade-btn-primary:hover, .btn-primary:hover, .btn-link:hover, .pgc-play:hover { transform: none; filter: brightness(1.07); box-shadow: none; }
+.btn-secondary, .arcade-btn-secondary, .btn-link.secondary, .hero-fav-btn { background: transparent; border: 1px solid var(--portal-border); color: #fff; border-radius: 999px; box-shadow: none; }
+.btn-secondary:hover, .hero-fav-btn:hover { background: var(--portal-surface); transform: none; border-color: #444956; }
+.hero-fav-btn.favorited { color: var(--cyan); border-color: var(--cyan); background: transparent; }
+
+/* Home hero: big headline + bold colour tile */
+.arcade-hero { margin-top: 40px; gap: 48px; }
+.hero-tag { color: var(--cyan); letter-spacing: .08em; }
+.hero-title { font-size: clamp(2.8rem, 6vw, 4.8rem); line-height: .98; background: none; -webkit-text-fill-color: #fff; color: #fff; filter: none; }
+.hero-description { color: #c9cdd8; font-size: 1.1rem; }
+.meta-item { background: var(--portal-surface); border-radius: 999px; }
+.hero-badge-card { max-width: 460px; border: none; border-radius: 28px; box-shadow: 0 24px 60px rgba(0,0,0,.5); animation: none; }
+.hero-large-icon { font-size: 8rem; transform: rotate(-8deg); }
+.hero-visual-ribbon { background: rgba(16,17,21,.7); border-radius: 999px; letter-spacing: .04em; font-size: .85rem; }
+
+/* Categories: chips, active = solid light */
+.section-title { font-size: 1.9rem; }
+.cat-pill { height: 40px; padding: 0 18px; border-radius: 999px; background: var(--portal-surface); color: #fff; font-weight: 500; }
+.cat-pill:hover { background: var(--portal-surface-hover); border-color: #444956; }
+.cat-pill.active { background: #f4f1ea; color: var(--accent-ink); border-color: #f4f1ea; box-shadow: none; }
+.recent-chip { border-radius: 999px; background: var(--portal-surface); }
+
+/* Game cards: poster style */
+.games-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 22px 18px; }
+.game-card { background: transparent; border: none; box-shadow: none; border-radius: 20px; overflow: visible; }
+.game-card:hover { transform: none; box-shadow: none; border: none; }
+.card-art { height: auto; aspect-ratio: 1 / 1; border-radius: 20px; transition: transform .2s ease; }
+.game-card:hover .card-art { transform: translateY(-4px); }
+.card-art-icon { font-size: 5rem; transform: rotate(-8deg); }
+.game-card:hover .card-art-icon { transform: rotate(-8deg) scale(1.06); }
+.card-badge { background: rgba(16,17,21,.7); border-radius: 999px; padding: 4px 10px; }
+.card-fav-btn { background: rgba(16,17,21,.7); }
+.card-info { padding: 12px 2px 0; gap: 4px; }
+.card-title { font-size: 1.1rem; }
+.card-desc { font-size: .88rem; }
+.card-footer-row { border-top: none; margin-top: 6px; padding-top: 0; }
+.card-cat-tag, .pgc-cat { background: none; padding: 0; color: var(--text-muted); letter-spacing: .04em; }
+.card-play-btn { padding: 8px 18px; font-size: .88rem; border-radius: 999px; }
+.card-rating { color: var(--cyan); }
+
+/* Game view */
+.game-view-header, .game-details-box, .gv-suggested-section { background: var(--portal-surface); border-radius: 20px; backdrop-filter: none; }
+.btn-back-arcade { border-radius: 999px; }
+.btn-back-arcade:hover { background: var(--cyan); border-color: var(--cyan); color: var(--accent-ink); }
+.gv-cat-badge { background: none; border-color: var(--portal-border); color: var(--text-muted); border-radius: 999px; }
+.gv-btn:hover, .gv-btn.active { background: var(--cyan); border-color: var(--cyan); color: var(--accent-ink); }
+.game-wrapper, #game-container { border-radius: 22px; border-color: var(--portal-border); box-shadow: 0 24px 60px rgba(0,0,0,.45); }
+.overlay-content { background: var(--portal-surface); border-radius: 24px; }
+.game-title, .neon-title { background: none; -webkit-text-fill-color: #fff; color: #fff; filter: none; animation: none; }
+.game-subtitle { color: var(--cyan); }
+.feat-badge { background: var(--portal-surface); border-radius: 999px; box-shadow: none; }
+
+/* Content pages */
+.page-main { max-width: 1040px; padding-top: 48px; }
+.page-hero { background: var(--portal-surface); border-radius: 28px; padding: 52px 44px; box-shadow: none; }
+.page-title { background: none; -webkit-text-fill-color: #fff; color: #fff; font-size: clamp(2.2rem, 5vw, 3.4rem); line-height: 1; }
+.page-lead { color: #c9cdd8; }
+.content-card, .info-card, .toc { background: var(--portal-surface); border-radius: 20px; }
+.toc { border-color: var(--portal-border); }
+.prose h3 { color: #fff; }
+.prose p, .prose li { color: #c9cdd8; }
+.info-card .info-icon { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 14px; background: var(--cyan); font-size: 1.4rem; }
+.contact-form input, .contact-form select, .contact-form textarea { background: #101115; border-radius: 14px; }
+.contact-form input:focus, .contact-form select:focus, .contact-form textarea:focus { border-color: var(--cyan); outline: none; }
+
+/* Footer */
+.arcade-footer { background: #0b0c0f; padding-top: 40px; }
+.footer-nav a:hover { color: var(--cyan); border-bottom-color: var(--cyan); }
+.skip-link { color: var(--accent-ink); }
+
+@media (max-width: 650px) {
+  .arcade-navbar { padding: 10px 14px; }
+  .arcade-hero { margin-top: 20px; gap: 24px; }
+  .page-hero { padding: 30px 20px; }
+  .games-grid { grid-template-columns: repeat(2, 1fr); gap: 18px 12px; }
+  .card-art-icon { font-size: 3.6rem; }
+}
+
+/* ==========================================================================
+   HOME LAYOUT: full-width featured banner + dense game grid.
+   Works on the markup arcade.js already renders (no JS changes needed).
+   ========================================================================== */
+.arcade-hero {
+  position: relative; display: block; isolation: isolate; overflow: hidden;
+  width: calc(100% - 48px); max-width: 1240px; min-height: 460px;
+  margin: 28px auto 8px; padding: 0; border-radius: 28px; text-align: left;
+}
+.hero-visual { position: absolute; inset: 0; z-index: -1; display: block; }
+.hero-badge-card {
+  position: absolute; inset: 0; width: 100%; max-width: none; aspect-ratio: auto;
+  border: none; border-radius: 0; box-shadow: none; animation: none;
+}
+.hero-badge-card::before {
+  content: ""; position: absolute; inset: 0;
+  background: radial-gradient(circle at 78% 25%, rgba(255,255,255,.3), transparent 45%),
+              repeating-linear-gradient(135deg, rgba(255,255,255,.07) 0 16px, transparent 16px 32px);
+}
+.hero-badge-card::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, rgba(10,10,14,.8) 0%, rgba(10,10,14,.4) 52%, transparent 80%);
+}
+.hero-large-icon {
+  position: absolute; right: 8%; top: 50%; z-index: 1;
+  transform: translateY(-50%) rotate(-8deg);
+  font-size: clamp(9rem, 22vw, 17rem); filter: drop-shadow(0 22px 30px rgba(0,0,0,.4));
+}
+.hero-visual-ribbon { display: none; }
+.hero-content { position: relative; z-index: 2; max-width: 640px; min-height: 460px; justify-content: flex-end; align-items: flex-start; padding: 56px 48px; }
+.hero-description { color: #fff; opacity: .92; }
+.hero-meta { flex-wrap: wrap; justify-content: flex-start; }
+.meta-item { background: rgba(10,10,14,.55); border-color: rgba(255,255,255,.14); }
+.hero-actions { justify-content: flex-start; }
+.hero-fav-btn { background: rgba(10,10,14,.45); }
+
+/* Drop the feature-badge row; denser, cleaner grid */
+.platform-features-strip { display: none; }
+.catalog-header-section { margin-top: 36px; }
+.games-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+.card-desc { display: none; }
+.card-info { gap: 2px; }
+
+@media (max-width: 650px) {
+  .arcade-hero { width: calc(100% - 24px); min-height: 420px; margin-top: 16px; border-radius: 22px; }
+  .hero-content { min-height: 420px; padding: 28px 22px; }
+  .hero-badge-card::after { background: linear-gradient(180deg, rgba(10,10,14,.05) 20%, rgba(10,10,14,.88) 80%); }
+  .hero-large-icon { right: 50%; top: 28%; transform: translate(50%, -50%) rotate(-8deg); font-size: 8rem; }
+  .hero-title { font-size: 2.6rem; }
 }
