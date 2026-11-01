@@ -800,3 +800,54 @@ body { background: var(--portal-bg); font-family: var(--font-portal); }
   .games-grid { grid-template-columns: repeat(2, 1fr); gap: 18px 12px; }
   .card-art-icon { font-size: 3.6rem; }
 }
+
+/* ==========================================================================
+   HOME LAYOUT: full-width featured banner + dense game grid.
+   Works on the markup arcade.js already renders (no JS changes needed).
+   ========================================================================== */
+.arcade-hero {
+  position: relative; display: block; isolation: isolate; overflow: hidden;
+  width: calc(100% - 48px); max-width: 1240px; min-height: 460px;
+  margin: 28px auto 8px; padding: 0; border-radius: 28px; text-align: left;
+}
+.hero-visual { position: absolute; inset: 0; z-index: -1; display: block; }
+.hero-badge-card {
+  position: absolute; inset: 0; width: 100%; max-width: none; aspect-ratio: auto;
+  border: none; border-radius: 0; box-shadow: none; animation: none;
+}
+.hero-badge-card::before {
+  content: ""; position: absolute; inset: 0;
+  background: radial-gradient(circle at 78% 25%, rgba(255,255,255,.3), transparent 45%),
+              repeating-linear-gradient(135deg, rgba(255,255,255,.07) 0 16px, transparent 16px 32px);
+}
+.hero-badge-card::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, rgba(10,10,14,.8) 0%, rgba(10,10,14,.4) 52%, transparent 80%);
+}
+.hero-large-icon {
+  position: absolute; right: 8%; top: 50%; z-index: 1;
+  transform: translateY(-50%) rotate(-8deg);
+  font-size: clamp(9rem, 22vw, 17rem); filter: drop-shadow(0 22px 30px rgba(0,0,0,.4));
+}
+.hero-visual-ribbon { display: none; }
+.hero-content { position: relative; z-index: 2; max-width: 640px; min-height: 460px; justify-content: flex-end; align-items: flex-start; padding: 56px 48px; }
+.hero-description { color: #fff; opacity: .92; }
+.hero-meta { flex-wrap: wrap; justify-content: flex-start; }
+.meta-item { background: rgba(10,10,14,.55); border-color: rgba(255,255,255,.14); }
+.hero-actions { justify-content: flex-start; }
+.hero-fav-btn { background: rgba(10,10,14,.45); }
+
+/* Drop the feature-badge row; denser, cleaner grid */
+.platform-features-strip { display: none; }
+.catalog-header-section { margin-top: 36px; }
+.games-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+.card-desc { display: none; }
+.card-info { gap: 2px; }
+
+@media (max-width: 650px) {
+  .arcade-hero { width: calc(100% - 24px); min-height: 420px; margin-top: 16px; border-radius: 22px; }
+  .hero-content { min-height: 420px; padding: 28px 22px; }
+  .hero-badge-card::after { background: linear-gradient(180deg, rgba(10,10,14,.05) 20%, rgba(10,10,14,.88) 80%); }
+  .hero-large-icon { right: 50%; top: 28%; transform: translate(50%, -50%) rotate(-8deg); font-size: 8rem; }
+  .hero-title { font-size: 2.6rem; }
+}
