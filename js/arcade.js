@@ -9,15 +9,16 @@ const ARCADE_GAMES = [
     id: 'fruit-slice',
     title: 'Fruit Slice',
     category: 'action',
-    badge: 'POPULAR',
+    badge: 'REFLEX',
     icon: '🍉',
     gradient: 'linear-gradient(135deg, #ff4757 0%, #ffa502 100%)',
     description: 'Swift blade slashing arcade! Slice juicy watermelons, oranges, and pineapples in 60 seconds while avoiding hazard skull bombs.',
-    rating: 4.9,
-    plays: '28.4k',
     featured: true,
     tags: ['blade', 'fruits', 'slicing', 'reflex'],
-    controls: 'Mouse Drag or Touch Swipe across flying fruits.'
+    controls: 'Mouse Drag or Touch Swipe across flying fruits.',
+    scoreKey: 'fruit_arcade_high_score',
+    scoreLabel: 'Best score',
+    scoreUnit: ''
   },
   {
     id: 'snake',
@@ -27,39 +28,42 @@ const ARCADE_GAMES = [
     icon: '🐍',
     gradient: 'linear-gradient(135deg, #00d2d3 0%, #10ac84 100%)',
     description: 'Cybernetic slither game! Eat glowing apples, track down golden stars for 50-point bonuses, and conquer the cyber grid.',
-    rating: 4.8,
-    plays: '22.1k',
     featured: true,
     tags: ['retro', 'grid', 'cyber', 'classic'],
-    controls: 'Arrow Keys / WASD, Swipe, or Virtual D-Pad.'
+    controls: 'Arrow Keys / WASD, Swipe, or Virtual D-Pad.',
+    scoreKey: 'arcade_snake_highscore',
+    scoreLabel: 'Best score',
+    scoreUnit: ''
   },
   {
     id: 'brick-breaker',
     title: 'Brick Breaker',
     category: 'arcade',
-    badge: 'HOT',
+    badge: 'BREAKOUT',
     icon: '🧱',
     gradient: 'linear-gradient(135deg, #ffa502 0%, #ff4757 100%)',
     description: 'High-octane breakout action with angle deflections, multi-ball capsules, paddle expanders, and 3 progressive stages.',
-    rating: 4.9,
-    plays: '19.6k',
     featured: false,
     tags: ['breakout', 'paddle', 'ball', 'powerups'],
-    controls: 'Mouse Drag, Left/Right Arrows, or Touch Screen.'
+    controls: 'Mouse Drag, Left/Right Arrows, or Touch Screen.',
+    scoreKey: 'arcade_bricks_highscore',
+    scoreLabel: 'Best score',
+    scoreUnit: ''
   },
   {
     id: 'space-shooter',
     title: 'Space Shooter',
     category: 'action',
-    badge: 'HOT',
+    badge: 'SHOOTER',
     icon: '🚀',
     gradient: 'linear-gradient(135deg, #5f27cd 0%, #00d2d3 100%)',
     description: 'Vertical parallax space combat! Blast alien drones, dodge laser cruisers, crack tumbling asteroids, and trigger smart bombs.',
-    rating: 4.9,
-    plays: '24.7k',
     featured: true,
     tags: ['space', 'aliens', 'lasers', 'shooter'],
-    controls: 'Arrow Keys / Mouse / Drag to fly + Spacebar or Fire button.'
+    controls: 'Arrow Keys / Mouse / Drag to fly + Spacebar or Fire button.',
+    scoreKey: 'arcade_space_highscore',
+    scoreLabel: 'Best score',
+    scoreUnit: ''
   },
   {
     id: 'puzzle-2048',
@@ -69,11 +73,12 @@ const ARCADE_GAMES = [
     icon: '🔢',
     gradient: 'linear-gradient(135deg, #ff9f43 0%, #ee5253 100%)',
     description: 'Smooth 4x4 tile-sliding puzzle. Merge matching powers of 2, plan with Undo, and engineer the mythical 2048 core!',
-    rating: 4.7,
-    plays: '18.3k',
     featured: false,
     tags: ['numbers', 'merge', 'logic', 'strategy'],
-    controls: 'Arrow Keys / WASD, Swipe, or Touch D-Pad.'
+    controls: 'Arrow Keys / WASD, Swipe, or Touch D-Pad.',
+    scoreKey: 'arcade_2048_highscore',
+    scoreLabel: 'Best score',
+    scoreUnit: ''
   },
   {
     id: 'tic-tac-toe',
@@ -83,11 +88,12 @@ const ARCADE_GAMES = [
     icon: '✕◯',
     gradient: 'linear-gradient(135deg, #0abde3 0%, #ee5253 100%)',
     description: 'Cyber neon battle of wits! Challenge the unbeatable Minimax AI or pass-and-play locally with a friend on the same device.',
-    rating: 4.6,
-    plays: '15.2k',
     featured: false,
     tags: ['minimax', 'ai', 'pvp', 'turn-based'],
-    controls: 'Click or Tap cells to place X and O.'
+    controls: 'Click or Tap cells to place X and O.',
+    scoreKey: null,
+    scoreLabel: 'Best score',
+    scoreUnit: ''
   },
   {
     id: 'memory-match',
@@ -97,25 +103,28 @@ const ARCADE_GAMES = [
     icon: '🃏',
     gradient: 'linear-gradient(135deg, #10ac84 0%, #1dd1a1 100%)',
     description: 'Interactive 3D card-flipping brain teaser with 8 pairs of arcade relics, match streaks, timer, and 3-star ratings.',
-    rating: 4.8,
-    plays: '16.9k',
     featured: false,
     tags: ['cards', 'flip', 'pairs', 'memory'],
-    controls: 'Click or Tap cards to reveal matching pairs.'
+    controls: 'Click or Tap cards to reveal matching pairs.',
+    scoreKey: 'arcade_memory_best',
+    scoreLabel: 'Fewest moves',
+    scoreUnit: ' moves',
+    scoreLowerIsBetter: true
   },
   {
     id: 'endless-runner',
     title: 'Endless Runner',
     category: 'action',
-    badge: 'POPULAR',
+    badge: 'RUNNER',
     icon: '🏃',
     gradient: 'linear-gradient(135deg, #2e86de 0%, #ff9f43 100%)',
     description: 'Sprint across neon rooftops! Leap spikes with double-jump and duck under laser drones with fluid slide maneuvers.',
-    rating: 4.9,
-    plays: '26.1k',
     featured: false,
     tags: ['ninja', 'parkour', 'jump', 'slide'],
-    controls: 'Space / Up Arrow to Jump, Down Arrow to Slide.'
+    controls: 'Space / Up Arrow to Jump, Down Arrow to Slide.',
+    scoreKey: 'arcade_runner_highscore',
+    scoreLabel: 'Best score',
+    scoreUnit: ''
   },
   {
     id: 'block-puzzle',
@@ -125,11 +134,12 @@ const ARCADE_GAMES = [
     icon: '🟦',
     gradient: 'linear-gradient(135deg, #341f97 0%, #00d2d3 100%)',
     description: 'Timeless falling polyominoes arcade with 7 tetrominoes, ghost landing projection, next preview queue, hold piece, and hard drop.',
-    rating: 5.0,
-    plays: '31.5k',
     featured: true,
     tags: ['tetris', 'blocks', 'lines', 'retro'],
-    controls: 'Left/Right, Up to Rotate, Space for Hard Drop, C to Hold.'
+    controls: 'Left/Right, Up to Rotate, Space for Hard Drop, C to Hold.',
+    scoreKey: 'arcade_blocks_highscore',
+    scoreLabel: 'Best score',
+    scoreUnit: ''
   },
   {
     id: 'whack-a-mole',
@@ -139,13 +149,44 @@ const ARCADE_GAMES = [
     icon: '🔨',
     gradient: 'linear-gradient(135deg, #ff6b6b 0%, #feca57 100%)',
     description: 'Rapid-fire cyber reflex test! Whack pop-up moles, rack up combo multipliers, bag golden stars, and dodge ticking hazard bombs.',
-    rating: 4.7,
-    plays: '17.4k',
     featured: false,
     tags: ['reflex', 'hammer', 'whack', 'combo'],
-    controls: 'Click or Tap moles as fast as they appear.'
+    controls: 'Click or Tap moles as fast as they appear.',
+    scoreKey: 'arcade_mole_highscore',
+    scoreLabel: 'Best score',
+    scoreUnit: ''
   }
 ];
+
+/**
+ * Reads the player's real best result for a game from browser storage.
+ * Returns a positive whole number, or null when nothing has been saved yet
+ * (or when the game does not track a score). Nothing is invented: the value
+ * comes only from the score the game itself saved on this device.
+ */
+function getBestScoreForGame(game, storage) {
+  if (!game || !game.scoreKey || !storage) return null;
+  try {
+    const raw = storage.getItem(game.scoreKey);
+    const n = parseInt(raw, 10);
+    if (!Number.isFinite(n) || n <= 0) return null;
+    // Memory Match uses 999 as its "no record yet" value (fewer moves is better)
+    if (game.scoreLowerIsBetter && n >= 999) return null;
+    return n;
+  } catch (e) {
+    return null;
+  }
+}
+
+/** Formats a best score for display, e.g. "1,250" or "14 moves". */
+function formatBestScore(game, value) {
+  return value.toLocaleString('en-US') + (game.scoreUnit || '');
+}
+
+/** "action" -> "Action" */
+function categoryLabel(game) {
+  return game.category.charAt(0).toUpperCase() + game.category.slice(1);
+}
 
 class ArcadePortal {
   constructor() {
@@ -196,6 +237,38 @@ class ArcadePortal {
     }
   }
 
+  /** The player's real best result for a game (number) or null. */
+  getBestScore(game) {
+    return getBestScoreForGame(game, typeof localStorage !== 'undefined' ? localStorage : null);
+  }
+
+  /** Text for the "your best" display in the game details panel. */
+  bestScoreText(game) {
+    if (!game.scoreKey) return 'Not tracked';
+    const best = this.getBestScore(game);
+    return best === null ? 'No score yet' : formatBestScore(game, best);
+  }
+
+  /** Keeps the game-details best score current while a game is being played. */
+  startBestScoreRefresh(game) {
+    this.stopBestScoreRefresh();
+    if (!game.scoreKey || typeof document === 'undefined') return;
+    this.bestScoreTimer = setInterval(() => {
+      const el = document.getElementById('gd-best-score');
+      if (el) el.textContent = this.bestScoreText(game);
+    }, 1500);
+    if (this.bestScoreTimer && typeof this.bestScoreTimer.unref === 'function') {
+      this.bestScoreTimer.unref();
+    }
+  }
+
+  stopBestScoreRefresh() {
+    if (this.bestScoreTimer) {
+      clearInterval(this.bestScoreTimer);
+      this.bestScoreTimer = null;
+    }
+  }
+
   handleHashChange() {
     const hash = window.location.hash || '#';
 
@@ -242,6 +315,7 @@ class ArcadePortal {
 
   showHomeView() {
     this.currentRoute = 'home';
+    this.stopBestScoreRefresh();
 
     // Clean up any active running game
     if (this.activeGameInstance) {
@@ -274,6 +348,7 @@ class ArcadePortal {
 
     const featuredGame = this.games.find(g => g.id === 'fruit-slice') || this.games[0];
     const isFeatFav = this.favorites.includes(featuredGame.id);
+    const featuredBest = this.getBestScore(featuredGame);
 
     homeView.innerHTML = `
       <!-- Arcade Navigation Header -->
@@ -303,13 +378,13 @@ class ArcadePortal {
       <!-- Hero Section with Featured Showcase -->
       <section class="arcade-hero">
         <div class="hero-content">
-          <div class="hero-tag">🌟 FEATURED GAME OF THE DAY</div>
+          <div class="hero-tag">🌟 FEATURED GAME</div>
           <h1 class="hero-title">${featuredGame.title.toUpperCase()}</h1>
           <p class="hero-description">${featuredGame.description}</p>
           <div class="hero-meta">
-            <span class="meta-item">⭐ ${featuredGame.rating}</span>
-            <span class="meta-item">🎮 ${featuredGame.plays} Plays</span>
-            <span class="meta-item">🕹️ Action / Reflex</span>
+            <span class="meta-item">🕹️ ${categoryLabel(featuredGame)}</span>
+            <span class="meta-item">🏆 ${featuredBest === null ? 'Play to set a score' : 'Your best: ' + formatBestScore(featuredGame, featuredBest)}</span>
+            <span class="meta-item">🆓 Free to play</span>
           </div>
           <div class="hero-actions">
             <button class="hero-play-btn" onclick="window.ArcadePortal.openGame('${featuredGame.id}')">
@@ -483,6 +558,7 @@ class ArcadePortal {
 
     grid.innerHTML = filtered.map(game => {
       const isFav = this.favorites.includes(game.id);
+      const best = this.getBestScore(game);
       return `
         <div class="game-card" data-id="${game.id}" onclick="window.ArcadePortal.openGame('${game.id}')">
           <div class="card-art" style="background: ${game.gradient};">
@@ -497,7 +573,7 @@ class ArcadePortal {
           <div class="card-info">
             <div class="card-header-row">
               <h3 class="card-title">${game.title}</h3>
-              <span class="card-rating">⭐ ${game.rating}</span>
+              ${best === null ? '' : `<span class="card-rating" title="Your best on this device">🏆 ${formatBestScore(game, best)}</span>`}
             </div>
             <p class="card-desc">${game.description}</p>
             <div class="card-footer-row">
@@ -530,6 +606,7 @@ class ArcadePortal {
     }
 
     this.currentRoute = 'game';
+    this.stopBestScoreRefresh();
     this.currentGameId = gameId;
     this.setPageTitle(`Play ${game.title} Free Online | Neo Arcade Vault`);
     this.recordPlay(gameId);
@@ -608,14 +685,18 @@ class ArcadePortal {
           </p>
         </div>
         <div class="gd-col stats-box">
-          <h3>🏆 ARCADE RECORDS</h3>
+          <h3>🏆 YOUR RECORDS</h3>
           <div class="gd-stat-row">
-            <span>RATING</span>
-            <span style="color: #fffa65;">⭐ ${game.rating} / 5.0</span>
+            <span>CATEGORY</span>
+            <span style="color: #fffa65;">${categoryLabel(game)}</span>
           </div>
           <div class="gd-stat-row">
-            <span>TOTAL SESSIONS</span>
-            <span style="color: #00d2d3;">${game.plays}</span>
+            <span>${game.scoreLabel.toUpperCase()}</span>
+            <span id="gd-best-score" style="color: #00d2d3;">${this.bestScoreText(game)}</span>
+          </div>
+          <div class="gd-stat-row">
+            <span>SAVED</span>
+            <span>This device only</span>
           </div>
         </div>
       </div>
@@ -677,6 +758,7 @@ class ArcadePortal {
     // Mount Game Instance
     const viewport = document.getElementById('game-viewport');
     this.mountGame(game.id, viewport);
+    this.startBestScoreRefresh(game);
   }
 
   updateGameViewFavBtn() {
@@ -862,5 +944,5 @@ if (typeof window !== 'undefined' && typeof window.addEventListener === 'functio
 }
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { ARCADE_GAMES, ArcadePortal };
+  module.exports = { ARCADE_GAMES, ArcadePortal, getBestScoreForGame, formatBestScore, categoryLabel };
 }
