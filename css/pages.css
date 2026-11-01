@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Sans:wght@400;500;700&display=swap');
 /* ==========================================================================
    NEO ARCADE VAULT - SITE PAGES (About, Contact, Privacy, Terms, Games, 404)
    Shared navigation / footer additions used by the arcade portal as well.
@@ -673,199 +673,130 @@ mark.placeholder {
 }
 
 /* ==========================================================================
-   MODERN THEME (appended; overrides everything above)
+   NEW LOOK (appended to pages.css, overrides everything above).
+   Charcoal base, warm white text, one yellow accent, poster-style game cards.
    ========================================================================== */
 :root {
-  /* Surfaces: deep blue-black with real layering */
-  --portal-bg: #0a0c14;
-  --portal-surface: #121624;
-  --portal-surface-hover: #181d30;
-  --portal-border: rgba(255, 255, 255, 0.07);
-  --portal-border-glow: rgba(139, 123, 255, 0.45);
-
-  /* One brand accent (violet) + a calm secondary (mint). Red/orange stay for game semantics. */
-  --cyan: #9a8cff;          /* legacy name: now the brand accent used for links, tags, focus */
-  --neon-blue: #9a8cff;
-  --brand: #7c5cff;
-  --brand-2: #4f8dff;
-  --mint: #3ee6b0;
-  --yellow: #ffd166;
-
-  --text-main: #e8ebf4;
-  --text-muted: #8a93ab;
-
-  /* Replace the cartoon face with a clean geometric one */
-  --font-portal: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --portal-bg: #101115;
+  --portal-surface: #1a1c22;
+  --portal-surface-hover: #22252d;
+  --portal-border: #2a2d36;
+  --portal-border-glow: rgba(255, 210, 63, 0.55);
+  --cyan: #ffd23f;            /* legacy name = main accent (links, tags, focus) */
+  --neon-blue: #ffd23f;
+  --yellow: #ffd23f;
+  --accent-ink: #15161a;
+  --text-main: #f4f1ea;
+  --text-muted: #9aa0ae;
+  --font-portal: 'DM Sans', system-ui, sans-serif;
   --font-family: var(--font-portal);
-  --font-arcade: 'Sora', 'Inter', system-ui, sans-serif;
-
-  --btn-grad: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
-  --radius: 16px;
+  --font-arcade: 'Bricolage Grotesque', 'DM Sans', system-ui, sans-serif;
 }
-
 body { background: var(--portal-bg); font-family: var(--font-portal); }
+.arcade-background { display: none; }
+#portal-app { background: var(--portal-bg); }
 
-/* Quieter background: faint grid + one soft glow instead of two loud orbs */
-.arcade-grid { opacity: 0.35; background-size: 56px 56px; }
-.ambient-flare { opacity: 0.12; filter: blur(120px); }
-.flare-1 { background: var(--brand); }
-.flare-2 { background: var(--brand-2); }
-
-/* Sora needs tighter tracking than Luckiest Guy */
-.brand-text, .hero-title, .section-title, .card-title, .gv-title, .neon-title,
-.page-title, .game-title, .footer-brand, .stat-value, .score-counter, .timer-counter,
-.hud-stat .val, .stat-box .num, .ttt-status-banner, .gd-col h3, .gv-suggested-title {
-  font-family: var(--font-arcade);
-  letter-spacing: -0.02em;
-  font-weight: 700;
+.brand-text, .hero-title, .section-title, .card-title, .gv-title, .neon-title, .page-title,
+.game-title, .footer-brand, .stat-value, .score-counter, .timer-counter, .hud-stat .val,
+.stat-box .num, .ttt-status-banner, .gd-col h3, .gv-suggested-title, .js-fallback h1 {
+  font-family: var(--font-arcade); font-weight: 800; letter-spacing: -0.025em;
 }
 
-/* ---------- Navigation ---------- */
-.arcade-navbar {
-  background: rgba(10, 12, 20, 0.8);
-  backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
-  padding: 14px 32px;
-}
-.brand-bolt { animation: none; filter: none; color: var(--brand); }
-.brand-text { font-size: 1.25rem; background: none; -webkit-text-fill-color: #fff; color: #fff; }
-.brand-badge { background: rgba(124, 92, 255, 0.18); color: var(--cyan); border: 1px solid var(--portal-border-glow); letter-spacing: 0.08em; }
+/* Header */
+.arcade-navbar { background: rgba(16,17,21,.9); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); padding: 12px 32px; border-bottom-color: var(--portal-border); }
+.brand-bolt { animation: none; filter: none; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 10px; background: var(--cyan); color: var(--accent-ink); font-size: 1.05rem; }
+.brand-text { background: none; -webkit-text-fill-color: #fff; color: #fff; font-size: 1.3rem; letter-spacing: -0.02em; }
+.brand-badge { display: none; }
+.nav-search-bar input { height: 44px; border-radius: 999px; background: var(--portal-surface); border-color: var(--portal-border); }
+.nav-search-bar input:focus { border-color: var(--cyan); box-shadow: none; }
+.nav-icon-btn { border-radius: 999px; background: var(--portal-surface); }
+.nav-icon-btn:hover, .nav-icon-btn.active { background: var(--cyan); border-color: var(--cyan); color: var(--accent-ink); transform: none; }
+.nav-links a { font-weight: 500; border-radius: 999px; }
+.nav-links a:hover { background: var(--portal-surface); }
+.nav-links a[aria-current="page"] { background: var(--portal-surface); color: #fff; border-color: transparent; box-shadow: inset 0 -2px 0 var(--cyan); }
 
-.nav-search-bar input { background: rgba(255,255,255,0.04); border-radius: 12px; }
-.nav-search-bar input:focus { border-color: var(--brand); box-shadow: 0 0 0 4px rgba(124,92,255,0.18); }
-.nav-icon-btn { border-radius: 10px; background: rgba(255,255,255,0.04); }
-.nav-icon-btn:hover, .nav-icon-btn.active { background: rgba(124,92,255,0.14); border-color: var(--portal-border-glow); color: #fff; transform: none; }
-
-.nav-links a { border-radius: 10px; font-weight: 600; }
-.nav-links a[aria-current="page"] { background: rgba(124,92,255,0.14); color: #fff; }
-.nav-links a.nav-cta { background: var(--btn-grad); }
-
-/* ---------- Buttons: one consistent primary style ---------- */
-.hero-play-btn, .card-play-btn, .arcade-btn-primary, .btn-primary,
-.btn-link, .pgc-play, .sc-btn, .b-btn.action {
-  background: var(--btn-grad);
-  color: #fff;
-  font-family: var(--font-arcade);
-  font-weight: 600;
-  letter-spacing: 0;
-  text-shadow: none;
-  border: none;
-  box-shadow: 0 6px 20px rgba(124, 92, 255, 0.35);
-  animation: none;
+/* Buttons: one yellow pill style */
+.hero-play-btn, .card-play-btn, .arcade-btn-primary, .btn-primary, .btn-link, .pgc-play, .sc-btn, .b-btn.action, .nav-links a.nav-cta {
+  background: var(--cyan); color: var(--accent-ink); font-family: var(--font-portal); font-weight: 700;
+  letter-spacing: 0; text-shadow: none; box-shadow: none; animation: none; border: none; border-radius: 999px;
 }
 .btn-primary::before { display: none; }
-.hero-play-btn { border-radius: 12px; font-size: 1.05rem; padding: 14px 28px; }
-.card-play-btn { border-radius: 10px; font-size: 0.88rem; }
-.arcade-btn-primary, .btn-primary { border-radius: 12px; font-size: 1.05rem; }
-.btn-link, .pgc-play { border-radius: 12px; }
-.hero-play-btn:hover, .card-play-btn:hover, .arcade-btn-primary:hover,
-.btn-primary:hover, .btn-link:hover, .pgc-play:hover {
-  transform: translateY(-1px); filter: brightness(1.08);
-  box-shadow: 0 10px 28px rgba(124, 92, 255, 0.5);
-}
-.btn-secondary, .arcade-btn-secondary, .btn-link.secondary, .hero-fav-btn {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid var(--portal-border);
-  border-radius: 12px;
-  box-shadow: none;
-}
-.btn-secondary:hover, .hero-fav-btn:hover { background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.18); transform: none; }
+.hero-play-btn { font-size: 1.05rem; padding: 14px 30px; }
+.arcade-btn-primary, .btn-primary { font-size: 1.05rem; }
+.hero-play-btn:hover, .card-play-btn:hover, .arcade-btn-primary:hover, .btn-primary:hover, .btn-link:hover, .pgc-play:hover { transform: none; filter: brightness(1.07); box-shadow: none; }
+.btn-secondary, .arcade-btn-secondary, .btn-link.secondary, .hero-fav-btn { background: transparent; border: 1px solid var(--portal-border); color: #fff; border-radius: 999px; box-shadow: none; }
+.btn-secondary:hover, .hero-fav-btn:hover { background: var(--portal-surface); transform: none; border-color: #444956; }
+.hero-fav-btn.favorited { color: var(--cyan); border-color: var(--cyan); background: transparent; }
 
-/* ---------- Hero ---------- */
-.arcade-hero { margin-top: 48px; margin-bottom: 40px; gap: 56px; }
-.hero-tag { color: var(--mint); letter-spacing: 0.12em; font-weight: 700; }
-.hero-title {
-  font-size: clamp(2.6rem, 5.5vw, 4.4rem);
-  line-height: 1.02;
-  background: none; -webkit-text-fill-color: #fff; color: #fff; filter: none;
-}
-.hero-description { font-size: 1.1rem; line-height: 1.6; }
-.meta-item { border-radius: 10px; background: rgba(255,255,255,0.04); font-weight: 600; }
-.hero-badge-card {
-  border-radius: 28px;
-  border: 1px solid rgba(255,255,255,0.12);
-  box-shadow: 0 30px 80px rgba(0,0,0,0.55), 0 0 60px rgba(124,92,255,0.22);
-}
-.hero-visual-ribbon { font-family: var(--font-arcade); letter-spacing: 0.08em; font-size: 0.8rem; border-radius: 10px; }
+/* Home hero: big headline + bold colour tile */
+.arcade-hero { margin-top: 40px; gap: 48px; }
+.hero-tag { color: var(--cyan); letter-spacing: .08em; }
+.hero-title { font-size: clamp(2.8rem, 6vw, 4.8rem); line-height: .98; background: none; -webkit-text-fill-color: #fff; color: #fff; filter: none; }
+.hero-description { color: #c9cdd8; font-size: 1.1rem; }
+.meta-item { background: var(--portal-surface); border-radius: 999px; }
+.hero-badge-card { max-width: 460px; border: none; border-radius: 28px; box-shadow: 0 24px 60px rgba(0,0,0,.5); animation: none; }
+.hero-large-icon { font-size: 8rem; transform: rotate(-8deg); }
+.hero-visual-ribbon { background: rgba(16,17,21,.7); border-radius: 999px; letter-spacing: .04em; font-size: .85rem; }
 
-/* ---------- Categories ---------- */
-.section-title { font-size: 1.6rem; }
-.cat-pill { border-radius: 999px; background: transparent; font-weight: 600; padding: 8px 18px; }
-.cat-pill:hover { background: rgba(255,255,255,0.05); }
-.cat-pill.active { background: #fff; color: #0a0c14; border-color: #fff; box-shadow: none; }
-.recent-chip { border-radius: 12px; }
+/* Categories: chips, active = solid light */
+.section-title { font-size: 1.9rem; }
+.cat-pill { height: 40px; padding: 0 18px; border-radius: 999px; background: var(--portal-surface); color: #fff; font-weight: 500; }
+.cat-pill:hover { background: var(--portal-surface-hover); border-color: #444956; }
+.cat-pill.active { background: #f4f1ea; color: var(--accent-ink); border-color: #f4f1ea; box-shadow: none; }
+.recent-chip { border-radius: 999px; background: var(--portal-surface); }
 
-/* ---------- Game cards ---------- */
-.games-grid { gap: 20px; }
-.game-card, .page-game-card {
-  background: var(--portal-surface);
-  border-radius: var(--radius);
-  box-shadow: none;
-  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-}
-.game-card:hover, .page-game-card:hover {
-  transform: translateY(-3px);
-  border-color: var(--portal-border-glow);
-  background: var(--portal-surface-hover);
-  box-shadow: 0 18px 40px rgba(0,0,0,0.45);
-}
-.card-art { height: 150px; }
-.card-art::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 55%, rgba(10,12,20,0.55)); pointer-events: none; }
-.card-art-icon { position: relative; z-index: 1; }
-.game-card:hover .card-art-icon { transform: scale(1.08); }
-.card-badge, .card-fav-btn { border-radius: 8px; background: rgba(10,12,20,0.6); }
-.card-fav-btn { border-radius: 50%; }
+/* Game cards: poster style */
+.games-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 22px 18px; }
+.game-card { background: transparent; border: none; box-shadow: none; border-radius: 20px; overflow: visible; }
+.game-card:hover { transform: none; box-shadow: none; border: none; }
+.card-art { height: auto; aspect-ratio: 1 / 1; border-radius: 20px; transition: transform .2s ease; }
+.game-card:hover .card-art { transform: translateY(-4px); }
+.card-art-icon { font-size: 5rem; transform: rotate(-8deg); }
+.game-card:hover .card-art-icon { transform: rotate(-8deg) scale(1.06); }
+.card-badge { background: rgba(16,17,21,.7); border-radius: 999px; padding: 4px 10px; }
+.card-fav-btn { background: rgba(16,17,21,.7); }
+.card-info { padding: 12px 2px 0; gap: 4px; }
 .card-title { font-size: 1.1rem; }
-.card-desc { font-size: 0.88rem; line-height: 1.5; }
-.card-cat-tag, .pgc-cat { color: var(--cyan); background: rgba(124,92,255,0.12); padding: 3px 9px; border-radius: 6px; letter-spacing: 0.06em; }
-.card-rating { color: var(--yellow); }
+.card-desc { font-size: .88rem; }
+.card-footer-row { border-top: none; margin-top: 6px; padding-top: 0; }
+.card-cat-tag, .pgc-cat { background: none; padding: 0; color: var(--text-muted); letter-spacing: .04em; }
+.card-play-btn { padding: 8px 18px; font-size: .88rem; border-radius: 999px; }
+.card-rating { color: var(--cyan); }
 
-/* ---------- Game view ---------- */
-.game-view-header, .game-details-box, .gv-suggested-section { border-radius: var(--radius); background: var(--portal-surface); backdrop-filter: none; }
-.btn-back-arcade { border-radius: 10px; }
-.btn-back-arcade:hover { background: var(--brand); border-color: var(--brand); }
-.gv-title { font-size: 1.35rem; }
-.gv-cat-badge { background: rgba(124,92,255,0.12); border-color: var(--portal-border-glow); color: var(--cyan); }
-.gv-btn { background: rgba(255,255,255,0.05); }
-.gv-btn:hover, .gv-btn.active { border-color: var(--brand); color: #fff; background: rgba(124,92,255,0.2); }
-.game-wrapper, #game-container { border-radius: 20px; box-shadow: 0 24px 70px rgba(0,0,0,0.5), 0 0 0 1px var(--portal-border); border-color: var(--portal-border); }
-.overlay-content { border-radius: 22px; background: linear-gradient(180deg, #181d33 0%, #101424 100%); }
+/* Game view */
+.game-view-header, .game-details-box, .gv-suggested-section { background: var(--portal-surface); border-radius: 20px; backdrop-filter: none; }
+.btn-back-arcade { border-radius: 999px; }
+.btn-back-arcade:hover { background: var(--cyan); border-color: var(--cyan); color: var(--accent-ink); }
+.gv-cat-badge { background: none; border-color: var(--portal-border); color: var(--text-muted); border-radius: 999px; }
+.gv-btn:hover, .gv-btn.active { background: var(--cyan); border-color: var(--cyan); color: var(--accent-ink); }
+.game-wrapper, #game-container { border-radius: 22px; border-color: var(--portal-border); box-shadow: 0 24px 60px rgba(0,0,0,.45); }
+.overlay-content { background: var(--portal-surface); border-radius: 24px; }
 .game-title, .neon-title { background: none; -webkit-text-fill-color: #fff; color: #fff; filter: none; animation: none; }
-.game-subtitle { color: var(--cyan); letter-spacing: 0.14em; }
-.hud-pill, .icon-btn { background: rgba(18,22,36,0.85); }
-.feat-badge { border-radius: 12px; box-shadow: none; }
+.game-subtitle { color: var(--cyan); }
+.feat-badge { background: var(--portal-surface); border-radius: 999px; box-shadow: none; }
 
-/* ---------- Content pages ---------- */
+/* Content pages */
 .page-main { max-width: 1040px; padding-top: 48px; }
-.page-hero {
-  border-radius: 24px;
-  padding: 48px 40px;
-  background:
-    radial-gradient(600px 240px at 90% -20%, rgba(124,92,255,0.22), transparent 70%),
-    var(--portal-surface);
-  box-shadow: none;
-}
-.page-title { background: none; -webkit-text-fill-color: #fff; color: #fff; font-size: clamp(2rem, 5vw, 3rem); }
-.page-lead { font-size: 1.1rem; color: #c3cadb; }
-.content-card, .info-card, .toc { border-radius: var(--radius); background: var(--portal-surface); }
-.toc { background: rgba(124,92,255,0.07); }
-.prose h3 { color: var(--cyan); }
-.prose p, .prose li { color: #bcc4d6; }
-.info-card .info-icon { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 12px; background: rgba(124,92,255,0.14); font-size: 1.4rem; }
+.page-hero { background: var(--portal-surface); border-radius: 28px; padding: 52px 44px; box-shadow: none; }
+.page-title { background: none; -webkit-text-fill-color: #fff; color: #fff; font-size: clamp(2.2rem, 5vw, 3.4rem); line-height: 1; }
+.page-lead { color: #c9cdd8; }
+.content-card, .info-card, .toc { background: var(--portal-surface); border-radius: 20px; }
+.toc { border-color: var(--portal-border); }
+.prose h3 { color: #fff; }
+.prose p, .prose li { color: #c9cdd8; }
+.info-card .info-icon { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 14px; background: var(--cyan); font-size: 1.4rem; }
+.contact-form input, .contact-form select, .contact-form textarea { background: #101115; border-radius: 14px; }
+.contact-form input:focus, .contact-form select:focus, .contact-form textarea:focus { border-color: var(--cyan); outline: none; }
 
-/* Forms */
-.contact-form input, .contact-form select, .contact-form textarea { background: #0e1220; border-radius: 12px; }
-.contact-form input:focus, .contact-form select:focus, .contact-form textarea:focus { border-color: var(--brand); box-shadow: 0 0 0 4px rgba(124,92,255,0.18); outline: none; }
-
-/* Focus + footer */
-a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline-color: var(--mint); }
-.arcade-footer { background: #080a11; border-top: 1px solid var(--portal-border); padding-top: 40px; }
-.footer-brand { font-size: 1.05rem; }
+/* Footer */
+.arcade-footer { background: #0b0c0f; padding-top: 40px; }
 .footer-nav a:hover { color: var(--cyan); border-bottom-color: var(--cyan); }
-.skip-link { background: var(--mint); }
+.skip-link { color: var(--accent-ink); }
 
 @media (max-width: 650px) {
   .arcade-navbar { padding: 10px 14px; }
-  .arcade-hero { margin-top: 24px; gap: 28px; }
-  .page-hero { padding: 28px 20px; }
+  .arcade-hero { margin-top: 20px; gap: 24px; }
+  .page-hero { padding: 30px 20px; }
+  .games-grid { grid-template-columns: repeat(2, 1fr); gap: 18px 12px; }
+  .card-art-icon { font-size: 3.6rem; }
 }
