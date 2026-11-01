@@ -48,7 +48,7 @@ global.localStorage = {
 };
 
 // Import all game classes and portal catalog
-const { ARCADE_GAMES } = require('../js/arcade.js');
+const { ARCADE_GAMES, ArcadePortal, getBestScoreForGame, formatBestScore, categoryLabel } = require('../js/arcade.js');
 const { NeonSnakeGame } = require('../js/games/snake.js');
 const { BrickBreakerGame } = require('../js/games/brick-breaker.js');
 const { SpaceShooterGame } = require('../js/games/space-shooter.js');
@@ -131,7 +131,7 @@ function createMockContainer() {
 test('Catalog contains at least 10 games with complete metadata', () => {
   assert.ok(ARCADE_GAMES.length >= 10, 'Must have at least 10 games');
   const ids = new Set();
-  const requiredFields = ['id', 'title', 'category', 'description', 'controls', 'rating', 'plays', 'tags'];
+  const requiredFields = ['id', 'title', 'category', 'badge', 'description', 'controls', 'tags', 'scoreLabel'];
 
   ARCADE_GAMES.forEach(g => {
     assert.ok(!ids.has(g.id), `Game ID ${g.id} must be unique`);
@@ -358,6 +358,168 @@ test('Arcade Portal: Search filter & favorites storage', () => {
   const snakeQuery = portalData.filter(g => g.title.toLowerCase().includes('snake'));
   assert.strictEqual(snakeQuery.length, 1);
   assert.strictEqual(snakeQuery[0].id, 'snake');
+});
+
+// 12. No invented statistics or unsupported popularity claims
+test('Catalog has no fabricated ratings, play counts or popularity badges', () => {
+  const bannedBadges = ['POPULAR', 'HOT', 'TRENDING', 'TOP RATED', 'BEST SELLER', 'MOST PLAYED', 'FAVORITE'];
+  ARCADE_GAMES.forEach(g => {
+    assert.strictEqual(g.rating, undefined, `${g.id} must not define a rating`);
+    assert.strictEqual(g.plays, undefined, `${g.id} must not define a play count`);
+    assert.ok(!bannedBadges.includes(String(g.badge).toUpperCase()), `${g.id} uses an unsupported popularity badge: ${g.badge}`);
+    assert.ok(typeof g.badge === 'string' && g.badge.length > 0, `${g.id} needs a descriptive badge`);
+  });
+  // Legitimate descriptive labels are preserved
+  const badgeOf = (id) => ARCADE_GAMES.find(g => g.id === id).badge;
+  assert.strictEqual(badgeOf('snake'), 'CLASSIC');
+  assert.strictEqual(badgeOf('memory-match'), 'NEW');
+  assert.strictEqual(badgeOf('whack-a-mole'), 'NEW');
+});
+
+// 13. Best-score metadata must point at the keys the games really save
+test('Catalog score keys match the storage keys used by the game engines', () => {
+  const root = path.join(__dirname, '..', 'js');
+  const sources = [path.join(root, 'game.js')]
+    .concat(fs.readdirSync(path.join(root, 'games')).map(f => path.join(root, 'games', f)))
+    .map(f => fs.readFileSync(f, 'utf8'))
+    .join('\n');
+
+  ARCADE_GAMES.forEach(g => {
+    assert.ok(g.scoreKey === null || typeof g.scoreKey === 'string', `${g.id}: scoreKey must be a string or null`);
+    if (g.scoreKey) {
+      assert.ok(sources.includes(`'${g.scoreKey}'`), `${g.id}: no game engine uses storage key "${g.scoreKey}"`);
+    }
+  });
+  // Tic-Tac-Toe saves no score, so it must not pretend to have one
+  assert.strictEqual(ARCADE_GAMES.find(g => g.id === 'tic-tac-toe').scoreKey, null);
+  assert.strictEqual(ARCADE_GAMES.filter(g => g.scoreKey).length, 9);
+});
+
+// 14. Best score helper reads only genuine saved values
+test('getBestScoreForGame: real values only, safe defaults, lower-is-better handling', () => {
+  const snake = ARCADE_GAMES.find(g => g.id === 'snake');
+  const memory = ARCADE_GAMES.find(g => g.id === 'memory-match');
+  const ttt = ARCADE_GAMES.find(g => g.id === 'tic-tac-toe');
+  const store = (obj) => ({ getItem: (k) => (k in obj ? obj[k] : null) });
+
+  assert.strictEqual(getBestScoreForGame(snake, store({})), null, 'nothing saved -> null');
+  assert.strictEqual(getBestScoreForGame(snake, store({ arcade_snake_highscore: '0' })), null, 'zero -> null');
+  assert.strictEqual(getBestScoreForGame(snake, store({ arcade_snake_highscore: 'abc' })), null, 'garbage -> null');
+  assert.strictEqual(getBestScoreForGame(snake, store({ arcade_snake_highscore: '1250' })), 1250);
+  assert.strictEqual(getBestScoreForGame(memory, store({ arcade_memory_best: '999' })), null, '999 means no record');
+  assert.strictEqual(getBestScoreForGame(memory, store({ arcade_memory_best: '14' })), 14);
+  assert.strictEqual(getBestScoreForGame(ttt, store({ anything: '5' })), null, 'untracked game -> null');
+  assert.strictEqual(getBestScoreForGame(snake, null), null, 'no storage -> null');
+  assert.strictEqual(getBestScoreForGame(snake, { getItem() { throw new Error('blocked'); } }), null, 'blocked storage -> null');
+
+  assert.strictEqual(formatBestScore(snake, 1250), '1,250');
+  assert.strictEqual(formatBestScore(memory, 14), '14 moves');
+  assert.strictEqual(categoryLabel(snake), 'Arcade');
+});
+
+// Helper: run portal rendering against a tiny fake DOM
+function withPortalDom(fn) {
+  const els = {};
+  const getEl = (id) => els[id] || (els[id] = {
+    id, innerHTML: '', textContent: '', style: {},
+    classList: { add() {}, remove() {}, contains: () => false },
+    addEventListener() {}, querySelectorAll: () => []
+  });
+  const prev = {
+    getElementById: global.document.getElementById,
+    scrollTo: global.window.scrollTo,
+    SoundManager: global.SoundManager
+  };
+  global.document.getElementById = getEl;
+  global.window.scrollTo = () => {};
+  global.SoundManager = class { constructor() { this.enabled = true; } playClick() {} toggle() {} };
+  localStorage.clear();
+  try {
+    const portal = new ArcadePortal();
+    portal.mountGame = () => {};   // render only; game engines are tested separately above
+    return fn(portal, els);
+  } finally {
+    global.document.getElementById = prev.getElementById;
+    global.window.scrollTo = prev.scrollTo;
+    global.SoundManager = prev.SoundManager;
+    localStorage.clear();
+  }
+}
+
+// 15. Home page + cards render genuine details and no fake stats
+test('Portal home and cards: real best scores, no ratings, no play counts, 10 cards', () => {
+  withPortalDom((portal, els) => {
+    localStorage.setItem('arcade_snake_highscore', '1250');
+    portal.renderHome();
+    const home = els['home-portal-view'].innerHTML;
+    const grid = els['games-grid'].innerHTML;
+
+    ['⭐', ' Plays', 'POPULAR', '>HOT<', 'OF THE DAY'].forEach(bad => {
+      assert.ok(!home.includes(bad) && !grid.includes(bad), `rendered page must not contain "${bad}"`);
+    });
+    assert.ok(home.includes('Free to play') && home.includes('Action'), 'hero shows genuine details');
+    assert.ok(home.includes('Play to set a score'), 'hero invites a score when none saved');
+    assert.strictEqual((grid.match(/class="game-card"/g) || []).length, 10, 'all 10 cards render');
+    assert.ok(grid.includes('🏆 1,250'), 'saved Neon Snake best score appears on its card');
+    assert.strictEqual((grid.match(/🏆/g) || []).length, 1, 'only games with a saved score show one');
+    assert.ok(grid.includes('REFLEX') && grid.includes('CLASSIC') && grid.includes('NEW'), 'descriptive badges render');
+  });
+});
+
+// 16. Game details panel
+test('Game details: category, real best score, device note; no fake records', () => {
+  withPortalDom((portal, els) => {
+    localStorage.setItem('arcade_memory_best', '14');
+    portal.openGame('memory-match');
+    let view = els['game-portal-view'].innerHTML;
+    assert.ok(view.includes('YOUR RECORDS') && view.includes('FEWEST MOVES') && view.includes('14 moves'));
+    assert.ok(view.includes('Casual') && view.includes('This device only'));
+    assert.ok(view.includes('Click or Tap cards to reveal matching pairs.'), 'controls still shown');
+    ['RATING', 'TOTAL SESSIONS', '⭐', '16.9k'].forEach(bad => assert.ok(!view.includes(bad), `must not contain "${bad}"`));
+
+    portal.openGame('snake');
+    view = els['game-portal-view'].innerHTML;
+    assert.ok(view.includes('BEST SCORE') && view.includes('No score yet'));
+
+    portal.openGame('tic-tac-toe');
+    view = els['game-portal-view'].innerHTML;
+    assert.ok(view.includes('Not tracked'), 'Tic-Tac-Toe does not pretend to track a score');
+
+    portal.showHomeView();
+    assert.ok(!portal.bestScoreTimer, 'refresh timer must stop when leaving the game view');
+  });
+});
+
+// 17. Live refresh of the best score while playing
+test('Best-score refresh updates the panel and cleans up its timer', () => {
+  withPortalDom((portal, els) => {
+    const snake = ARCADE_GAMES.find(g => g.id === 'snake');
+    portal.startBestScoreRefresh(snake);
+    assert.ok(portal.bestScoreTimer, 'timer starts for a tracked game');
+    portal.stopBestScoreRefresh();
+    assert.ok(!portal.bestScoreTimer, 'timer stops');
+    portal.startBestScoreRefresh(ARCADE_GAMES.find(g => g.id === 'tic-tac-toe'));
+    assert.ok(!portal.bestScoreTimer, 'no timer for a game without a score');
+  });
+});
+
+// 18. Search, filters and favorites still work
+test('Portal search, category filters and favorites still work', () => {
+  withPortalDom((portal) => {
+    portal.favorites = ['snake'];
+    const count = () => portal.getFilteredGames().length;
+    assert.strictEqual(count(), 10);
+    portal.searchQuery = 'snake';            assert.strictEqual(count(), 1);
+    portal.searchQuery = 'tetris';           assert.strictEqual(portal.getFilteredGames()[0].id, 'block-puzzle', 'tag search');
+    portal.searchQuery = 'zzz-nothing';      assert.strictEqual(count(), 0);
+    portal.searchQuery = '';
+    portal.selectedCategory = 'puzzle';      assert.strictEqual(count(), 2);
+    portal.selectedCategory = 'action';      assert.strictEqual(count(), 3);
+    portal.selectedCategory = 'favorites';   assert.strictEqual(count(), 1);
+    portal.selectedCategory = 'all';         assert.strictEqual(count(), 10);
+    portal.toggleFavorite('brick-breaker');
+    assert.ok(portal.favorites.includes('brick-breaker') && localStorage.getItem('arcade_favorites').includes('brick-breaker'));
+  });
 });
 
 console.log(`\nResults: ${passedTests}/${totalTests} tests passed.`);
