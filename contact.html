@@ -68,22 +68,25 @@
 
           <div id="form-status" class="notice hidden" role="status" aria-live="polite" tabindex="-1"></div>
 
-          <!-- Replace YOUR_FORM_ID with the ID from your form service (e.g. Formspree). See README. -->
-          <form id="contact-form" class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST" style="margin-top:16px;">
+          <form id="contact-form" class="contact-form" action="https://formspree.io/f/xaeepjol" method="POST" data-fallback-email="zaim926awan@gmail.com" style="margin-top:16px;">
+            <p style="margin:0;font-size:0.85rem;color:var(--text-muted);">Fields marked <span aria-hidden="true">*</span><span class="sr-only">with an asterisk</span> are required.</p>
+
             <div class="form-row">
-              <label for="cf-name">Your name</label>
-              <input id="cf-name" name="name" type="text" autocomplete="name" maxlength="100" required>
+              <label for="cf-name">Your name <span aria-hidden="true">*</span></label>
+              <input id="cf-name" name="name" type="text" autocomplete="name" maxlength="100" required aria-describedby="err-name">
+              <span class="hint" id="err-name" style="color:#ffc9ce;" hidden></span>
             </div>
 
             <div class="form-row">
-              <label for="cf-email">Email address</label>
-              <input id="cf-email" name="email" type="email" autocomplete="email" maxlength="200" required>
-              <span class="hint">We will only use this to reply to you.</span>
+              <label for="cf-email">Email address <span aria-hidden="true">*</span></label>
+              <input id="cf-email" name="email" type="email" autocomplete="email" maxlength="200" required aria-describedby="hint-email err-email">
+              <span class="hint" id="hint-email">We will only use this to reply to you.</span>
+              <span class="hint" id="err-email" style="color:#ffc9ce;" hidden></span>
             </div>
 
             <div class="form-row">
-              <label for="cf-topic">Topic</label>
-              <select id="cf-topic" name="topic" required>
+              <label for="cf-topic">Topic <span aria-hidden="true">*</span></label>
+              <select id="cf-topic" name="topic" required aria-describedby="err-topic">
                 <option value="" disabled selected>Choose a topic</option>
                 <option value="General question">General question</option>
                 <option value="Bug report">Bug report</option>
@@ -92,12 +95,14 @@
                 <option value="Business or advertising">Business or advertising</option>
                 <option value="Other">Other</option>
               </select>
+              <span class="hint" id="err-topic" style="color:#ffc9ce;" hidden></span>
             </div>
 
             <div class="form-row">
-              <label for="cf-message">Message</label>
-              <textarea id="cf-message" name="message" maxlength="3000" required></textarea>
-              <span class="hint">For bug reports, please include the game, your device and your browser.</span>
+              <label for="cf-message">Message <span aria-hidden="true">*</span></label>
+              <textarea id="cf-message" name="message" maxlength="3000" minlength="10" required aria-describedby="hint-message err-message"></textarea>
+              <span class="hint" id="hint-message">For bug reports, please include the game, your device and your browser.</span>
+              <span class="hint" id="err-message" style="color:#ffc9ce;" hidden></span>
             </div>
 
             <!-- Honeypot field to reduce spam; leave empty -->
@@ -108,22 +113,26 @@
 
             <input type="hidden" name="_subject" value="New message from Neo Arcade Vault contact form">
 
-            <div class="form-row consent-row">
-              <input id="cf-consent" name="consent" type="checkbox" value="yes" required>
-              <label for="cf-consent">I have read the <a href="/privacy-policy">Privacy Policy</a> and agree that my details may be used to respond to my message.</label>
+            <div class="form-row">
+              <div class="consent-row" style="display:flex;gap:10px;align-items:flex-start;">
+                <input id="cf-consent" name="consent" type="checkbox" value="yes" required aria-describedby="err-consent" style="width:20px;height:20px;margin-top:3px;flex-shrink:0;">
+                <label for="cf-consent" style="font-weight:500;line-height:1.5;">I have read the <a href="/privacy-policy">Privacy Policy</a> and agree that my details may be used to respond to my message. <span aria-hidden="true">*</span></label>
+              </div>
+              <span class="hint" id="err-consent" style="color:#ffc9ce;" hidden></span>
             </div>
 
             <div>
               <button id="contact-submit" class="btn-link" type="submit">Send message</button>
             </div>
+            <p style="margin:0;font-size:0.85rem;color:var(--text-muted);">Your message is sent through Formspree, a third-party form service. See our <a href="/privacy-policy#contact-data" style="color:var(--cyan);">Privacy Policy</a> for details.</p>
           </form>
         </section>
 
         <aside class="content-card prose" aria-labelledby="other-ways">
           <h2 id="other-ways" style="font-size:1.2rem;">Other ways to reach us</h2>
-          <p><strong>Email:</strong><br><mark class="placeholder">[PLACEHOLDER: contact email address]</mark></p>
-          <p><strong>Typical response time:</strong><br><mark class="placeholder">[PLACEHOLDER: for example "within 3 business days" - only if you can keep it]</mark></p>
-          <p><strong>Postal address:</strong><br><mark class="placeholder">[PLACEHOLDER: mailing address, optional - publish only a real address you are comfortable sharing]</mark></p>
+          <p><strong>Email:</strong><br><a href="mailto:zaim926awan@gmail.com">zaim926awan@gmail.com</a></p>
+          <p><strong>Response time:</strong><br>We aim to reply within 12 hours.</p>
+          <p><strong>Based in:</strong><br>Pakistan</p>
           <p style="font-size:0.9rem;">Your message is handled as described in our <a href="/privacy-policy">Privacy Policy</a>.</p>
         </aside>
       </div>
