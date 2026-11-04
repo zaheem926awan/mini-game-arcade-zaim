@@ -1,179 +1,171 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#090d16">
-  <title>Contact Us | Neo Arcade Vault</title>
-  <meta name="description" content="Contact Neo Arcade Vault to report a bug, suggest a game, ask a question or make a privacy request. Use our contact form.">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://mini-game-arcade-zaim.vercel.app/contact">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E">
+/**
+ * Contact form handler (static-hosting friendly).
+ *
+ * The form posts to a Formspree endpoint set in the <form action="..."> attribute
+ * of contact.html, so no server code is needed on GitHub / Vercel static hosting.
+ *
+ * - Validates the fields inline, with accessible error messages.
+ * - Refuses to send if the form action is not a valid Formspree URL.
+ * - Without JavaScript the form still submits normally to Formspree, with the
+ *   browser's built-in validation.
+ */
+(function () {
+  'use strict';
 
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Neo Arcade Vault">
-  <meta property="og:title" content="Contact Us | Neo Arcade Vault">
-  <meta property="og:description" content="Contact Neo Arcade Vault to report a bug, suggest a game, ask a question or make a privacy request. Use our contact form.">
-  <meta property="og:url" content="https://mini-game-arcade-zaim.vercel.app/contact">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Contact Us | Neo Arcade Vault">
-  <meta name="twitter:description" content="Contact Neo Arcade Vault to report a bug, suggest a game, ask a question or make a privacy request. Use our contact form.">
+  const form = document.getElementById('contact-form');
+  if (!form) return;
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  const statusBox = document.getElementById('form-status');
+  const submitBtn = document.getElementById('contact-submit');
 
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/arcade.css">
-  <link rel="stylesheet" href="/css/pages.css">
-</head>
-<body>
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  const ENDPOINT_PATTERN = /^https:\/\/formspree\.io\/f\/[A-Za-z0-9]+$/;
+  const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const REQUEST_TIMEOUT_MS = 15000;
 
-  <div class="arcade-background" aria-hidden="true">
-    <div class="arcade-grid"></div>
-    <div class="ambient-flare flare-1"></div>
-    <div class="ambient-flare flare-2"></div>
-  </div>
+  const endpointOk = ENDPOINT_PATTERN.test(form.getAttribute('action') || '');
+  const fallbackEmail = form.getAttribute('data-fallback-email') || '';
+  const emailHint = fallbackEmail ? ' You can also email us at ' + fallbackEmail + '.' : '';
 
-  <div id="portal-app">
-    <header>
-      <nav class="arcade-navbar" aria-label="Main navigation">
-        <a class="nav-brand" href="/" aria-label="Neo Arcade Vault - home">
-          <span class="brand-bolt">⚡</span>
-          <span class="brand-text">NEO ARCADE</span>
-          <span class="brand-badge">VAULT</span>
-        </a>
-        <div class="nav-links">
-        <a href="/">Home</a>
-        <a href="/games">Games</a>
-        <a href="/about">About</a>
-        <a href="/contact" aria-current="page">Contact</a>
-        </div>
-      </nav>
-    </header>
+  // JavaScript takes over validation so messages appear next to each field.
+  // (Without JavaScript this attribute is absent and the browser validates.)
+  form.setAttribute('novalidate', '');
 
-    <main id="main-content" class="page-main">
-      <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a> &rsaquo; <span>Contact</span></nav>
+  // Field rules, checked in page order.
+  const rules = [
+    { name: 'name', ok: (el) => el.value.trim().length > 0, message: 'Please enter your name.' },
+    { name: 'email', ok: (el) => EMAIL_PATTERN.test(el.value.trim()), message: 'Please enter a valid email address.' },
+    { name: 'topic', ok: (el) => el.value !== '', message: 'Please choose a topic.' },
+    { name: 'message', ok: (el) => el.value.trim().length >= 10, message: 'Please write a message of at least 10 characters.' },
+    { name: 'consent', ok: (el) => el.checked, message: 'Please confirm that you have read the Privacy Policy.' }
+  ];
 
-      <section class="page-hero">
-        <div class="hero-tag">✉️ CONTACT US</div>
-        <h1 class="page-title">Contact Us</h1>
-        <p class="page-lead">Questions, bug reports, game ideas or privacy requests &mdash; send us a message using the form below. Please do not include passwords or other sensitive personal information.</p>
-      </section>
+  function errorBox(name) {
+    return document.getElementById('err-' + name);
+  }
 
-      <div class="contact-layout">
-        <section class="content-card" aria-labelledby="form-title">
-          <h2 id="form-title" style="font-size:1.35rem;margin-bottom:16px;">Send a message</h2>
+  function showFieldError(el, message) {
+    const box = errorBox(el.name);
+    el.setAttribute('aria-invalid', 'true');
+    el.style.borderColor = '#ff4757';
+    if (box) {
+      box.textContent = message;
+      box.hidden = false;
+    }
+  }
 
-          <div id="form-status" class="notice hidden" role="status" aria-live="polite" tabindex="-1"></div>
+  function clearFieldError(el) {
+    const box = errorBox(el.name);
+    el.removeAttribute('aria-invalid');
+    el.style.borderColor = '';
+    if (box) {
+      box.textContent = '';
+      box.hidden = true;
+    }
+  }
 
-          <form id="contact-form" class="contact-form" action="https://formspree.io/f/xaeepjol" method="POST" data-fallback-email="zaim926awan@gmail.com" style="margin-top:16px;">
-            <p style="margin:0;font-size:0.85rem;color:var(--text-muted);">Fields marked <span aria-hidden="true">*</span><span class="sr-only">with an asterisk</span> are required.</p>
+  /** Validates every field; returns the first invalid element, or null. */
+  function validate() {
+    let firstInvalid = null;
+    rules.forEach((rule) => {
+      const el = form.elements[rule.name];
+      if (!el) return;
+      if (rule.ok(el)) {
+        clearFieldError(el);
+      } else {
+        showFieldError(el, rule.message);
+        if (!firstInvalid) firstInvalid = el;
+      }
+    });
+    return firstInvalid;
+  }
 
-            <div class="form-row">
-              <label for="cf-name">Your name <span aria-hidden="true">*</span></label>
-              <input id="cf-name" name="name" type="text" autocomplete="name" maxlength="100" required aria-describedby="err-name">
-              <span class="hint" id="err-name" style="color:#ffc9ce;" hidden></span>
-            </div>
+  function showStatus(type, message, moveFocus) {
+    statusBox.className = 'notice ' + type;
+    statusBox.textContent = message;
+    statusBox.classList.remove('hidden');
+    if (moveFocus) statusBox.focus(); // only after a submit, never on page load
+  }
 
-            <div class="form-row">
-              <label for="cf-email">Email address <span aria-hidden="true">*</span></label>
-              <input id="cf-email" name="email" type="email" autocomplete="email" maxlength="200" required aria-describedby="hint-email err-email">
-              <span class="hint" id="hint-email">We will only use this to reply to you.</span>
-              <span class="hint" id="err-email" style="color:#ffc9ce;" hidden></span>
-            </div>
+  // Clear a field's error as soon as the visitor edits it.
+  rules.forEach((rule) => {
+    const el = form.elements[rule.name];
+    if (!el) return;
+    el.addEventListener('input', () => clearFieldError(el));
+    el.addEventListener('change', () => clearFieldError(el));
+  });
 
-            <div class="form-row">
-              <label for="cf-topic">Topic <span aria-hidden="true">*</span></label>
-              <select id="cf-topic" name="topic" required aria-describedby="err-topic">
-                <option value="" disabled selected>Choose a topic</option>
-                <option value="General question">General question</option>
-                <option value="Bug report">Bug report</option>
-                <option value="Game suggestion">Game suggestion</option>
-                <option value="Privacy request">Privacy request</option>
-                <option value="Business or advertising">Business or advertising</option>
-                <option value="Other">Other</option>
-              </select>
-              <span class="hint" id="err-topic" style="color:#ffc9ce;" hidden></span>
-            </div>
+  /** Builds a readable message from a Formspree error response, if it sent one. */
+  async function describeError(response) {
+    try {
+      const data = await response.json();
+      if (data && Array.isArray(data.errors) && data.errors.length) {
+        return data.errors.map((e) => e && e.message).filter(Boolean).join(' ');
+      }
+      if (data && typeof data.error === 'string') return data.error;
+    } catch (e) {
+      /* response was not JSON */
+    }
+    return '';
+  }
 
-            <div class="form-row">
-              <label for="cf-message">Message <span aria-hidden="true">*</span></label>
-              <textarea id="cf-message" name="message" maxlength="3000" minlength="10" required aria-describedby="hint-message err-message"></textarea>
-              <span class="hint" id="hint-message">For bug reports, please include the game, your device and your browser.</span>
-              <span class="hint" id="err-message" style="color:#ffc9ce;" hidden></span>
-            </div>
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (submitBtn.disabled) return; // already sending
 
-            <!-- Honeypot field to reduce spam; leave empty -->
-            <div class="hp-field" aria-hidden="true">
-              <label for="cf-website">Leave this field empty</label>
-              <input id="cf-website" name="_gotcha" type="text" tabindex="-1" autocomplete="off">
-            </div>
+    if (!endpointOk) {
+      showStatus('error', 'This form is not set up correctly, so your message was not sent.' + emailHint, true);
+      return;
+    }
 
-            <input type="hidden" name="_subject" value="New message from Neo Arcade Vault contact form">
+    // Honeypot: real visitors never fill this in. Pretend success and send nothing.
+    const honeypot = form.elements['_gotcha'];
+    if (honeypot && honeypot.value) {
+      form.reset();
+      showStatus('success', 'Thank you! Your message has been sent.', true);
+      return;
+    }
 
-            <div class="form-row">
-              <div class="consent-row" style="display:flex;gap:10px;align-items:flex-start;">
-                <input id="cf-consent" name="consent" type="checkbox" value="yes" required aria-describedby="err-consent" style="width:20px;height:20px;margin-top:3px;flex-shrink:0;">
-                <label for="cf-consent" style="font-weight:500;line-height:1.5;">I have read the <a href="/privacy-policy">Privacy Policy</a> and agree that my details may be used to respond to my message. <span aria-hidden="true">*</span></label>
-              </div>
-              <span class="hint" id="err-consent" style="color:#ffc9ce;" hidden></span>
-            </div>
+    const firstInvalid = validate();
+    if (firstInvalid) {
+      showStatus('error', 'Please correct the highlighted fields and try again.', false);
+      firstInvalid.focus();
+      return;
+    }
 
-            <div>
-              <button id="contact-submit" class="btn-link" type="submit">Send message</button>
-            </div>
-            <p style="margin:0;font-size:0.85rem;color:var(--text-muted);">Your message is sent through Formspree, a third-party form service. See our <a href="/privacy-policy#contact-data" style="color:var(--cyan);">Privacy Policy</a> for details.</p>
-          </form>
-        </section>
+    submitBtn.disabled = true;
+    const originalLabel = submitBtn.textContent;
+    submitBtn.textContent = 'Sending...';
 
-        <aside class="content-card prose" aria-labelledby="other-ways">
-          <h2 id="other-ways" style="font-size:1.2rem;">Other ways to reach us</h2>
-          <p><strong>Email:</strong><br><a href="mailto:zaim926awan@gmail.com">zaim926awan@gmail.com</a></p>
-          <p><strong>Response time:</strong><br>We aim to reply within 12 hours.</p>
-          <p><strong>Based in:</strong><br>Pakistan</p>
-          <p style="font-size:0.9rem;">Your message is handled as described in our <a href="/privacy-policy">Privacy Policy</a>.</p>
-        </aside>
-      </div>
+    const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    const timer = controller ? setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS) : null;
 
-      <section class="content-card prose" aria-labelledby="faq">
-        <h2 id="faq">Before you write</h2>
-        <div class="faq-item">
-          <h3>How do I report a bug?</h3>
-          <p>Choose &ldquo;Bug report&rdquo; as the topic and tell us which game you were playing, what you expected to happen, what happened instead, and which device and browser you use.</p>
-        </div>
-        <div class="faq-item">
-          <h3>Can I suggest a new game?</h3>
-          <p>Yes. Choose &ldquo;Game suggestion&rdquo; and describe the idea. We cannot promise that every suggestion will be built, but we read them.</p>
-        </div>
-        <div class="faq-item">
-          <h3>My high scores disappeared. What happened?</h3>
-          <p>Scores and favorites are stored in your browser on your device. They can be removed if you clear your browser&rsquo;s site data, use private browsing, or switch devices. See the <a href="/privacy-policy#local-storage">Privacy Policy</a> for details.</p>
-        </div>
-        <div class="faq-item">
-          <h3>How do I make a privacy request?</h3>
-          <p>Choose &ldquo;Privacy request&rdquo; as the topic. Our <a href="/privacy-policy#your-rights">Privacy Policy</a> explains what we can help with.</p>
-        </div>
-      </section>
-    </main>
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { Accept: 'application/json' },
+        signal: controller ? controller.signal : undefined
+      });
 
-    <footer class="arcade-footer site-footer">
-      <div class="footer-brand"><span class="brand-bolt">⚡</span> NEO ARCADE</div>
-      <p>A free collection of 10 browser mini-games. No downloads, no sign-up.</p>
-      <nav class="footer-nav" aria-label="Footer">
-        <a href="/">Home</a>
-        <a href="/games">Games</a>
-        <a href="/about">About</a>
-        <a href="/contact">Contact</a>
-        <a href="/privacy-policy">Privacy Policy</a>
-        <a href="/terms">Terms &amp; Conditions</a>
-      </nav>
-      <p class="footer-copy">&copy; <span data-year>2026</span> Neo Arcade Vault. All rights reserved.</p>
-    </footer>
-  </div>
-
-  <script src="/js/site-shell.js"></script>
-  <script src="/js/contact.js"></script>
-</body>
-</html>
+      if (response.ok) {
+        form.reset();
+        rules.forEach((rule) => { const el = form.elements[rule.name]; if (el) clearFieldError(el); });
+        showStatus('success', 'Thank you! Your message has been sent. We aim to reply within 12 hours.', true);
+      } else {
+        const detail = await describeError(response);
+        showStatus('error', 'Sorry, your message could not be sent.' + (detail ? ' ' + detail : '') + emailHint, true);
+      }
+    } catch (err) {
+      const timedOut = err && err.name === 'AbortError';
+      showStatus(
+        'error',
+        (timedOut ? 'The request took too long.' : 'Network error. Please check your connection and try again.') + emailHint,
+        true
+      );
+    } finally {
+      if (timer) clearTimeout(timer);
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalLabel;
+    }
+  });
+})();
