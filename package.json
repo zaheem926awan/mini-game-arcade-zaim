@@ -1,6 +1,7 @@
 {
   "name": "fruit-slice-arcade",
   "version": "1.0.0",
+  "private": true,
   "description": "A polished, responsive 60-second fruit slicing arcade mini-game built with vanilla HTML5, Canvas, CSS, and Web Audio API.",
   "scripts": {
     "test": "node tests/game.test.js && node tests/render.test.js && node tests/arcade-games.test.js && node tests/site-structure.test.js",
@@ -14,6 +15,6 @@
     "canvas-game",
     "vanilla-javascript"
   ],
-  "author": "",
-  "license": "MIT"
+  "author": "Neo Arcade Vault",
+  "license": "UNLICENSED"
 }
