@@ -27,7 +27,7 @@ Zero frameworks, zero external image assets, zero build step overheads. Instant 
 
 - **Cyber Dark & Neon Design System**: Deep dark glassmorphism surfaces, glowing neon accents, and responsive typography.
 - **Dynamic Hash Routing**: Single Page Application (SPA) routing (`#/`, `#/game/<id>`, `#/category/<cat>`, `#/favorites`) with full browser history support.
-- **Hero Featured Showcase**: High-impact banner featuring the game of the day with quick launch and stats.
+- **Hero Featured Showcase**: High-impact banner featuring a highlighted game with quick launch and your own best score.
 - **Instant Search & Category Filters**: Real-time filtering across titles, descriptions, categories (Action, Arcade, Puzzle, Strategy, Casual), and tags.
 - **Favorites & Recently Played**: Persisted in `localStorage` across visits.
 - **Unified Game Viewport**: Dedicated game view with breadcrumb navigation (`← Back to Arcade`), fullscreen mode, sound toggle, and instructions guide.
@@ -96,7 +96,7 @@ npm test
    - Whack-a-Mole scoring, combo multipliers, and bomb penalties.
    - Arcade Portal search filtering and favorites persistence.
 
-4. `tests/site-structure.test.js`: Pages exist, unique titles/descriptions, one `<h1>` per page, canonical + Open Graph tags, shared nav/footer, working internal links and anchors, contact form fields, privacy-policy storage-key audit, sitemap/robots, and a list of placeholders still to fill in.
+4. `tests/site-structure.test.js`: Pages exist, unique titles/descriptions, one `<h1>` per page, canonical + Open Graph tags, shared nav/footer, working internal links and anchors, contact form fields and Formspree endpoint, privacy-policy storage-key audit, legal-page consistency (no leftover placeholders, no premature advertising or consent claims, no open-source licence claims), and sitemap/robots.
 
 ---
 
@@ -132,8 +132,8 @@ mini-game-arcade/
 ├── games.html                     # Crawlable list of all 10 games
 ├── about.html                     # About Us
 ├── contact.html                   # Contact form (static-hosting friendly)
-├── privacy-policy.html            # Privacy Policy (contains placeholders)
-├── terms.html                     # Terms & Conditions (contains placeholders)
+├── privacy-policy.html            # Privacy Policy
+├── terms.html                     # Terms & Conditions
 ├── 404.html                       # Custom not-found page
 ├── robots.txt                     # Crawler rules + sitemap location
 ├── sitemap.xml                    # Sitemap of the 6 indexable pages
@@ -153,7 +153,7 @@ mini-game-arcade/
 │   ├── arcade.js                  # Arcade portal: router, catalog, favorites, UI
 │   └── games/                     # The other 9 game engines (unchanged)
 ├── scripts/
-│   └── set-domain.js              # Replaces YOUR-DOMAIN.example with your real domain
+│   └── set-domain.js              # Sets or changes the site domain everywhere (--from, --dry-run)
 └── tests/
     ├── game.test.js               # Fruit Slice unit & integration tests
     ├── render.test.js             # Procedural canvas rendering tests
@@ -163,23 +163,35 @@ mini-game-arcade/
 
 ---
 
-## 🧾 Site Pages, Placeholders & AdSense Checklist
+## 🧾 Site Pages & AdSense Checklist
 
-The legal and contact pages deliberately contain **highlighted placeholders** (`[PLACEHOLDER: ...]`) wherever real information is required. Nothing about the operator, address, email or data practices has been invented. Before going live:
+The About, Contact, Privacy Policy and Terms pages are complete and contain no placeholders. `npm test` fails if a `PLACEHOLDER:` marker, the placeholder domain or the placeholder form ID ever reappears.
 
-1. **Domain** - `npm run set-domain -- https://your-site.vercel.app` (updates canonical, Open Graph, sitemap, robots).
-2. **Contact form** - create a free form at [formspree.io](https://formspree.io) (or a compatible service), then replace `YOUR_FORM_ID` in the `action` attribute of `contact.html`. Until then the form shows a "not connected" notice and never pretends to send.
-3. **Placeholders** - search all `.html` files for `PLACEHOLDER:` and replace each with true information (operator name, contact email, jurisdiction, retention period, children's policy, etc.).
-4. **Privacy statements** - the policy states that the site sets no cookies, has no analytics and only requests Google Fonts. Re-verify this whenever you add analytics, ads or other third-party scripts. `npm test` fails if the code starts using `document.cookie` or new `localStorage` keys that the policy does not list.
-5. **Advertising** - if you enable AdSense, keep and complete the advertising block in the Privacy Policy, update About/Terms wording, and add a consent banner (CMP) for visitors in the EEA/UK/Switzerland.
-6. Have the Privacy Policy and Terms reviewed by a qualified professional for your jurisdiction.
+**Current status (keep these statements true):**
+- No advertising is running and no consent-management tool is installed. The Privacy Policy, Terms and About page say this explicitly.
+- No analytics are used. Contact form messages are processed by Formspree, hosting is on Vercel, and fonts load from Google Fonts. All of this is disclosed in the Privacy Policy.
 
-`npm test` prints a "[TODO]" list of everything still unfilled.
+**Before enabling Google AdSense, you must:**
+1. Set up a consent solution (for example Google's Privacy & messaging) for visitors in the EEA, UK and Switzerland, and test it.
+2. Update `privacy-policy.html` §3, §5, §6 and §8, `terms.html` §6 and `about.html` ("Funding and advertising") so they describe what is really running, including how visitors can change their choices. Do **not** mention a consent link until it exists.
+3. Update the "Last updated" date on the Privacy Policy and Terms.
+4. Add the AdSense code to the pages where ads are allowed, and add the `ads.txt` file Google provides.
+5. Re-run `npm test` and review the "Code sets no cookies" and storage-key tests, which describe the site's own code and will need a conscious update once third-party scripts are added.
+
+**Domain:** `npm run set-domain -- https://new-domain --from https://old-domain` updates canonical links, Open Graph URLs, JSON-LD, the sitemap, robots.txt and the host named in the Privacy Policy.
+
+**Contact form:** it posts to the Formspree endpoint in the `action` attribute of `contact.html`. Send a real test message after any change and confirm it arrives.
+
+Have the Privacy Policy and Terms reviewed by a qualified professional for your jurisdiction. Nothing in this repository is legal advice or a guarantee of AdSense approval.
 
 ---
 
----
+## 📄 License & Ownership
 
-## 📄 License
+**All Rights Reserved.** No open-source licence is granted for this project. You may not copy, redistribute or reuse the code, design or content without permission, except where the law allows it.
 
-MIT License. Designed and engineered for maximum arcade fun!
+- Parts of this project, including some code and content, were created with the assistance of AI tools. No claim is made to material that cannot be protected under applicable law.
+- Third-party components remain under their own licences and are not owned by Neo Arcade Vault:
+  - **Outfit** font - SIL Open Font License 1.1, (c) 2021 The Outfit Project Authors (loaded from Google Fonts).
+  - **Luckiest Guy** font - Apache License 2.0, (c) 2010 Brian J. Bonislawsky DBA Astigmatic (loaded from Google Fonts).
+- No third-party JavaScript libraries are used.
