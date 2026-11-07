@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090d16">
+  <title>How to Play Block Puzzle: Rules, Controls &amp; Tips | Neo Arcade Vault</title>
+  <meta name="description" content="How to play Block Puzzle: falling block controls, ghost landing outline, hold slot, line clear and level scoring, plus tips for clearing four lines at once.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mini-game-arcade-zaim.vercel.app/play/block-puzzle">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Neo Arcade Vault">
+  <meta property="og:title" content="How to Play Block Puzzle: Rules, Controls &amp; Tips | Neo Arcade Vault">
+  <meta property="og:description" content="How to play Block Puzzle: falling block controls, ghost landing outline, hold slot, line clear and level scoring, plus tips for clearing four lines at once.">
+  <meta property="og:url" content="https://mini-game-arcade-zaim.vercel.app/play/block-puzzle">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="How to Play Block Puzzle: Rules, Controls &amp; Tips | Neo Arcade Vault">
+  <meta name="twitter:description" content="How to play Block Puzzle: falling block controls, ghost landing outline, hold slot, line clear and level scoring, plus tips for clearing four lines at once.">
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "VideoGame",
+      "@id": "https://mini-game-arcade-zaim.vercel.app/play/block-puzzle#game",
+      "name": "Block Puzzle",
+      "description": "How to play Block Puzzle: falling block controls, ghost landing outline, hold slot, line clear and level scoring, plus tips for clearing four lines at once.",
+      "url": "https://mini-game-arcade-zaim.vercel.app/play/block-puzzle",
+      "genre": [
+        "Puzzle",
+        "Arcade"
+      ],
+      "gamePlatform": "Web browser",
+      "applicationCategory": "Game",
+      "playMode": [
+        "SinglePlayer"
+      ],
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "publisher": {
+        "@type": "Organization",
+        "name": "Neo Arcade Vault",
+        "url": "https://mini-game-arcade-zaim.vercel.app/"
+      },
+      "potentialAction": {
+        "@type": "PlayAction",
+        "target": "https://mini-game-arcade-zaim.vercel.app/#/game/block-puzzle"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://mini-game-arcade-zaim.vercel.app/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Games",
+          "item": "https://mini-game-arcade-zaim.vercel.app/games"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Block Puzzle Guide & Rules",
+          "item": "https://mini-game-arcade-zaim.vercel.app/play/block-puzzle"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How many next pieces can I see?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "One. The NEXT box shows only the piece that follows the current one."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are the pieces random?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Each piece is chosen at random, so the same shape can appear more than once in a row."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I rotate the other way?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Rotation is clockwise only."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do levels work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You gain a level every 10 lines. Each level makes pieces fall 70 milliseconds faster, down to a limit of 120 milliseconds."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How many pieces can I hold?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "One. You can hold once per turn, and you can swap with the held piece after the next piece locks."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does it work on a phone?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, using the on-screen buttons below the board."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/arcade.css">
+  <link rel="stylesheet" href="/css/pages.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <div class="arcade-background" aria-hidden="true">
+    <div class="arcade-grid"></div>
+    <div class="ambient-flare flare-1"></div>
+    <div class="ambient-flare flare-2"></div>
+  </div>
+
+  <div id="portal-app">
+    <header>
+      <nav class="arcade-navbar" aria-label="Main navigation">
+        <a class="nav-brand" href="/" aria-label="Neo Arcade Vault - home">
+          <span class="brand-bolt">⚡</span>
+          <span class="brand-text">NEO ARCADE</span>
+          <span class="brand-badge">VAULT</span>
+        </a>
+        <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/games">Games</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="main-content" class="page-main">
+      <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/games">Games</a> &rsaquo; <span>Block Puzzle Guide &amp; Rules</span></nav>
+
+      <section class="page-hero">
+        <div class="hero-tag">Puzzle game</div>
+        <h1 class="page-title">Block Puzzle: Guide &amp; Rules</h1>
+        <p class="page-lead">Block Puzzle is a falling-block game on a 10 x 20 board. Seven shapes drop one at a time. Move and rotate each one so that it completes a full row, which then clears. A ghost outline shows where the piece will land, one piece can be put on hold, and the pace quickens every ten lines.</p>
+        <div class="btn-row">
+          <a class="btn-link" href="/#/game/block-puzzle">Play Block Puzzle now</a>
+          <a class="btn-link secondary" href="/games">Browse all games</a>
+        </div>
+        <p class="page-meta">Free in your browser. No download and no sign-up.</p>
+      </section>
+
+      <section aria-labelledby="quick-facts">
+        <h2 id="quick-facts" class="sr-only">Quick facts</h2>
+        <div class="card-grid">
+          <div class="info-card">
+            <h3>Category</h3>
+            <p>Puzzle</p>
+          </div>
+          <div class="info-card">
+            <h3>Board</h3>
+            <p>10 x 20</p>
+          </div>
+          <div class="info-card">
+            <h3>Shapes</h3>
+            <p>7 (I, O, T, S, Z, J, L)</p>
+          </div>
+          <div class="info-card">
+            <h3>Hold slot</h3>
+            <p>1 piece</p>
+          </div>
+        </div>
+      </section>
+
+      <nav class="toc" aria-label="On this page">
+        <h2>On this page</h2>
+        <ol>
+          <li><a href="#how-to-play">How to play Block Puzzle</a></li>
+          <li><a href="#controls">Controls</a></li>
+          <li><a href="#scoring">Scoring</a></li>
+          <li><a href="#how-it-ends">How a round ends</a></li>
+          <li><a href="#features">Special features</a></li>
+          <li><a href="#tips">Tips for beginners</a></li>
+          <li><a href="#good-to-know">Good to know</a></li>
+          <li><a href="#faq">Block Puzzle FAQ</a></li>
+        </ol>
+      </nav>
+
+      <section class="content-card prose" aria-labelledby="how-to-play">
+        <h2 id="how-to-play">How to play Block Puzzle</h2>
+        <p>Each new piece is chosen at random from the seven shapes, so the same shape can come up several times in a row. The NEXT box on the right shows the one piece that will follow, and the HOLD box on the left shows your held piece. An outline shows where the current piece would land if you dropped it.</p>
+        <p>Pieces fall by themselves. At level 1 a piece drops one row every 800 milliseconds. Each level makes this 70 milliseconds faster, down to 120 milliseconds from level 11. You move up a level every 10 lines.</p>
+        <p>Rotation turns the piece clockwise. If a piece would overlap something after rotating, the game tries shifting it one cell left or right to make it fit.</p>
+        <p>You can hold a piece once per turn. The first hold stores the current piece and brings in the next one. After that, a hold swaps the current piece with the held piece. You cannot hold again until the next piece has been locked in place.</p>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="controls">
+        <h2 id="controls">Controls</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th scope="col">Input</th><th scope="col">What it does</th></tr></thead>
+            <tbody>
+              <tr><td><code>Left</code> / <code>Right</code> arrows or <code>A</code> / <code>D</code></td><td>Move the piece one cell sideways.</td></tr>
+              <tr><td><code>Up arrow</code> or <code>W</code></td><td>Rotate clockwise.</td></tr>
+              <tr><td><code>Down arrow</code> or <code>S</code></td><td>Soft drop: move down one row. If the piece is already resting, it locks in place.</td></tr>
+              <tr><td><code>Space</code></td><td>Hard drop: drop the piece to its landing spot and lock it.</td></tr>
+              <tr><td><code>C</code> or <code>Shift</code></td><td>Hold or swap the held piece.</td></tr>
+              <tr><td><code>P</code> or <code>Esc</code></td><td>Pause, and press again to resume.</td></tr>
+              <tr><td><code>Space</code> or <code>Enter</code></td><td>Play again after a game over.</td></tr>
+              <tr><td>On-screen buttons</td><td>Left, rotate, right, hold, soft drop and hard drop. They respond to touch and to clicks.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>There are no swipe gestures on the board. On a phone, use the on-screen buttons.</p>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="scoring">
+        <h2 id="scoring">Scoring</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th scope="col">Event</th><th scope="col">Result</th></tr></thead>
+            <tbody>
+              <tr><td>Soft drop</td><td>+1 point per row</td></tr>
+              <tr><td>Hard drop</td><td>+2 points per row dropped</td></tr>
+              <tr><td>1 line cleared</td><td>100 x your level</td></tr>
+              <tr><td>2 lines cleared at once</td><td>300 x your level</td></tr>
+              <tr><td>3 lines cleared at once</td><td>500 x your level</td></tr>
+              <tr><td>4 lines cleared at once</td><td>800 x your level</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Your best score is updated when you clear lines. Because the line values are multiplied by your level, line clears are worth far more than drop points.</p>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="how-it-ends">
+        <h2 id="how-it-ends">How a round ends</h2>
+        <p>The game ends with "BLOCK MATRIX FULL" when a new piece has no room to appear at the top of the board. There is no winning screen: it is an endless score chase.</p>
+        <p>The panel shows your score, lines cleared, level and best score.</p>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="features">
+        <h2 id="features">Special features</h2>
+        <ul>
+          <li><strong>Ghost outline</strong> of the landing spot.</li>
+          <li><strong>One hold slot</strong> for saving an awkward piece.</li>
+          <li><strong>Next piece preview.</strong> One piece is shown, not a queue.</li>
+          <li><strong>Levels.</strong> The speed rises every 10 lines.</li>
+        </ul>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="tips">
+        <h2 id="tips">Tips for beginners</h2>
+        <ul>
+          <li>Use the ghost outline to check the landing spot before you drop.</li>
+          <li>Four lines at once is worth 800 x level, compared with 400 x level for four separate single lines. Leaving one column open and waiting for a long piece is the usual way to set it up.</li>
+          <li>Hold a piece you cannot place well and use it later, but remember you can hold only once per turn.</li>
+          <li>Press Space once per piece. Holding the key down may repeat and drop the next pieces straight away.</li>
+          <li>Keep the stack low and flat. The game is over as soon as a new piece cannot fit at the top.</li>
+        </ul>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="good-to-know">
+        <h2 id="good-to-know">Good to know</h2>
+        <ul>
+          <li>Pause with <code>P</code> or <code>Esc</code> and resume with the same key. The on-screen Resume button currently restarts the run, so on a phone it is best not to pause mid-run.</li>
+        </ul>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="faq">
+        <h2 id="faq">Block Puzzle FAQ</h2>
+        <div class="faq-item">
+          <h3>How many next pieces can I see?</h3>
+          <p>One. The NEXT box shows only the piece that follows the current one.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Are the pieces random?</h3>
+          <p>Yes. Each piece is chosen at random, so the same shape can appear more than once in a row.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can I rotate the other way?</h3>
+          <p>No. Rotation is clockwise only.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How do levels work?</h3>
+          <p>You gain a level every 10 lines. Each level makes pieces fall 70 milliseconds faster, down to a limit of 120 milliseconds.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How many pieces can I hold?</h3>
+          <p>One. You can hold once per turn, and you can swap with the held piece after the next piece locks.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Does it work on a phone?</h3>
+          <p>Yes, using the on-screen buttons below the board.</p>
+        </div>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="more-games">
+        <h2 id="more-games">More games to try</h2>
+        <div class="card-grid">
+          <article class="info-card">
+            <h3><a href="/play/2048-puzzle">2048 Puzzle guide</a></h3>
+            <p>Slide and merge tiles on a 4 x 4 board.</p>
+          </article>
+          <article class="info-card">
+            <h3><a href="/play/tic-tac-toe">Tic-Tac-Toe guide</a></h3>
+            <p>Play the computer or a friend on a 3 x 3 grid.</p>
+          </article>
+          <article class="info-card">
+            <h3><a href="/play/brick-breaker">Brick Breaker guide</a></h3>
+            <p>Clear three stages of bricks with a paddle and a ball.</p>
+          </article>
+        </div>
+        <div class="btn-row">
+          <a class="btn-link" href="/#/game/block-puzzle">Play Block Puzzle now</a>
+          <a class="btn-link secondary" href="/games">Browse all games</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="arcade-footer site-footer">
+      <div class="footer-brand"><span class="brand-bolt">⚡</span> NEO ARCADE</div>
+      <p>A free collection of 10 browser mini-games. No downloads, no sign-up.</p>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="/">Home</a>
+        <a href="/games">Games</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        <a href="/privacy-policy">Privacy Policy</a>
+        <a href="/terms">Terms &amp; Conditions</a>
+      </nav>
+      <p class="footer-copy">&copy; <span data-year>2026</span> Neo Arcade Vault. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <script src="/js/site-shell.js"></script>
+</body>
+</html>

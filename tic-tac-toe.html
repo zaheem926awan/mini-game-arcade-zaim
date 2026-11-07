@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090d16">
+  <title>How to Play Tic-Tac-Toe: Rules, Modes &amp; Tips | Neo Arcade Vault</title>
+  <meta name="description" content="How to play Tic-Tac-Toe online: rules, vs Computer and 2 Players modes, Easy, Medium and Invincible difficulty, the win tally and tips for beginners.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mini-game-arcade-zaim.vercel.app/play/tic-tac-toe">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Neo Arcade Vault">
+  <meta property="og:title" content="How to Play Tic-Tac-Toe: Rules, Modes &amp; Tips | Neo Arcade Vault">
+  <meta property="og:description" content="How to play Tic-Tac-Toe online: rules, vs Computer and 2 Players modes, Easy, Medium and Invincible difficulty, the win tally and tips for beginners.">
+  <meta property="og:url" content="https://mini-game-arcade-zaim.vercel.app/play/tic-tac-toe">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="How to Play Tic-Tac-Toe: Rules, Modes &amp; Tips | Neo Arcade Vault">
+  <meta name="twitter:description" content="How to play Tic-Tac-Toe online: rules, vs Computer and 2 Players modes, Easy, Medium and Invincible difficulty, the win tally and tips for beginners.">
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "VideoGame",
+      "@id": "https://mini-game-arcade-zaim.vercel.app/play/tic-tac-toe#game",
+      "name": "Tic-Tac-Toe",
+      "description": "How to play Tic-Tac-Toe online: rules, vs Computer and 2 Players modes, Easy, Medium and Invincible difficulty, the win tally and tips for beginners.",
+      "url": "https://mini-game-arcade-zaim.vercel.app/play/tic-tac-toe",
+      "genre": [
+        "Strategy",
+        "Board game"
+      ],
+      "gamePlatform": "Web browser",
+      "applicationCategory": "Game",
+      "playMode": [
+        "SinglePlayer",
+        "MultiPlayer"
+      ],
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "publisher": {
+        "@type": "Organization",
+        "name": "Neo Arcade Vault",
+        "url": "https://mini-game-arcade-zaim.vercel.app/"
+      },
+      "potentialAction": {
+        "@type": "PlayAction",
+        "target": "https://mini-game-arcade-zaim.vercel.app/#/game/tic-tac-toe"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://mini-game-arcade-zaim.vercel.app/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Games",
+          "item": "https://mini-game-arcade-zaim.vercel.app/games"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Tic-Tac-Toe Guide & Rules",
+          "item": "https://mini-game-arcade-zaim.vercel.app/play/tic-tac-toe"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Can I beat the Invincible computer?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. It checks every possible continuation, so the best result you can get against it is a draw."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I play as O or move second?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not in the computer mode. You are always X and you always move first."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I play with a friend?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Pick 2 PLAYERS, and take turns on the same device. There is no online multiplayer."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my score saved?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The win tally lasts only while the page stays open, and there is no best score in this game."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens when I change difficulty?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The board is cleared and a new round starts, but the tally stays."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does Medium play?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It chooses the best move about 65% of the time and a random move the rest of the time."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/arcade.css">
+  <link rel="stylesheet" href="/css/pages.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <div class="arcade-background" aria-hidden="true">
+    <div class="arcade-grid"></div>
+    <div class="ambient-flare flare-1"></div>
+    <div class="ambient-flare flare-2"></div>
+  </div>
+
+  <div id="portal-app">
+    <header>
+      <nav class="arcade-navbar" aria-label="Main navigation">
+        <a class="nav-brand" href="/" aria-label="Neo Arcade Vault - home">
+          <span class="brand-bolt">⚡</span>
+          <span class="brand-text">NEO ARCADE</span>
+          <span class="brand-badge">VAULT</span>
+        </a>
+        <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/games">Games</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="main-content" class="page-main">
+      <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/games">Games</a> &rsaquo; <span>Tic-Tac-Toe Guide &amp; Rules</span></nav>
+
+      <section class="page-hero">
+        <div class="hero-tag">Strategy game</div>
+        <h1 class="page-title">Tic-Tac-Toe: Guide &amp; Rules</h1>
+        <p class="page-lead">Tic-Tac-Toe on a 3 x 3 grid, either against the computer or against a friend on the same device. In the computer mode you play X and move first, and the opponent can be set to Easy, Medium or Invincible. Get three in a row, across, down or diagonally, before your opponent does.</p>
+        <div class="btn-row">
+          <a class="btn-link" href="/#/game/tic-tac-toe">Play Tic-Tac-Toe now</a>
+          <a class="btn-link secondary" href="/games">Browse all games</a>
+        </div>
+        <p class="page-meta">Free in your browser. No download and no sign-up.</p>
+      </section>
+
+      <section aria-labelledby="quick-facts">
+        <h2 id="quick-facts" class="sr-only">Quick facts</h2>
+        <div class="card-grid">
+          <div class="info-card">
+            <h3>Category</h3>
+            <p>Strategy</p>
+          </div>
+          <div class="info-card">
+            <h3>Modes</h3>
+            <p>Vs Computer or 2 Players</p>
+          </div>
+          <div class="info-card">
+            <h3>Difficulty</h3>
+            <p>Easy, Medium, Invincible</p>
+          </div>
+          <div class="info-card">
+            <h3>Score</h3>
+            <p>Win tally, not saved</p>
+          </div>
+        </div>
+      </section>
+
+      <nav class="toc" aria-label="On this page">
+        <h2>On this page</h2>
+        <ol>
+          <li><a href="#how-to-play">How to play Tic-Tac-Toe</a></li>
+          <li><a href="#controls">Controls</a></li>
+          <li><a href="#scoring">Scoring</a></li>
+          <li><a href="#how-it-ends">How a round ends</a></li>
+          <li><a href="#features">Special features</a></li>
+          <li><a href="#tips">Tips for beginners</a></li>
+          <li><a href="#good-to-know">Good to know</a></li>
+          <li><a href="#faq">Tic-Tac-Toe FAQ</a></li>
+        </ol>
+      </nav>
+
+      <section class="content-card prose" aria-labelledby="how-to-play">
+        <h2 id="how-to-play">How to play Tic-Tac-Toe</h2>
+        <p><strong>X always moves first.</strong> In the Vs Computer mode you are X and the computer plays O after a short pause. In the 2 Players mode, X and O take turns on the same screen, so you can pass the device back and forth with a friend.</p>
+        <p>The three difficulty levels change how the computer chooses its moves. <strong>Invincible</strong> uses the minimax method, which looks ahead through every possible continuation, so the best you can do against it is a draw. <strong>Medium</strong> plays the best move about 65% of the time and a random legal move otherwise. <strong>Easy</strong> always plays a random legal move.</p>
+        <p>When a round ends the board stays as it is until you press the new round button. The tally of X wins, ties and O wins is kept while the page stays open. Changing mode or difficulty gives you a fresh board but keeps the tally. Reloading the page or leaving the game resets it.</p>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="controls">
+        <h2 id="controls">Controls</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th scope="col">Input</th><th scope="col">What it does</th></tr></thead>
+            <tbody>
+              <tr><td>Mouse or touch</td><td>Click or tap an empty cell to place your mark.</td></tr>
+              <tr><td>VS COMPUTER and 2 PLAYERS buttons</td><td>Switch mode. This starts a fresh board.</td></tr>
+              <tr><td>Difficulty menu</td><td>Choose Invincible, Medium or Easy in the computer mode. This also starts a fresh board.</td></tr>
+              <tr><td>New round button (circular arrows)</td><td>Clears the board and starts a new round with X to move.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>There are no dedicated keyboard shortcuts in this game.</p>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="scoring">
+        <h2 id="scoring">Scoring</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th scope="col">Event</th><th scope="col">Result</th></tr></thead>
+            <tbody>
+              <tr><td>A round won by X</td><td>X wins +1 in the tally</td></tr>
+              <tr><td>A round won by O</td><td>O wins +1 in the tally</td></tr>
+              <tr><td>A full board with no line</td><td>Ties +1 in the tally</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>There are no points and no best score in this game, only the tally for the current visit.</p>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="how-it-ends">
+        <h2 id="how-it-ends">How a round ends</h2>
+        <p>A round ends when one player has three marks in a row (any of the 3 rows, 3 columns or 2 diagonals), or when all nine cells are filled with no winning line, which is a draw.</p>
+        <p>The status line announces the result: "YOU WON!" or "COMPUTER WINS!" in the computer mode, "PLAYER X WINS!" or "PLAYER O WINS!" in the 2 Players mode, or "IT'S A DRAW!".</p>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="features">
+        <h2 id="features">Special features</h2>
+        <ul>
+          <li><strong>Two modes.</strong> Play the computer or a friend on the same device.</li>
+          <li><strong>Three difficulty levels</strong> in the computer mode.</li>
+          <li><strong>Highlighted winning line</strong> when a round is won.</li>
+          <li>The mode is local to your device. There is no online multiplayer.</li>
+        </ul>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="tips">
+        <h2 id="tips">Tips for beginners</h2>
+        <ul>
+          <li>You move first as X, so you can claim the centre or a corner on your first turn.</li>
+          <li>On every turn, check whether your opponent has two in a line with an empty third cell, and block it.</li>
+          <li>Against Invincible, aim not to lose. A draw is the best possible result.</li>
+          <li>Use Easy and Medium to practise spotting two-way threats, where one move creates two possible lines at once.</li>
+          <li>Use the 2 Players mode to keep a running tally against a friend over several rounds.</li>
+        </ul>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="good-to-know">
+        <h2 id="good-to-know">Good to know</h2>
+        <ul>
+          <li>In the computer mode on Medium and Invincible, three cells can sometimes glow as if a line had been completed while the round is still going. It is only a display effect. The round is over only when the status line announces a result.</li>
+        </ul>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="faq">
+        <h2 id="faq">Tic-Tac-Toe FAQ</h2>
+        <div class="faq-item">
+          <h3>Can I beat the Invincible computer?</h3>
+          <p>No. It checks every possible continuation, so the best result you can get against it is a draw.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can I play as O or move second?</h3>
+          <p>Not in the computer mode. You are always X and you always move first.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can I play with a friend?</h3>
+          <p>Yes. Pick 2 PLAYERS, and take turns on the same device. There is no online multiplayer.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Is my score saved?</h3>
+          <p>No. The win tally lasts only while the page stays open, and there is no best score in this game.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What happens when I change difficulty?</h3>
+          <p>The board is cleared and a new round starts, but the tally stays.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How does Medium play?</h3>
+          <p>It chooses the best move about 65% of the time and a random move the rest of the time.</p>
+        </div>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="more-games">
+        <h2 id="more-games">More games to try</h2>
+        <div class="card-grid">
+          <article class="info-card">
+            <h3><a href="/play/memory-match">Memory Match guide</a></h3>
+            <p>Match eight pairs of cards in as few moves as you can.</p>
+          </article>
+          <article class="info-card">
+            <h3><a href="/play/2048-puzzle">2048 Puzzle guide</a></h3>
+            <p>Slide and merge tiles on a 4 x 4 board.</p>
+          </article>
+          <article class="info-card">
+            <h3><a href="/play/block-puzzle">Block Puzzle guide</a></h3>
+            <p>Clear lines on a 10 x 20 board with hold and ghost outline.</p>
+          </article>
+        </div>
+        <div class="btn-row">
+          <a class="btn-link" href="/#/game/tic-tac-toe">Play Tic-Tac-Toe now</a>
+          <a class="btn-link secondary" href="/games">Browse all games</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="arcade-footer site-footer">
+      <div class="footer-brand"><span class="brand-bolt">⚡</span> NEO ARCADE</div>
+      <p>A free collection of 10 browser mini-games. No downloads, no sign-up.</p>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="/">Home</a>
+        <a href="/games">Games</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        <a href="/privacy-policy">Privacy Policy</a>
+        <a href="/terms">Terms &amp; Conditions</a>
+      </nav>
+      <p class="footer-copy">&copy; <span data-year>2026</span> Neo Arcade Vault. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <script src="/js/site-shell.js"></script>
+</body>
+</html>
