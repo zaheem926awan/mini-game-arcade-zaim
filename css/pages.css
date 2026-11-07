@@ -589,6 +589,63 @@ mark.placeholder {
   color: var(--cyan);
 }
 
+/* Static homepage intro + guide links (index.html). Shown as-is without JavaScript,
+   and moved under the game catalog by arcade.js once the arcade renders. */
+.home-info {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 8px 24px 48px;
+  text-align: left;
+}
+.js-fallback .home-info {
+  max-width: none;
+  margin-top: 28px;
+  padding: 0;
+}
+.home-info h2 {
+  font-family: var(--font-arcade);
+  font-size: clamp(1.4rem, 3.5vw, 1.9rem);
+  color: #fff;
+  margin: 28px 0 10px;
+}
+.home-info h2:first-child { margin-top: 0; }
+.home-info p {
+  max-width: 72ch;
+  color: var(--text-muted);
+  line-height: 1.65;
+  margin: 0 0 12px;
+}
+.home-game-list {
+  list-style: none;
+  margin: 18px 0 20px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+.home-game-list li {
+  background: var(--portal-surface);
+  border: 1px solid var(--portal-border);
+  border-radius: 16px;
+  padding: 16px 18px;
+}
+.home-game-list h3 {
+  font-size: 1.1rem;
+  color: #fff;
+  margin: 0 0 6px;
+}
+.home-game-cat {
+  margin-left: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+.home-game-list p { margin: 0 0 8px; }
+.home-game-list li p:last-child { margin-bottom: 0; }
+.home-info a { color: var(--cyan); }
+
 @media (max-width: 900px) {
   .contact-layout {
     grid-template-columns: 1fr;
