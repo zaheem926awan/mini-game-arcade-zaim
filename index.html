@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#090d16">
   <meta name="description" content="Play 10 free online mini-games at Neo Arcade Vault: Fruit Slice, Neon Snake, Brick Breaker, Space Shooter, 2048 and more. No download, no sign-up.">
   <meta name="robots" content="index, follow">
@@ -54,12 +54,12 @@
     <div id="home-portal-view">
       <!-- Static fallback: replaced by the JavaScript-rendered arcade. Gives crawlers and
            no-JS visitors real content and working links to every page. -->
-      <div class="js-fallback">
+      <main id="main-content" class="js-fallback">
         <h1>Neo Arcade Vault</h1>
         <p>Play 10 free browser mini-games: Fruit Slice, Neon Snake, Brick Breaker, Space Shooter, 2048 Puzzle, Tic-Tac-Toe, Memory Match, Endless Runner, Block Puzzle and Whack-a-Mole. No downloads and no sign-up.</p>
         <p>The arcade needs JavaScript. Please enable it in your browser, or read more on our <a href="/games">Games</a>, <a href="/about">About</a> and <a href="/contact">Contact</a> pages.</p>
         <p><a href="/privacy-policy">Privacy Policy</a> &middot; <a href="/terms">Terms &amp; Conditions</a></p>
-      </div>
+      </main>
     </div>
 
     <!-- Dedicated Game View: Top bar, Viewport, Controls guide -->
@@ -68,7 +68,7 @@
 
   <!-- Template / Mount Container for Fruit Slice (Preserves exact IDs for automated tests and standalone runs) -->
   <template id="fruit-slice-template">
-    <main id="game-container">
+    <div id="game-container">
       <!-- Heads-Up Display (HUD) -->
       <header id="hud">
         <div class="hud-left">
@@ -266,7 +266,7 @@
           </button>
         </div>
       </section>
-    </main>
+    </div>
   </template>
 
   <!-- Audio and Game Scripts -->
