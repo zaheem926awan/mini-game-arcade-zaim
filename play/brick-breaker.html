@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090d16">
+  <title>How to Play Brick Breaker: Rules, Controls &amp; Tips | Neo Arcade Vault</title>
+  <meta name="description" content="How to play Brick Breaker: paddle controls for mouse, keyboard and touch, brick hit points, power-up capsules, 3 stages, 3 lives and scoring explained.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mini-game-arcade-zaim.vercel.app/play/brick-breaker">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Neo Arcade Vault">
+  <meta property="og:title" content="How to Play Brick Breaker: Rules, Controls &amp; Tips | Neo Arcade Vault">
+  <meta property="og:description" content="How to play Brick Breaker: paddle controls for mouse, keyboard and touch, brick hit points, power-up capsules, 3 stages, 3 lives and scoring explained.">
+  <meta property="og:url" content="https://mini-game-arcade-zaim.vercel.app/play/brick-breaker">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="How to Play Brick Breaker: Rules, Controls &amp; Tips | Neo Arcade Vault">
+  <meta name="twitter:description" content="How to play Brick Breaker: paddle controls for mouse, keyboard and touch, brick hit points, power-up capsules, 3 stages, 3 lives and scoring explained.">
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "VideoGame",
+      "@id": "https://mini-game-arcade-zaim.vercel.app/play/brick-breaker#game",
+      "name": "Brick Breaker",
+      "description": "How to play Brick Breaker: paddle controls for mouse, keyboard and touch, brick hit points, power-up capsules, 3 stages, 3 lives and scoring explained.",
+      "url": "https://mini-game-arcade-zaim.vercel.app/play/brick-breaker",
+      "genre": [
+        "Arcade",
+        "Breakout"
+      ],
+      "gamePlatform": "Web browser",
+      "applicationCategory": "Game",
+      "playMode": [
+        "SinglePlayer"
+      ],
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "publisher": {
+        "@type": "Organization",
+        "name": "Neo Arcade Vault",
+        "url": "https://mini-game-arcade-zaim.vercel.app/"
+      },
+      "potentialAction": {
+        "@type": "PlayAction",
+        "target": "https://mini-game-arcade-zaim.vercel.app/#/game/brick-breaker"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://mini-game-arcade-zaim.vercel.app/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Games",
+          "item": "https://mini-game-arcade-zaim.vercel.app/games"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Brick Breaker Guide & Rules",
+          "item": "https://mini-game-arcade-zaim.vercel.app/play/brick-breaker"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How many stages are there?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Three. Clearing every brick on the third stage wins the game."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How many lives do I get?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Three. A life is lost when all balls in play have fallen."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do any capsules hurt me?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The four capsules are multi-ball, wide paddle, bonus points and slow ball."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use the keyboard and the mouse?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, both move the paddle. Touch screens use finger drag or the on-screen buttons."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do my score and lives carry over between stages?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Only the ball and paddle reset when a new stage begins."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my best score saved?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, in this browser on this device, when a run ends."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/arcade.css">
+  <link rel="stylesheet" href="/css/pages.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <div class="arcade-background" aria-hidden="true">
+    <div class="arcade-grid"></div>
+    <div class="ambient-flare flare-1"></div>
+    <div class="ambient-flare flare-2"></div>
+  </div>
+
+  <div id="portal-app">
+    <header>
+      <nav class="arcade-navbar" aria-label="Main navigation">
+        <a class="nav-brand" href="/" aria-label="Neo Arcade Vault - home">
+          <span class="brand-bolt">⚡</span>
+          <span class="brand-text">NEO ARCADE</span>
+          <span class="brand-badge">VAULT</span>
+        </a>
+        <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/games">Games</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="main-content" class="page-main">
+      <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/games">Games</a> &rsaquo; <span>Brick Breaker Guide &amp; Rules</span></nav>
+
+      <section class="page-hero">
+        <div class="hero-tag">Arcade game</div>
+        <h1 class="page-title">Brick Breaker: Guide &amp; Rules</h1>
+        <p class="page-lead">Brick Breaker is a breakout game. Slide a paddle along the bottom of the board, bounce a ball into rows of coloured bricks and clear three stages of increasing size. Falling capsules can add balls, widen your paddle, give bonus points or slow the ball. You have three lives, and the ball launches the moment you start.</p>
+        <div class="btn-row">
+          <a class="btn-link" href="/#/game/brick-breaker">Play Brick Breaker now</a>
+          <a class="btn-link secondary" href="/games">Browse all games</a>
+        </div>
+        <p class="page-meta">Free in your browser. No download and no sign-up.</p>
+      </section>
+
+      <section aria-labelledby="quick-facts">
+        <h2 id="quick-facts" class="sr-only">Quick facts</h2>
+        <div class="card-grid">
+          <div class="info-card">
+            <h3>Category</h3>
+            <p>Arcade</p>
+          </div>
+          <div class="info-card">
+            <h3>Stages</h3>
+            <p>3</p>
+          </div>
+          <div class="info-card">
+            <h3>Lives</h3>
+            <p>3</p>
+          </div>
+          <div class="info-card">
+            <h3>Best score</h3>
+            <p>Saved in this browser</p>
+          </div>
+        </div>
+      </section>
+
+      <nav class="toc" aria-label="On this page">
+        <h2>On this page</h2>
+        <ol>
+          <li><a href="#how-to-play">How to play Brick Breaker</a></li>
+          <li><a href="#controls">Controls</a></li>
+          <li><a href="#scoring">Scoring</a></li>
+          <li><a href="#how-it-ends">How a round ends</a></li>
+          <li><a href="#features">Special features</a></li>
+          <li><a href="#tips">Tips for beginners</a></li>
+          <li><a href="#good-to-know">Good to know</a></li>
+          <li><a href="#faq">Brick Breaker FAQ</a></li>
+        </ol>
+      </nav>
+
+      <section class="content-card prose" aria-labelledby="how-to-play">
+        <h2 id="how-to-play">How to play Brick Breaker</h2>
+        <p>Press <strong>LAUNCH BALL</strong> and the ball starts moving straight away, and after you lose a life the next ball also launches immediately. Get your paddle into position first.</p>
+        <p>There are 8 columns of bricks. Stage 1 has five rows. Stage 2 has six rows with a checkerboard pattern of gaps from the third row down. Stage 3 has seven rows with a gap in the middle of the third and fourth rows. When a stage is cleared, the next layout is built and the ball and paddle reset. Your score and remaining lives carry over.</p>
+        <p>Brick colour tells you how tough it is: gold bricks take 3 hits, cyan 2, red 1, green 1 and purple 2. The colours repeat in that order down the rows, and bricks that take more than one hit show the hits remaining as a small number.</p>
+        <p>Where the ball lands on the paddle sets its bounce angle: near the centre sends it almost straight up, near either edge sends it off at a steep angle (up to 70 degrees). Each paddle bounce also makes the ball slightly faster (about 2%) up to a speed limit.</p>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="controls">
+        <h2 id="controls">Controls</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th scope="col">Input</th><th scope="col">What it does</th></tr></thead>
+            <tbody>
+              <tr><td>Mouse</td><td>Move the pointer over the board. The paddle follows it. No clicking is needed.</td></tr>
+              <tr><td><code>Left</code> / <code>Right</code> arrows or <code>A</code> / <code>D</code></td><td>Move the paddle.</td></tr>
+              <tr><td><code>P</code> or <code>Esc</code></td><td>Pause, and press again to resume.</td></tr>
+              <tr><td><code>Space</code> or <code>Enter</code></td><td>Play again after a game over or after clearing the final stage.</td></tr>
+              <tr><td>Touch</td><td>Drag a finger across the board, or hold the MOVE LEFT and MOVE RIGHT buttons under it.</td></tr>
+              <tr><td>Buttons at the top</td><td>Pause and restart.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>The MOVE LEFT and MOVE RIGHT buttons respond to touch. On a computer, use the mouse or the keyboard.</p>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="scoring">
+        <h2 id="scoring">Scoring</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th scope="col">Event</th><th scope="col">Result</th></tr></thead>
+            <tbody>
+              <tr><td>Each hit on a brick</td><td>+15 points</td></tr>
+              <tr><td>Destroying a brick</td><td>+25 more points. A 1-hit brick is worth 40 in total, a 2-hit brick 55 and a 3-hit brick 70.</td></tr>
+              <tr><td>Star capsule</td><td>+75 points</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Destroyed bricks drop a capsule 22% of the time. Four kinds exist and each is equally likely. Catch one with the paddle to use it; uncaught capsules fall away.</p>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="how-it-ends">
+        <h2 id="how-it-ends">How a round ends</h2>
+        <p>You lose a life only when every ball in play has fallen off the bottom. With three lives gone, the run ends with "GAME OVER". Lives are not refilled between stages.</p>
+        <p>Clearing all bricks on stage 3 ends the game with "STAGE CLEAR!", the game's winning screen. The panel shows your score, the stage reached and your best score, and your best is saved when a run ends.</p>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="features">
+        <h2 id="features">Special features</h2>
+        <ul>
+          <li><strong>Multi-ball (lightning bolt capsule).</strong> Adds two extra balls.</li>
+          <li><strong>Wide paddle (arrow capsule).</strong> Widens the paddle from 90 to 140 pixels for 10 seconds.</li>
+          <li><strong>Bonus (star capsule).</strong> +75 points.</li>
+          <li><strong>Slow (turtle capsule).</strong> Cuts the ball's current speed by 25% when caught. It builds back up gradually as the ball keeps bouncing off the paddle.</li>
+          <li>None of the capsules is harmful.</li>
+        </ul>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="tips">
+        <h2 id="tips">Tips for beginners</h2>
+        <ul>
+          <li>Aim with the paddle edges. Hitting the ball with the edge sends it sideways, which is how you reach bricks in the corners.</li>
+          <li>With multi-ball you only lose a life when the last ball falls, so it is the safest capsule to chase.</li>
+          <li>Check the numbers on bricks. A 3-hit gold brick takes three hits, so do not leave it behind while chasing easier ones.</li>
+          <li>Long rallies get faster, because each paddle bounce speeds the ball up a little.</li>
+          <li>Use the wide paddle window of 10 seconds to catch awkward angles and collect more capsules.</li>
+        </ul>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="good-to-know">
+        <h2 id="good-to-know">Good to know</h2>
+        <ul>
+          <li>Pause with <code>P</code> or <code>Esc</code> and resume with the same key. The on-screen Resume button currently restarts the run, so on a phone it is best not to pause mid-run.</li>
+        </ul>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="faq">
+        <h2 id="faq">Brick Breaker FAQ</h2>
+        <div class="faq-item">
+          <h3>How many stages are there?</h3>
+          <p>Three. Clearing every brick on the third stage wins the game.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How many lives do I get?</h3>
+          <p>Three. A life is lost when all balls in play have fallen.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Do any capsules hurt me?</h3>
+          <p>No. The four capsules are multi-ball, wide paddle, bonus points and slow ball.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can I use the keyboard and the mouse?</h3>
+          <p>Yes, both move the paddle. Touch screens use finger drag or the on-screen buttons.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Do my score and lives carry over between stages?</h3>
+          <p>Yes. Only the ball and paddle reset when a new stage begins.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Is my best score saved?</h3>
+          <p>Yes, in this browser on this device, when a run ends.</p>
+        </div>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="more-games">
+        <h2 id="more-games">More games to try</h2>
+        <div class="card-grid">
+          <article class="info-card">
+            <h3><a href="/play/space-shooter">Space Shooter guide</a></h3>
+            <p>A vertical shooter with three enemy types and power-ups.</p>
+          </article>
+          <article class="info-card">
+            <h3><a href="/play/neon-snake">Neon Snake guide</a></h3>
+            <p>Steer a growing snake around a 22 x 22 board.</p>
+          </article>
+          <article class="info-card">
+            <h3><a href="/play/block-puzzle">Block Puzzle guide</a></h3>
+            <p>Clear lines on a 10 x 20 board with hold and ghost outline.</p>
+          </article>
+        </div>
+        <div class="btn-row">
+          <a class="btn-link" href="/#/game/brick-breaker">Play Brick Breaker now</a>
+          <a class="btn-link secondary" href="/games">Browse all games</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="arcade-footer site-footer">
+      <div class="footer-brand"><span class="brand-bolt">⚡</span> NEO ARCADE</div>
+      <p>A free collection of 10 browser mini-games. No downloads, no sign-up.</p>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="/">Home</a>
+        <a href="/games">Games</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        <a href="/privacy-policy">Privacy Policy</a>
+        <a href="/terms">Terms &amp; Conditions</a>
+      </nav>
+      <p class="footer-copy">&copy; <span data-year>2026</span> Neo Arcade Vault. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <script src="/js/site-shell.js"></script>
+</body>
+</html>

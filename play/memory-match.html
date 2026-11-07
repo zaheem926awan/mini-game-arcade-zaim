@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090d16">
+  <title>How to Play Memory Match: Rules, Stars &amp; Tips | Neo Arcade Vault</title>
+  <meta name="description" content="How to play Memory Match: flip two cards at a time, match 8 pairs, how moves, the timer and the 1 to 3 star rating work, and tips to clear the board.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mini-game-arcade-zaim.vercel.app/play/memory-match">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Neo Arcade Vault">
+  <meta property="og:title" content="How to Play Memory Match: Rules, Stars &amp; Tips | Neo Arcade Vault">
+  <meta property="og:description" content="How to play Memory Match: flip two cards at a time, match 8 pairs, how moves, the timer and the 1 to 3 star rating work, and tips to clear the board.">
+  <meta property="og:url" content="https://mini-game-arcade-zaim.vercel.app/play/memory-match">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="How to Play Memory Match: Rules, Stars &amp; Tips | Neo Arcade Vault">
+  <meta name="twitter:description" content="How to play Memory Match: flip two cards at a time, match 8 pairs, how moves, the timer and the 1 to 3 star rating work, and tips to clear the board.">
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "VideoGame",
+      "@id": "https://mini-game-arcade-zaim.vercel.app/play/memory-match#game",
+      "name": "Memory Match",
+      "description": "How to play Memory Match: flip two cards at a time, match 8 pairs, how moves, the timer and the 1 to 3 star rating work, and tips to clear the board.",
+      "url": "https://mini-game-arcade-zaim.vercel.app/play/memory-match",
+      "genre": [
+        "Casual",
+        "Puzzle"
+      ],
+      "gamePlatform": "Web browser",
+      "applicationCategory": "Game",
+      "playMode": [
+        "SinglePlayer"
+      ],
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "publisher": {
+        "@type": "Organization",
+        "name": "Neo Arcade Vault",
+        "url": "https://mini-game-arcade-zaim.vercel.app/"
+      },
+      "potentialAction": {
+        "@type": "PlayAction",
+        "target": "https://mini-game-arcade-zaim.vercel.app/#/game/memory-match"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://mini-game-arcade-zaim.vercel.app/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Games",
+          "item": "https://mini-game-arcade-zaim.vercel.app/games"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Memory Match Guide & Rules",
+          "item": "https://mini-game-arcade-zaim.vercel.app/play/memory-match"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is there a time limit?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The timer only records how long you took."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How are the stars decided?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "By moves: 3 stars for 14 or fewer, 2 stars for 15 to 20, and 1 star for 21 or more."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What counts as one move?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Flipping two cards. It does not matter whether they match."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does my best score track time or moves?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Moves. Your best is the fewest moves you have needed."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is the layout the same every time?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The cards are shuffled at the start of every game and whenever you restart."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use the keyboard?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Click or tap the cards."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/arcade.css">
+  <link rel="stylesheet" href="/css/pages.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <div class="arcade-background" aria-hidden="true">
+    <div class="arcade-grid"></div>
+    <div class="ambient-flare flare-1"></div>
+    <div class="ambient-flare flare-2"></div>
+  </div>
+
+  <div id="portal-app">
+    <header>
+      <nav class="arcade-navbar" aria-label="Main navigation">
+        <a class="nav-brand" href="/" aria-label="Neo Arcade Vault - home">
+          <span class="brand-bolt">⚡</span>
+          <span class="brand-text">NEO ARCADE</span>
+          <span class="brand-badge">VAULT</span>
+        </a>
+        <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/games">Games</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="main-content" class="page-main">
+      <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/games">Games</a> &rsaquo; <span>Memory Match Guide &amp; Rules</span></nav>
+
+      <section class="page-hero">
+        <div class="hero-tag">Casual game</div>
+        <h1 class="page-title">Memory Match: Guide &amp; Rules</h1>
+        <p class="page-lead">Memory Match is a card-flipping game on a 4 x 4 grid with eight pairs of arcade symbols. Flip two cards at a time, remember where each symbol is hiding and clear the board in as few moves as you can. There is no move limit: your result is judged on the number of moves, with one to three stars.</p>
+        <div class="btn-row">
+          <a class="btn-link" href="/#/game/memory-match">Play Memory Match now</a>
+          <a class="btn-link secondary" href="/games">Browse all games</a>
+        </div>
+        <p class="page-meta">Free in your browser. No download and no sign-up.</p>
+      </section>
+
+      <section aria-labelledby="quick-facts">
+        <h2 id="quick-facts" class="sr-only">Quick facts</h2>
+        <div class="card-grid">
+          <div class="info-card">
+            <h3>Category</h3>
+            <p>Casual</p>
+          </div>
+          <div class="info-card">
+            <h3>Cards</h3>
+            <p>16 (8 pairs)</p>
+          </div>
+          <div class="info-card">
+            <h3>Rating</h3>
+            <p>1 to 3 stars</p>
+          </div>
+          <div class="info-card">
+            <h3>Best score</h3>
+            <p>Fewest moves, saved in this browser</p>
+          </div>
+        </div>
+      </section>
+
+      <nav class="toc" aria-label="On this page">
+        <h2>On this page</h2>
+        <ol>
+          <li><a href="#how-to-play">How to play Memory Match</a></li>
+          <li><a href="#controls">Controls</a></li>
+          <li><a href="#scoring">Scoring</a></li>
+          <li><a href="#how-it-ends">How a round ends</a></li>
+          <li><a href="#features">Special features</a></li>
+          <li><a href="#tips">Tips for beginners</a></li>
+          <li><a href="#good-to-know">Good to know</a></li>
+          <li><a href="#faq">Memory Match FAQ</a></li>
+        </ol>
+      </nav>
+
+      <section class="content-card prose" aria-labelledby="how-to-play">
+        <h2 id="how-to-play">How to play Memory Match</h2>
+        <p>Each game shuffles 16 face-down cards. The eight symbols, each used on two cards, are 👾 🚀 💎 ⚡ 🎮 🍒 💣 and 👑.</p>
+        <p>Flipping two cards counts as one move. If the symbols match, both cards stay face up. If they do not match, they flip back after about three-quarters of a second, and you cannot flip anything else during that moment.</p>
+        <p>The timer starts counting seconds as soon as the board appears, not when you flip your first card, and stops when the last pair is matched. The time is shown in your results, but it does not affect your stars or your best score, and there is no time limit.</p>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="controls">
+        <h2 id="controls">Controls</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th scope="col">Input</th><th scope="col">What it does</th></tr></thead>
+            <tbody>
+              <tr><td>Mouse or touch</td><td>Click or tap a face-down card to flip it.</td></tr>
+              <tr><td>Restart button (circular arrows)</td><td>Reshuffles the cards and starts a new game, with the move count and timer back at zero.</td></tr>
+              <tr><td>PLAY AGAIN</td><td>Appears on the completion screen and starts a new game.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>There are no keyboard controls and no pause button in this game.</p>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="scoring">
+        <h2 id="scoring">Scoring</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th scope="col">Event</th><th scope="col">Result</th></tr></thead>
+            <tbody>
+              <tr><td>14 moves or fewer</td><td>3 stars</td></tr>
+              <tr><td>15 to 20 moves</td><td>2 stars</td></tr>
+              <tr><td>21 moves or more</td><td>1 star</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Your best result is the lowest number of moves, saved when you beat your previous best. The lowest possible is 8 moves, which would mean finding every pair on the first try.</p>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="how-it-ends">
+        <h2 id="how-it-ends">How a round ends</h2>
+        <p>The game is complete when all 8 pairs are matched. The "MEMORY GRID CLEARED!" screen shows your stars, moves, time and best number of moves. There is no way to lose.</p>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="features">
+        <h2 id="features">Special features</h2>
+        <ul>
+          <li><strong>Star rating.</strong> One to three stars based on the number of moves.</li>
+          <li><strong>Shuffled every game.</strong> The layout is different each time.</li>
+          <li><strong>Timer.</strong> Shown for your own interest, with no time pressure attached to it.</li>
+        </ul>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="tips">
+        <h2 id="tips">Tips for beginners</h2>
+        <ul>
+          <li>Early flips are for gathering information. Every card you see makes a later match easier.</li>
+          <li>When a first card reveals a symbol you have seen before, flip the card you remember to make a match.</li>
+          <li>Use the grid rows and columns to remember positions, for example "top row, second card".</li>
+          <li>Because stars depend on moves and not time, there is no reason to rush.</li>
+          <li>Pay attention to mismatches too. Both cards you just saw are information you can use on later turns.</li>
+        </ul>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="good-to-know">
+        <h2 id="good-to-know">Good to know</h2>
+        <ul>
+          <li>The timer cannot be paused. It starts when the board appears.</li>
+        </ul>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="faq">
+        <h2 id="faq">Memory Match FAQ</h2>
+        <div class="faq-item">
+          <h3>Is there a time limit?</h3>
+          <p>No. The timer only records how long you took.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How are the stars decided?</h3>
+          <p>By moves: 3 stars for 14 or fewer, 2 stars for 15 to 20, and 1 star for 21 or more.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What counts as one move?</h3>
+          <p>Flipping two cards. It does not matter whether they match.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Does my best score track time or moves?</h3>
+          <p>Moves. Your best is the fewest moves you have needed.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Is the layout the same every time?</h3>
+          <p>No. The cards are shuffled at the start of every game and whenever you restart.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can I use the keyboard?</h3>
+          <p>No. Click or tap the cards.</p>
+        </div>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="more-games">
+        <h2 id="more-games">More games to try</h2>
+        <div class="card-grid">
+          <article class="info-card">
+            <h3><a href="/play/tic-tac-toe">Tic-Tac-Toe guide</a></h3>
+            <p>Play the computer or a friend on a 3 x 3 grid.</p>
+          </article>
+          <article class="info-card">
+            <h3><a href="/play/2048-puzzle">2048 Puzzle guide</a></h3>
+            <p>Slide and merge tiles on a 4 x 4 board.</p>
+          </article>
+          <article class="info-card">
+            <h3><a href="/play/whack-a-mole">Whack-a-Mole guide</a></h3>
+            <p>A 30-second reflex game on a 3 x 3 board.</p>
+          </article>
+        </div>
+        <div class="btn-row">
+          <a class="btn-link" href="/#/game/memory-match">Play Memory Match now</a>
+          <a class="btn-link secondary" href="/games">Browse all games</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="arcade-footer site-footer">
+      <div class="footer-brand"><span class="brand-bolt">⚡</span> NEO ARCADE</div>
+      <p>A free collection of 10 browser mini-games. No downloads, no sign-up.</p>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="/">Home</a>
+        <a href="/games">Games</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        <a href="/privacy-policy">Privacy Policy</a>
+        <a href="/terms">Terms &amp; Conditions</a>
+      </nav>
+      <p class="footer-copy">&copy; <span data-year>2026</span> Neo Arcade Vault. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <script src="/js/site-shell.js"></script>
+</body>
+</html>

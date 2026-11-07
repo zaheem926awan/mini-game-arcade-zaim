@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090d16">
+  <title>How to Play 2048 Puzzle: Rules, Controls &amp; Tips | Neo Arcade Vault</title>
+  <meta name="description" content="How to play 2048 Puzzle: arrow key and swipe controls, how tiles merge, how scoring works, the one-step undo, and tips for building a 2048 tile.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mini-game-arcade-zaim.vercel.app/play/2048-puzzle">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Neo Arcade Vault">
+  <meta property="og:title" content="How to Play 2048 Puzzle: Rules, Controls &amp; Tips | Neo Arcade Vault">
+  <meta property="og:description" content="How to play 2048 Puzzle: arrow key and swipe controls, how tiles merge, how scoring works, the one-step undo, and tips for building a 2048 tile.">
+  <meta property="og:url" content="https://mini-game-arcade-zaim.vercel.app/play/2048-puzzle">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="How to Play 2048 Puzzle: Rules, Controls &amp; Tips | Neo Arcade Vault">
+  <meta name="twitter:description" content="How to play 2048 Puzzle: arrow key and swipe controls, how tiles merge, how scoring works, the one-step undo, and tips for building a 2048 tile.">
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "VideoGame",
+      "@id": "https://mini-game-arcade-zaim.vercel.app/play/2048-puzzle#game",
+      "name": "2048 Puzzle",
+      "description": "How to play 2048 Puzzle: arrow key and swipe controls, how tiles merge, how scoring works, the one-step undo, and tips for building a 2048 tile.",
+      "url": "https://mini-game-arcade-zaim.vercel.app/play/2048-puzzle",
+      "genre": [
+        "Puzzle",
+        "Strategy"
+      ],
+      "gamePlatform": "Web browser",
+      "applicationCategory": "Game",
+      "playMode": [
+        "SinglePlayer"
+      ],
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "publisher": {
+        "@type": "Organization",
+        "name": "Neo Arcade Vault",
+        "url": "https://mini-game-arcade-zaim.vercel.app/"
+      },
+      "potentialAction": {
+        "@type": "PlayAction",
+        "target": "https://mini-game-arcade-zaim.vercel.app/#/game/puzzle-2048"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://mini-game-arcade-zaim.vercel.app/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Games",
+          "item": "https://mini-game-arcade-zaim.vercel.app/games"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "2048 Puzzle Guide & Rules",
+          "item": "https://mini-game-arcade-zaim.vercel.app/play/2048-puzzle"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Do I have to stop at 2048?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. When you reach 2048, choose KEEP PLAYING to carry on with the same board."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I undo more than one move?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Undo goes back one step only."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What new tiles appear?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A 2 most of the time (about 90%) and a 4 occasionally (about 10%)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What ends the game?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A full board with no two neighbouring tiles that match."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my progress saved if I leave?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Only your best score is saved, in this browser. The current board is not."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does it work on a phone?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Swipe on the board or use the on-screen arrow buttons."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/arcade.css">
+  <link rel="stylesheet" href="/css/pages.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <div class="arcade-background" aria-hidden="true">
+    <div class="arcade-grid"></div>
+    <div class="ambient-flare flare-1"></div>
+    <div class="ambient-flare flare-2"></div>
+  </div>
+
+  <div id="portal-app">
+    <header>
+      <nav class="arcade-navbar" aria-label="Main navigation">
+        <a class="nav-brand" href="/" aria-label="Neo Arcade Vault - home">
+          <span class="brand-bolt">⚡</span>
+          <span class="brand-text">NEO ARCADE</span>
+          <span class="brand-badge">VAULT</span>
+        </a>
+        <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/games">Games</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="main-content" class="page-main">
+      <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/games">Games</a> &rsaquo; <span>2048 Puzzle Guide &amp; Rules</span></nav>
+
+      <section class="page-hero">
+        <div class="hero-tag">Puzzle game</div>
+        <h1 class="page-title">2048 Puzzle: Guide &amp; Rules</h1>
+        <p class="page-lead">2048 Puzzle is a sliding-tile number game on a 4 x 4 board. Every move slides all the tiles in one direction, and when two tiles with the same number collide they merge into one tile with double the value. Build a 2048 tile to win, or keep going for a higher score. This version includes a one-step undo.</p>
+        <div class="btn-row">
+          <a class="btn-link" href="/#/game/puzzle-2048">Play 2048 Puzzle now</a>
+          <a class="btn-link secondary" href="/games">Browse all games</a>
+        </div>
+        <p class="page-meta">Free in your browser. No download and no sign-up.</p>
+      </section>
+
+      <section aria-labelledby="quick-facts">
+        <h2 id="quick-facts" class="sr-only">Quick facts</h2>
+        <div class="card-grid">
+          <div class="info-card">
+            <h3>Category</h3>
+            <p>Puzzle</p>
+          </div>
+          <div class="info-card">
+            <h3>Board</h3>
+            <p>4 x 4</p>
+          </div>
+          <div class="info-card">
+            <h3>Goal</h3>
+            <p>Build a 2048 tile</p>
+          </div>
+          <div class="info-card">
+            <h3>Undo</h3>
+            <p>One step</p>
+          </div>
+        </div>
+      </section>
+
+      <nav class="toc" aria-label="On this page">
+        <h2>On this page</h2>
+        <ol>
+          <li><a href="#how-to-play">How to play 2048 Puzzle</a></li>
+          <li><a href="#controls">Controls</a></li>
+          <li><a href="#scoring">Scoring</a></li>
+          <li><a href="#how-it-ends">How a round ends</a></li>
+          <li><a href="#features">Special features</a></li>
+          <li><a href="#tips">Tips for beginners</a></li>
+          <li><a href="#faq">2048 Puzzle FAQ</a></li>
+        </ol>
+      </nav>
+
+      <section class="content-card prose" aria-labelledby="how-to-play">
+        <h2 id="how-to-play">How to play 2048 Puzzle</h2>
+        <p>The game starts as soon as it opens, with two tiles on the board. Each new tile is a 2, or a 4 about one time in ten. After every move that changes the board, one new tile appears in a random empty cell. A move that changes nothing does not add a tile.</p>
+        <p>In a single move each tile can merge only once. If three equal tiles sit in a row, the two nearest the wall you are sliding towards merge, and the third stays put.</p>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="controls">
+        <h2 id="controls">Controls</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th scope="col">Input</th><th scope="col">What it does</th></tr></thead>
+            <tbody>
+              <tr><td><code>Arrow keys</code> or <code>W A S D</code></td><td>Slide all tiles up, down, left or right.</td></tr>
+              <tr><td><code>Z</code> or <code>Backspace</code></td><td>Undo your last move.</td></tr>
+              <tr><td><code>Space</code> or <code>Enter</code></td><td>Start a new game after a game over.</td></tr>
+              <tr><td>Touch swipe</td><td>Swipe on the board (about 25 pixels or more) in the direction you want the tiles to slide.</td></tr>
+              <tr><td>On-screen D-pad</td><td>Four arrow buttons below the board. They work with touch and with mouse clicks.</td></tr>
+              <tr><td>Buttons at the top</td><td>Undo (back arrow) and new game (circular arrows).</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Dragging with the mouse on the board does not move tiles. Use the keyboard or click the D-pad buttons.</p>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="scoring">
+        <h2 id="scoring">Scoring</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th scope="col">Event</th><th scope="col">Result</th></tr></thead>
+            <tbody>
+              <tr><td>Merging two tiles</td><td>You score the value of the new tile. Merging two 8s gives +16.</td></tr>
+              <tr><td>Sliding without a merge</td><td>No points</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Your best score is updated as it grows during a game.</p>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="how-it-ends">
+        <h2 id="how-it-ends">How a round ends</h2>
+        <p>When a 2048 tile appears for the first time, an overlay says "YOU REACHED 2048!". You can choose KEEP PLAYING to carry on with the same board and keep scoring, or TRY AGAIN for a new game.</p>
+        <p>The game ends with "GAME OVER" when the board is full and no two neighbouring tiles match. The panel shows your score and best score, and Undo is still available from that screen.</p>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="features">
+        <h2 id="features">Special features</h2>
+        <ul>
+          <li><strong>One-step undo.</strong> Takes back your latest move, including its score.</li>
+          <li><strong>Keep playing after 2048.</strong> The board is not cut off when you win.</li>
+          <li>The board itself is not saved when you leave, only your best score.</li>
+        </ul>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="tips">
+        <h2 id="tips">Tips for beginners</h2>
+        <ul>
+          <li>Undo right after a move you regret. It only goes back one move, and it cannot be used twice in a row.</li>
+          <li>Trying a direction that cannot move is harmless: no tile is added. But it counts as your latest step for Undo, so Undo after a blocked press will not take you back any further.</li>
+          <li>Slide towards the wall in a regular pattern. A common way to play is to keep your biggest tile in one corner, though the game does not require it.</li>
+          <li>Before a move, check rows and columns for pairs that will merge together, because each merge scores the new tile value.</li>
+          <li>Remember that a new tile appears after every move that works, so avoid filling the board with tiles that do not match.</li>
+        </ul>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="faq">
+        <h2 id="faq">2048 Puzzle FAQ</h2>
+        <div class="faq-item">
+          <h3>Do I have to stop at 2048?</h3>
+          <p>No. When you reach 2048, choose KEEP PLAYING to carry on with the same board.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can I undo more than one move?</h3>
+          <p>No. Undo goes back one step only.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What new tiles appear?</h3>
+          <p>A 2 most of the time (about 90%) and a 4 occasionally (about 10%).</p>
+        </div>
+        <div class="faq-item">
+          <h3>What ends the game?</h3>
+          <p>A full board with no two neighbouring tiles that match.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Is my progress saved if I leave?</h3>
+          <p>No. Only your best score is saved, in this browser. The current board is not.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Does it work on a phone?</h3>
+          <p>Yes. Swipe on the board or use the on-screen arrow buttons.</p>
+        </div>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="more-games">
+        <h2 id="more-games">More games to try</h2>
+        <div class="card-grid">
+          <article class="info-card">
+            <h3><a href="/play/block-puzzle">Block Puzzle guide</a></h3>
+            <p>Clear lines on a 10 x 20 board with hold and ghost outline.</p>
+          </article>
+          <article class="info-card">
+            <h3><a href="/play/memory-match">Memory Match guide</a></h3>
+            <p>Match eight pairs of cards in as few moves as you can.</p>
+          </article>
+          <article class="info-card">
+            <h3><a href="/play/tic-tac-toe">Tic-Tac-Toe guide</a></h3>
+            <p>Play the computer or a friend on a 3 x 3 grid.</p>
+          </article>
+        </div>
+        <div class="btn-row">
+          <a class="btn-link" href="/#/game/puzzle-2048">Play 2048 Puzzle now</a>
+          <a class="btn-link secondary" href="/games">Browse all games</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="arcade-footer site-footer">
+      <div class="footer-brand"><span class="brand-bolt">⚡</span> NEO ARCADE</div>
+      <p>A free collection of 10 browser mini-games. No downloads, no sign-up.</p>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="/">Home</a>
+        <a href="/games">Games</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        <a href="/privacy-policy">Privacy Policy</a>
+        <a href="/terms">Terms &amp; Conditions</a>
+      </nav>
+      <p class="footer-copy">&copy; <span data-year>2026</span> Neo Arcade Vault. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <script src="/js/site-shell.js"></script>
+</body>
+</html>

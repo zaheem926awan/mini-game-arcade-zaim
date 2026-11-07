@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090d16">
+  <title>How to Play Neon Snake: Rules, Controls &amp; Tips | Neo Arcade Vault</title>
+  <meta name="description" content="How to play Neon Snake: arrow key, WASD, swipe and D-pad controls, apple and golden star scoring, speed-ups and what ends a run, plus beginner tips.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mini-game-arcade-zaim.vercel.app/play/neon-snake">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Neo Arcade Vault">
+  <meta property="og:title" content="How to Play Neon Snake: Rules, Controls &amp; Tips | Neo Arcade Vault">
+  <meta property="og:description" content="How to play Neon Snake: arrow key, WASD, swipe and D-pad controls, apple and golden star scoring, speed-ups and what ends a run, plus beginner tips.">
+  <meta property="og:url" content="https://mini-game-arcade-zaim.vercel.app/play/neon-snake">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="How to Play Neon Snake: Rules, Controls &amp; Tips | Neo Arcade Vault">
+  <meta name="twitter:description" content="How to play Neon Snake: arrow key, WASD, swipe and D-pad controls, apple and golden star scoring, speed-ups and what ends a run, plus beginner tips.">
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "VideoGame",
+      "@id": "https://mini-game-arcade-zaim.vercel.app/play/neon-snake#game",
+      "name": "Neon Snake",
+      "description": "How to play Neon Snake: arrow key, WASD, swipe and D-pad controls, apple and golden star scoring, speed-ups and what ends a run, plus beginner tips.",
+      "url": "https://mini-game-arcade-zaim.vercel.app/play/neon-snake",
+      "genre": [
+        "Arcade",
+        "Classic"
+      ],
+      "gamePlatform": "Web browser",
+      "applicationCategory": "Game",
+      "playMode": [
+        "SinglePlayer"
+      ],
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "publisher": {
+        "@type": "Organization",
+        "name": "Neo Arcade Vault",
+        "url": "https://mini-game-arcade-zaim.vercel.app/"
+      },
+      "potentialAction": {
+        "@type": "PlayAction",
+        "target": "https://mini-game-arcade-zaim.vercel.app/#/game/snake"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://mini-game-arcade-zaim.vercel.app/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Games",
+          "item": "https://mini-game-arcade-zaim.vercel.app/games"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Neon Snake Guide & Rules",
+          "item": "https://mini-game-arcade-zaim.vercel.app/play/neon-snake"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does the snake wrap around the edges?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Touching any wall ends the run."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How fast does the snake get?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It starts at one step every 120 milliseconds and speeds up by 4 milliseconds for every 3 apples, until it reaches 65 milliseconds per step."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "When does the golden star appear?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "After every 5th apple you eat, as long as a star is not already on the board. It disappears after 6 seconds."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I play with a mouse?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You can click the on-screen D-pad buttons. The mouse does not steer on the board itself."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens if I press the opposite direction?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Nothing. The snake cannot reverse straight into itself, so that input is ignored."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my best score saved?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, in this browser on this device."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/arcade.css">
+  <link rel="stylesheet" href="/css/pages.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <div class="arcade-background" aria-hidden="true">
+    <div class="arcade-grid"></div>
+    <div class="ambient-flare flare-1"></div>
+    <div class="ambient-flare flare-2"></div>
+  </div>
+
+  <div id="portal-app">
+    <header>
+      <nav class="arcade-navbar" aria-label="Main navigation">
+        <a class="nav-brand" href="/" aria-label="Neo Arcade Vault - home">
+          <span class="brand-bolt">⚡</span>
+          <span class="brand-text">NEO ARCADE</span>
+          <span class="brand-badge">VAULT</span>
+        </a>
+        <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/games">Games</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="main-content" class="page-main">
+      <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/games">Games</a> &rsaquo; <span>Neon Snake Guide &amp; Rules</span></nav>
+
+      <section class="page-hero">
+        <div class="hero-tag">Arcade game</div>
+        <h1 class="page-title">Neon Snake: Guide &amp; Rules</h1>
+        <p class="page-lead">Neon Snake is a grid-based snake game. Steer a glowing snake around a 22 x 22 board, eat apples to grow, grab the golden star that appears after every fifth apple, and avoid the walls and your own tail. The snake speeds up as you eat, and a single crash ends the run.</p>
+        <div class="btn-row">
+          <a class="btn-link" href="/#/game/snake">Play Neon Snake now</a>
+          <a class="btn-link secondary" href="/games">Browse all games</a>
+        </div>
+        <p class="page-meta">Free in your browser. No download and no sign-up.</p>
+      </section>
+
+      <section aria-labelledby="quick-facts">
+        <h2 id="quick-facts" class="sr-only">Quick facts</h2>
+        <div class="card-grid">
+          <div class="info-card">
+            <h3>Category</h3>
+            <p>Arcade</p>
+          </div>
+          <div class="info-card">
+            <h3>Board</h3>
+            <p>22 x 22 cells</p>
+          </div>
+          <div class="info-card">
+            <h3>Starting length</h3>
+            <p>3 cells</p>
+          </div>
+          <div class="info-card">
+            <h3>Best score</h3>
+            <p>Saved in this browser</p>
+          </div>
+        </div>
+      </section>
+
+      <nav class="toc" aria-label="On this page">
+        <h2>On this page</h2>
+        <ol>
+          <li><a href="#how-to-play">How to play Neon Snake</a></li>
+          <li><a href="#controls">Controls</a></li>
+          <li><a href="#scoring">Scoring</a></li>
+          <li><a href="#how-it-ends">How a round ends</a></li>
+          <li><a href="#features">Special features</a></li>
+          <li><a href="#tips">Tips for beginners</a></li>
+          <li><a href="#good-to-know">Good to know</a></li>
+          <li><a href="#faq">Neon Snake FAQ</a></li>
+        </ol>
+      </nav>
+
+      <section class="content-card prose" aria-labelledby="how-to-play">
+        <h2 id="how-to-play">How to play Neon Snake</h2>
+        <p>You start with a snake of three cells heading right. There is one red apple on the board at a time. Eating it makes the snake one cell longer and scores points, and a new apple appears in a free cell.</p>
+        <p>After every fifth apple, a golden star appears in a random free cell and stays for 6 seconds. It is worth much more than an apple.</p>
+        <p>The snake moves one cell per step. A step takes 120 milliseconds at the start, and gets 4 milliseconds shorter for every 3 apples you eat, down to a fastest step of 65 milliseconds. The board has solid walls and does not wrap around. You cannot turn straight back on yourself, because a 180 degree turn is ignored.</p>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="controls">
+        <h2 id="controls">Controls</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th scope="col">Input</th><th scope="col">What it does</th></tr></thead>
+            <tbody>
+              <tr><td><code>Arrow keys</code> or <code>W A S D</code></td><td>Steer the snake.</td></tr>
+              <tr><td><code>P</code> or <code>Esc</code></td><td>Pause, and press again to resume.</td></tr>
+              <tr><td><code>Space</code> or <code>Enter</code></td><td>Start a new run after a game over. On the first screen, click PLAY NOW instead.</td></tr>
+              <tr><td>Touch swipe</td><td>Swipe on the board (about 25 pixels or more) in the direction you want to turn.</td></tr>
+              <tr><td>On-screen D-pad</td><td>Four arrow buttons below the board. They work with touch and with mouse clicks.</td></tr>
+              <tr><td>Buttons at the top</td><td>Pause and restart.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>The mouse cannot steer directly on the board. On a computer, use the keyboard, or click the D-pad buttons.</p>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="scoring">
+        <h2 id="scoring">Scoring</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th scope="col">Event</th><th scope="col">Result</th></tr></thead>
+            <tbody>
+              <tr><td>Apple</td><td>+10 points, and the snake grows by one cell</td></tr>
+              <tr><td>Golden star</td><td>+50 points, and the snake grows by one cell. A star does not count toward the next "every 5 apples" star.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Your best score is updated as soon as you beat it during a run.</p>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="how-it-ends">
+        <h2 id="how-it-ends">How a round ends</h2>
+        <p>The run ends when the head hits a wall ("Hit the electric boundary wall!") or the snake runs into its own body ("Ran into yourself!"). There is no winning screen: you play for a longer snake and a higher score.</p>
+        <p>The game-over panel shows your final score, snake length, apples eaten and your best score.</p>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="features">
+        <h2 id="features">Special features</h2>
+        <ul>
+          <li><strong>Golden star bonus.</strong> Appears after every 5th apple and lasts 6 seconds.</li>
+          <li><strong>Speed scaling.</strong> The game gets faster as you eat, up to a fixed limit.</li>
+          <li><strong>Live HUD.</strong> Score, best score and snake length are shown above the board.</li>
+          <li>There are no difficulty settings or extra modes in this game.</li>
+        </ul>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="tips">
+        <h2 id="tips">Tips for beginners</h2>
+        <ul>
+          <li>The first apples are the slowest part of a run. Use them to settle into a steady rhythm before the speed rises.</li>
+          <li>Count your apples. A star that is 50 points is worth five apples, but only pick it up if the route is safe within the 6 seconds.</li>
+          <li>Only one pending turn is stored per step, so tap a direction once and wait for the snake to move rather than pressing two keys at once.</li>
+          <li>As the snake grows, leave yourself an open lane to turn into. Long snakes end runs far more often than walls do.</li>
+          <li>On a phone, short decisive swipes work better than long drags.</li>
+        </ul>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="good-to-know">
+        <h2 id="good-to-know">Good to know</h2>
+        <ul>
+          <li>Pause with <code>P</code> or <code>Esc</code> and resume with the same key. The on-screen Resume button currently restarts the run, so on a phone it is best not to pause mid-run.</li>
+          <li>A golden star's 6-second timer keeps running while the game is paused.</li>
+        </ul>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="faq">
+        <h2 id="faq">Neon Snake FAQ</h2>
+        <div class="faq-item">
+          <h3>Does the snake wrap around the edges?</h3>
+          <p>No. Touching any wall ends the run.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How fast does the snake get?</h3>
+          <p>It starts at one step every 120 milliseconds and speeds up by 4 milliseconds for every 3 apples, until it reaches 65 milliseconds per step.</p>
+        </div>
+        <div class="faq-item">
+          <h3>When does the golden star appear?</h3>
+          <p>After every 5th apple you eat, as long as a star is not already on the board. It disappears after 6 seconds.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can I play with a mouse?</h3>
+          <p>You can click the on-screen D-pad buttons. The mouse does not steer on the board itself.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What happens if I press the opposite direction?</h3>
+          <p>Nothing. The snake cannot reverse straight into itself, so that input is ignored.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Is my best score saved?</h3>
+          <p>Yes, in this browser on this device.</p>
+        </div>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="more-games">
+        <h2 id="more-games">More games to try</h2>
+        <div class="card-grid">
+          <article class="info-card">
+            <h3><a href="/play/brick-breaker">Brick Breaker guide</a></h3>
+            <p>Clear three stages of bricks with a paddle and a ball.</p>
+          </article>
+          <article class="info-card">
+            <h3><a href="/play/endless-runner">Endless Runner guide</a></h3>
+            <p>Jump, double jump and slide through a neon skyline.</p>
+          </article>
+          <article class="info-card">
+            <h3><a href="/play/2048-puzzle">2048 Puzzle guide</a></h3>
+            <p>Slide and merge tiles on a 4 x 4 board.</p>
+          </article>
+        </div>
+        <div class="btn-row">
+          <a class="btn-link" href="/#/game/snake">Play Neon Snake now</a>
+          <a class="btn-link secondary" href="/games">Browse all games</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="arcade-footer site-footer">
+      <div class="footer-brand"><span class="brand-bolt">⚡</span> NEO ARCADE</div>
+      <p>A free collection of 10 browser mini-games. No downloads, no sign-up.</p>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="/">Home</a>
+        <a href="/games">Games</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        <a href="/privacy-policy">Privacy Policy</a>
+        <a href="/terms">Terms &amp; Conditions</a>
+      </nav>
+      <p class="footer-copy">&copy; <span data-year>2026</span> Neo Arcade Vault. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <script src="/js/site-shell.js"></script>
+</body>
+</html>

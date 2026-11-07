@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090d16">
+  <title>How to Play Whack-a-Mole: Rules, Scoring &amp; Tips | Neo Arcade Vault</title>
+  <meta name="description" content="How to play Whack-a-Mole: click or tap moles and golden stars, avoid bombs, build combos for bonus multipliers and beat the 30-second timer.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mini-game-arcade-zaim.vercel.app/play/whack-a-mole">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Neo Arcade Vault">
+  <meta property="og:title" content="How to Play Whack-a-Mole: Rules, Scoring &amp; Tips | Neo Arcade Vault">
+  <meta property="og:description" content="How to play Whack-a-Mole: click or tap moles and golden stars, avoid bombs, build combos for bonus multipliers and beat the 30-second timer.">
+  <meta property="og:url" content="https://mini-game-arcade-zaim.vercel.app/play/whack-a-mole">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="How to Play Whack-a-Mole: Rules, Scoring &amp; Tips | Neo Arcade Vault">
+  <meta name="twitter:description" content="How to play Whack-a-Mole: click or tap moles and golden stars, avoid bombs, build combos for bonus multipliers and beat the 30-second timer.">
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "VideoGame",
+      "@id": "https://mini-game-arcade-zaim.vercel.app/play/whack-a-mole#game",
+      "name": "Whack-a-Mole",
+      "description": "How to play Whack-a-Mole: click or tap moles and golden stars, avoid bombs, build combos for bonus multipliers and beat the 30-second timer.",
+      "url": "https://mini-game-arcade-zaim.vercel.app/play/whack-a-mole",
+      "genre": [
+        "Casual",
+        "Reflex"
+      ],
+      "gamePlatform": "Web browser",
+      "applicationCategory": "Game",
+      "playMode": [
+        "SinglePlayer"
+      ],
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "publisher": {
+        "@type": "Organization",
+        "name": "Neo Arcade Vault",
+        "url": "https://mini-game-arcade-zaim.vercel.app/"
+      },
+      "potentialAction": {
+        "@type": "PlayAction",
+        "target": "https://mini-game-arcade-zaim.vercel.app/#/game/whack-a-mole"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://mini-game-arcade-zaim.vercel.app/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Games",
+          "item": "https://mini-game-arcade-zaim.vercel.app/games"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Whack-a-Mole Guide & Rules",
+          "item": "https://mini-game-arcade-zaim.vercel.app/play/whack-a-mole"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Do I lose points for missing a mole?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Only hitting a bomb costs points."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does the combo multiplier work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Each mole or star you hit in a row raises the combo. From your 2nd hit points are x1.5 and from your 4th they are x2. A bomb resets it."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is accuracy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The share of your whacks that were moles or stars rather than bombs. Missed moles do not count."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use the keyboard?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Click or tap the holes."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How long is a round?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "30 seconds."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my best score saved?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, in this browser on this device."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/arcade.css">
+  <link rel="stylesheet" href="/css/pages.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <div class="arcade-background" aria-hidden="true">
+    <div class="arcade-grid"></div>
+    <div class="ambient-flare flare-1"></div>
+    <div class="ambient-flare flare-2"></div>
+  </div>
+
+  <div id="portal-app">
+    <header>
+      <nav class="arcade-navbar" aria-label="Main navigation">
+        <a class="nav-brand" href="/" aria-label="Neo Arcade Vault - home">
+          <span class="brand-bolt">⚡</span>
+          <span class="brand-text">NEO ARCADE</span>
+          <span class="brand-badge">VAULT</span>
+        </a>
+        <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/games">Games</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="main-content" class="page-main">
+      <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/games">Games</a> &rsaquo; <span>Whack-a-Mole Guide &amp; Rules</span></nav>
+
+      <section class="page-hero">
+        <div class="hero-tag">Casual game</div>
+        <h1 class="page-title">Whack-a-Mole: Guide &amp; Rules</h1>
+        <p class="page-lead">Whack-a-Mole is a 30-second reflex game on a 3 x 3 board. Moles, golden stars and bombs pop out of the holes for a moment. Hit the moles and stars as fast as you can, build a combo for bigger scores and keep your hands off the bombs.</p>
+        <div class="btn-row">
+          <a class="btn-link" href="/#/game/whack-a-mole">Play Whack-a-Mole now</a>
+          <a class="btn-link secondary" href="/games">Browse all games</a>
+        </div>
+        <p class="page-meta">Free in your browser. No download and no sign-up.</p>
+      </section>
+
+      <section aria-labelledby="quick-facts">
+        <h2 id="quick-facts" class="sr-only">Quick facts</h2>
+        <div class="card-grid">
+          <div class="info-card">
+            <h3>Category</h3>
+            <p>Casual</p>
+          </div>
+          <div class="info-card">
+            <h3>Round length</h3>
+            <p>30 seconds</p>
+          </div>
+          <div class="info-card">
+            <h3>Holes</h3>
+            <p>9 (3 x 3)</p>
+          </div>
+          <div class="info-card">
+            <h3>Best score</h3>
+            <p>Saved in this browser</p>
+          </div>
+        </div>
+      </section>
+
+      <nav class="toc" aria-label="On this page">
+        <h2>On this page</h2>
+        <ol>
+          <li><a href="#how-to-play">How to play Whack-a-Mole</a></li>
+          <li><a href="#controls">Controls</a></li>
+          <li><a href="#scoring">Scoring</a></li>
+          <li><a href="#how-it-ends">How a round ends</a></li>
+          <li><a href="#features">Special features</a></li>
+          <li><a href="#tips">Tips for beginners</a></li>
+          <li><a href="#good-to-know">Good to know</a></li>
+          <li><a href="#faq">Whack-a-Mole FAQ</a></li>
+        </ol>
+      </nav>
+
+      <section class="content-card prose" aria-labelledby="how-to-play">
+        <h2 id="how-to-play">How to play Whack-a-Mole</h2>
+        <p>Every 0.45 to 0.9 seconds, something pops up in a random empty hole. Roughly 58% of the time it is a mole, 22% a golden star and 20% a bomb.</p>
+        <p>Moles stay up for about 0.9 to 1.3 seconds. Golden stars are quicker, at 0.75 seconds. Bombs stay for about 1.1 seconds.</p>
+        <p>Your combo counts successful hits in a row. From your second hit in a row, points are multiplied by 1.5, and from your fourth hit in a row they are multiplied by 2. Only hitting a bomb resets the combo. A mole or star that gets away does not break it, and clicking an empty hole does nothing.</p>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="controls">
+        <h2 id="controls">Controls</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th scope="col">Input</th><th scope="col">What it does</th></tr></thead>
+            <tbody>
+              <tr><td>Mouse</td><td>Click a mole, star or bomb to whack it.</td></tr>
+              <tr><td>Touch</td><td>Tap a mole, star or bomb.</td></tr>
+              <tr><td>Buttons at the top</td><td>Pause and restart.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>There are no keyboard controls in this game.</p>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="scoring">
+        <h2 id="scoring">Scoring</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th scope="col">Event</th><th scope="col">Result</th></tr></thead>
+            <tbody>
+              <tr><td>Mole</td><td>+10 points (15 at combo 2 or 3, 20 at combo 4 and above)</td></tr>
+              <tr><td>Golden star</td><td>+30 points (45 at combo 2 or 3, 60 at combo 4 and above)</td></tr>
+              <tr><td>Bomb</td><td>-15 points (never below 0), and your combo resets to 0</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Your best score is updated as it grows during the round.</p>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="how-it-ends">
+        <h2 id="how-it-ends">How a round ends</h2>
+        <p>The round ends when the 30-second timer reaches zero, with "TIME'S UP!". There is no losing screen. The panel shows your final score, max combo, accuracy and best score.</p>
+        <p>Accuracy here is the share of your whacks that were moles or stars rather than bombs. Escaped moles and clicks on empty holes are not counted.</p>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="features">
+        <h2 id="features">Special features</h2>
+        <ul>
+          <li><strong>Golden stars</strong> are worth three times a mole but stay up the shortest time.</li>
+          <li><strong>Combo multiplier</strong> of 1.5 and then 2.</li>
+          <li><strong>Bombs</strong> that cost points and break your streak.</li>
+        </ul>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="tips">
+        <h2 id="tips">Tips for beginners</h2>
+        <ul>
+          <li>Do not hit bombs. They are the only thing that resets your combo.</li>
+          <li>Missed moles are free, so skip a hole if hitting it would mean clicking a bomb.</li>
+          <li>Hit golden stars first when you see them. They disappear soonest and are worth the most.</li>
+          <li>Once you are at a combo of 4, every hit is worth double, so protect that streak.</li>
+          <li>Keep your pointer or finger near the middle of the board so that every hole is within quick reach.</li>
+        </ul>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="good-to-know">
+        <h2 id="good-to-know">Good to know</h2>
+        <ul>
+          <li>The pause button's tooltip mentions the P key, but there is no keyboard shortcut in this game. Moles that are showing when you pause disappear, and the on-screen Resume button currently restarts the round, so it is best not to pause mid-round.</li>
+        </ul>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="faq">
+        <h2 id="faq">Whack-a-Mole FAQ</h2>
+        <div class="faq-item">
+          <h3>Do I lose points for missing a mole?</h3>
+          <p>No. Only hitting a bomb costs points.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How does the combo multiplier work?</h3>
+          <p>Each mole or star you hit in a row raises the combo. From your 2nd hit points are x1.5 and from your 4th they are x2. A bomb resets it.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What is accuracy?</h3>
+          <p>The share of your whacks that were moles or stars rather than bombs. Missed moles do not count.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can I use the keyboard?</h3>
+          <p>No. Click or tap the holes.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How long is a round?</h3>
+          <p>30 seconds.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Is my best score saved?</h3>
+          <p>Yes, in this browser on this device.</p>
+        </div>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="more-games">
+        <h2 id="more-games">More games to try</h2>
+        <div class="card-grid">
+          <article class="info-card">
+            <h3><a href="/play/fruit-slice">Fruit Slice guide</a></h3>
+            <p>A 60-second blade game with combos and bombs.</p>
+          </article>
+          <article class="info-card">
+            <h3><a href="/play/memory-match">Memory Match guide</a></h3>
+            <p>Match eight pairs of cards in as few moves as you can.</p>
+          </article>
+          <article class="info-card">
+            <h3><a href="/play/endless-runner">Endless Runner guide</a></h3>
+            <p>Jump, double jump and slide through a neon skyline.</p>
+          </article>
+        </div>
+        <div class="btn-row">
+          <a class="btn-link" href="/#/game/whack-a-mole">Play Whack-a-Mole now</a>
+          <a class="btn-link secondary" href="/games">Browse all games</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="arcade-footer site-footer">
+      <div class="footer-brand"><span class="brand-bolt">⚡</span> NEO ARCADE</div>
+      <p>A free collection of 10 browser mini-games. No downloads, no sign-up.</p>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="/">Home</a>
+        <a href="/games">Games</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        <a href="/privacy-policy">Privacy Policy</a>
+        <a href="/terms">Terms &amp; Conditions</a>
+      </nav>
+      <p class="footer-copy">&copy; <span data-year>2026</span> Neo Arcade Vault. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <script src="/js/site-shell.js"></script>
+</body>
+</html>
