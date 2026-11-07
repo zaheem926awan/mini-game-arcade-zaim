@@ -616,6 +616,85 @@ test('Accessibility: portal renders one <main> per view, keeping navbar, subnav 
   assert(home.slice(home.indexOf('<main'), home.indexOf('</main>')).includes('<h1'), 'home view: <h1> must be inside <main>');
 });
 
+// ---------------------------------------------------------------------------
+// Static homepage content (works without JavaScript; arcade.js moves it, never copies it)
+// ---------------------------------------------------------------------------
+const HOME_GUIDES = {
+  'fruit-slice': 'Fruit Slice', 'neon-snake': 'Neon Snake', 'brick-breaker': 'Brick Breaker',
+  'space-shooter': 'Space Shooter', '2048-puzzle': '2048 Puzzle', 'tic-tac-toe': 'Tic-Tac-Toe',
+  'memory-match': 'Memory Match', 'endless-runner': 'Endless Runner', 'block-puzzle': 'Block Puzzle',
+  'whack-a-mole': 'Whack-a-Mole'
+};
+function homeInfo() {
+  const h = liveHtml('index.html');
+  const m = h.match(/<section class="home-info"[\s\S]*?<\/section>/);
+  assert(m, 'index.html: static .home-info section is missing');
+  return { section: m[0], page: h };
+}
+const plain = (html) => html.replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
+
+test('Homepage static HTML: one intro/guide section inside <main>, with a clean heading hierarchy', () => {
+  const { section, page } = homeInfo();
+  assert.strictEqual((page.match(/class="home-info"/g) || []).length, 1, 'exactly one .home-info section');
+  const mainHtml = page.slice(page.indexOf('<main'), page.indexOf('</main>'));
+  assert(mainHtml.includes('class="home-info"'), '.home-info must be inside the page <main>');
+  assert((page.match(/<h1[ >]/g) || []).length === 1, 'still exactly one <h1>');
+  const levels = (page.match(/<h([1-6])[ >]/g) || []).map(x => Number(x[2]));
+  levels.forEach((lv, i) => assert(i === 0 ? lv === 1 : lv <= levels[i - 1] + 1, `heading level jumps from h${levels[i - 1]} to h${lv}`));
+  const h2s = (section.match(/<h2[ >]/g) || []).length, h3s = (section.match(/<h3[ >]/g) || []).length;
+  assert(h2s === 2 && h3s === 10, `expected 2 h2 and 10 h3 in the section, found ${h2s} h2 and ${h3s} h3`);
+  const words = plain(section).split(' ').length;
+  assert(words >= 300 && words <= 700, `static section should be useful but light (found ${words} words)`);
+  assert(/free/i.test(section) && /no account|nothing to install/i.test(section), 'intro must explain what the site is and that it is free');
+});
+
+test('Homepage static HTML: crawlable, descriptive links to all 10 existing guide pages', () => {
+  const { section } = homeInfo();
+  const links = [...section.matchAll(/<a href="(\/play\/[^"]+)">([^<]+)<\/a>/g)].map(m => ({ href: m[1], text: m[2].trim() }));
+  assert.strictEqual(links.length, 10, `expected 10 /play/ links, found ${links.length}`);
+  for (const [slug, title] of Object.entries(HOME_GUIDES)) {
+    const l = links.filter(x => x.href === `/play/${slug}`);
+    assert.strictEqual(l.length, 1, `link to /play/${slug} must appear exactly once`);
+    assert(l[0].text.includes(title) && /guide/i.test(l[0].text), `link text for ${slug} must name the game and say it is a guide`);
+    assert(!/^(click here|here|read more|more|link)$/i.test(l[0].text), `${slug}: generic link text`);
+    assert(fs.existsSync(path.join(ROOT, 'play', `${slug}.html`)), `${slug}: guide file does not exist`);
+    assert(resolves(l[0].href), `${slug}: link does not resolve`);
+    assert(new RegExp(`<h3>${title.replace(/[-]/g, '\\-')}\\s`).test(section), `${slug}: needs an <h3> with the game name`);
+  }
+  assert.strictEqual(new Set(links.map(l => l.text)).size, 10, 'link texts must be unique');
+  assert(section.includes('href="/games"') && section.includes('href="/about"'), 'section links to the games and about pages');
+  // Every guide the homepage links to is also in the sitemap
+  const sm = read('sitemap.xml');
+  for (const slug of Object.keys(HOME_GUIDES)) assert(sm.includes(`/play/${slug}</loc>`), `${slug} missing from sitemap`);
+});
+
+test('Homepage static HTML: game facts match the guide for that game (no invented numbers)', () => {
+  const { section } = homeInfo();
+  const guideText = (slug) => plain(read(`play/${slug}.html`).replace(/<template[\s\S]*?<\/template>/g, ''));
+  for (const [slug, title] of Object.entries(HOME_GUIDES)) {
+    const li = (section.match(new RegExp(`<li>\\s*<h3>${title.replace(/[-]/g, '\\-')}[\\s\\S]*?</li>`)) || [''])[0];
+    assert(li, `${slug}: list item not found`);
+    const desc = plain(li);
+    const g = guideText(slug);
+    // sizes such as "22 x 22" and round lengths such as "60-second" must appear in the guide too
+    for (const fact of desc.match(/\b\d+ x \d+\b|\b\d+-second\b/g) || []) {
+      assert(g.includes(fact), `${slug}: homepage says "${fact}" but the guide does not`);
+    }
+  }
+});
+
+test('Homepage static HTML: shown once - arcade.js moves the section instead of duplicating it', () => {
+  const idx = read('index.html'), arcade = read('js/arcade.js'), css = read('css/pages.css');
+  assert(!/class="home-info"/.test(arcade) && !arcade.includes('/play/'), 'arcade.js must not re-render the guide section as a second copy');
+  assert(arcade.includes("querySelector?.('.home-info')") && arcade.includes('appendChild(this.homeInfo)'), 'arcade.js must keep and re-attach the static section');
+  assert(/\.home-info\s*\{/.test(css) && /\.home-game-list\s*\{/.test(css), 'styles for the static section must exist');
+  assert.strictEqual((idx.match(/\/play\/[a-z0-9-]+"/g) || []).length, 10, 'index.html links each guide exactly once');
+  // SEO / verification / accessibility items must survive
+  assert(idx.includes('name="google-site-verification" content="EUzjwsrCJ7rOlLMAv9V49wVVUIMJ9vyyOce6aKRHFRs"'), 'Search Console verification tag must stay');
+  assert(/<link rel="canonical" href="https:\/\/mini-game-arcade-zaim\.vercel\.app\/">/.test(idx), 'canonical must stay');
+  assert(/<meta name="viewport" content="width=device-width, initial-scale=1.0">/.test(idx), 'accessible viewport must stay');
+});
+
 console.log(`\nResults: ${passed}/${total} tests passed.`);
 
 // Report: domain status (placeholders are now a hard test failure above)
