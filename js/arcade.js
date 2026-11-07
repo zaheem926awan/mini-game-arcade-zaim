@@ -315,6 +315,7 @@ class ArcadePortal {
 
       ${this.shellSubnav('/')}
 
+      <main id="main-content">
       <h1 class="sr-only">Neo Arcade Vault: free online mini-games</h1>
       <section class="fx" aria-roledescription="carousel" aria-label="Featured games">
         ${slides}
@@ -339,6 +340,7 @@ class ArcadePortal {
       <section class="catalog-grid-section">
         <div id="games-grid" class="games-grid"></div>
       </section>
+      </main>
 
       ${this.shellFooter()}
     `;
@@ -510,6 +512,7 @@ class ArcadePortal {
     gameView.innerHTML = `
       ${this.shellSubnav(null)}
 
+      <main class="game-main">
       <div class="game-view-header">
         <div class="gv-left">
           <button class="btn-back-arcade" onclick="window.ArcadePortal.showHomeView()">${ico('back', 16)} Back to arcade</button>
@@ -557,6 +560,7 @@ class ArcadePortal {
             </div>`).join('')}
         </div>
       </div>
+      </main>
 
       ${this.shellFooter()}
     `;
