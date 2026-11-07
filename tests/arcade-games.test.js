@@ -421,25 +421,37 @@ test('getBestScoreForGame: real values only, safe defaults, lower-is-better hand
 function withPortalDom(fn) {
   const els = {};
   const getEl = (id) => els[id] || (els[id] = {
-    id, innerHTML: '', textContent: '', style: {},
-    classList: { add() {}, remove() {}, contains: () => false },
-    addEventListener() {}, querySelectorAll: () => []
+    id, innerHTML: '', textContent: '', style: {}, dataset: {},
+    classList: { add() {}, remove() {}, toggle() {}, contains: () => false },
+    addEventListener() {}, removeEventListener() {},
+    getAttribute: () => '',
+    // arcade.js calls these on the rendered views (carousel, category pills, favourite buttons).
+    // The fake views render no real child nodes, so lookups find nothing, like an empty page.
+    querySelector: () => null, querySelectorAll: () => []
   });
   const prev = {
     getElementById: global.document.getElementById,
+    querySelectorAll: global.document.querySelectorAll,
     scrollTo: global.window.scrollTo,
     SoundManager: global.SoundManager
   };
   global.document.getElementById = getEl;
+  // refreshFavUI() looks up every [data-fav] button on the document; tests can supply fakes via els.__favButtons
+  global.document.querySelectorAll = (sel) => (sel === '[data-fav]' ? (els.__favButtons || []) : []);
   global.window.scrollTo = () => {};
   global.SoundManager = class { constructor() { this.enabled = true; } playClick() {} toggle() {} };
   localStorage.clear();
+  let portal;
   try {
-    const portal = new ArcadePortal();
+    portal = new ArcadePortal();
     portal.mountGame = () => {};   // render only; game engines are tested separately above
     return fn(portal, els);
   } finally {
+    // renderHome() starts the hero-carousel timer and openGame() starts the best-score refresh timer.
+    // Stop them with the portal's own cleanup, otherwise they fire after the fake DOM is gone and crash the run.
+    if (portal) { portal.stopHero(); portal.stopBestScoreRefresh(); }
     global.document.getElementById = prev.getElementById;
+    global.document.querySelectorAll = prev.querySelectorAll;
     global.window.scrollTo = prev.scrollTo;
     global.SoundManager = prev.SoundManager;
     localStorage.clear();
@@ -451,17 +463,20 @@ test('Portal home and cards: real best scores, no ratings, no play counts, 10 ca
   withPortalDom((portal, els) => {
     localStorage.setItem('arcade_snake_highscore', '1250');
     portal.renderHome();
+    assert.ok(portal.heroTimer, 'hero carousel timer starts when the home view renders');
     const home = els['home-portal-view'].innerHTML;
     const grid = els['games-grid'].innerHTML;
 
     ['⭐', ' Plays', 'POPULAR', '>HOT<', 'OF THE DAY'].forEach(bad => {
       assert.ok(!home.includes(bad) && !grid.includes(bad), `rendered page must not contain "${bad}"`);
     });
-    assert.ok(home.includes('Free to play') && home.includes('Action'), 'hero shows genuine details');
-    assert.ok(home.includes('Play to set a score'), 'hero invites a score when none saved');
+    assert.ok(home.includes('Free · No sign-up') && home.includes('Featured · Action'), 'hero shows genuine details');
+    assert.ok(home.includes('Set your first score'), 'hero invites a score when none saved');
+    assert.ok(home.includes('Your best: 1,250'), 'hero shows the real saved Neon Snake best score');
     assert.strictEqual((grid.match(/class="game-card"/g) || []).length, 10, 'all 10 cards render');
-    assert.ok(grid.includes('🏆 1,250'), 'saved Neon Snake best score appears on its card');
-    assert.strictEqual((grid.match(/🏆/g) || []).length, 1, 'only games with a saved score show one');
+    const snakeCard = grid.split('<article').find(c => c.includes('Neon Snake')) || '';
+    assert.ok(/class="card-rating" title="Your best on this device"><svg[\s\S]*?<\/svg> 1,250<\/span>/.test(snakeCard), 'saved Neon Snake best score appears on its card');
+    assert.strictEqual((grid.match(/class="card-rating"/g) || []).length, 1, 'only games with a saved score show one');
     assert.ok(grid.includes('REFLEX') && grid.includes('CLASSIC') && grid.includes('NEW'), 'descriptive badges render');
   });
 });
@@ -472,14 +487,14 @@ test('Game details: category, real best score, device note; no fake records', ()
     localStorage.setItem('arcade_memory_best', '14');
     portal.openGame('memory-match');
     let view = els['game-portal-view'].innerHTML;
-    assert.ok(view.includes('YOUR RECORDS') && view.includes('FEWEST MOVES') && view.includes('14 moves'));
+    assert.ok(view.includes('Your records') && view.includes('Fewest moves') && view.includes('14 moves'));
     assert.ok(view.includes('Casual') && view.includes('This device only'));
     assert.ok(view.includes('Click or Tap cards to reveal matching pairs.'), 'controls still shown');
     ['RATING', 'TOTAL SESSIONS', '⭐', '16.9k'].forEach(bad => assert.ok(!view.includes(bad), `must not contain "${bad}"`));
 
     portal.openGame('snake');
     view = els['game-portal-view'].innerHTML;
-    assert.ok(view.includes('BEST SCORE') && view.includes('No score yet'));
+    assert.ok(view.includes('Best score') && view.includes('No score yet'));
 
     portal.openGame('tic-tac-toe');
     view = els['game-portal-view'].innerHTML;
@@ -505,7 +520,7 @@ test('Best-score refresh updates the panel and cleans up its timer', () => {
 
 // 18. Search, filters and favorites still work
 test('Portal search, category filters and favorites still work', () => {
-  withPortalDom((portal) => {
+  withPortalDom((portal, els) => {
     portal.favorites = ['snake'];
     const count = () => portal.getFilteredGames().length;
     assert.strictEqual(count(), 10);
@@ -517,8 +532,16 @@ test('Portal search, category filters and favorites still work', () => {
     portal.selectedCategory = 'action';      assert.strictEqual(count(), 3);
     portal.selectedCategory = 'favorites';   assert.strictEqual(count(), 1);
     portal.selectedCategory = 'all';         assert.strictEqual(count(), 10);
+    const toggled = [];
+    const fakeBtn = (id) => ({ dataset: { fav: id }, innerHTML: '', classList: { toggle: (cls, on) => toggled.push([id, cls, on]) } });
+    els.__favButtons = [fakeBtn('snake'), fakeBtn('brick-breaker')];
     portal.toggleFavorite('brick-breaker');
     assert.ok(portal.favorites.includes('brick-breaker') && localStorage.getItem('arcade_favorites').includes('brick-breaker'));
+    assert.deepStrictEqual(toggled, [['snake', 'favorited', true], ['brick-breaker', 'favorited', true]], 'refreshFavUI marks every saved game');
+    assert.ok(els.__favButtons[1].innerHTML.includes('Saved') && els.__favButtons[0].innerHTML.includes('Saved'), 'buttons show Saved');
+    portal.toggleFavorite('brick-breaker');
+    assert.ok(!portal.favorites.includes('brick-breaker') && !JSON.parse(localStorage.getItem('arcade_favorites')).includes('brick-breaker'), 'toggling again removes it');
+    assert.ok(els.__favButtons[1].innerHTML.includes('Save') && !els.__favButtons[1].innerHTML.includes('Saved'), 'button reverts to Save');
   });
 });
 
