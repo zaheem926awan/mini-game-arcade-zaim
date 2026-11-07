@@ -268,6 +268,10 @@ class ArcadePortal {
     if (!this.featList.length) this.featList = [this.games[0]];
     this.featIndex = 0;
 
+    // The static intro + guide links in index.html (.home-info) are kept and moved into the
+    // rendered page below, so crawlers and visitors see them once, with or without JavaScript.
+    if (!this.homeInfo) this.homeInfo = homeView.querySelector?.('.home-info') || null;
+
     const cats = [['all', 'All games'], ['action', 'Action'], ['arcade', 'Arcade'], ['puzzle', 'Puzzle'], ['strategy', 'Strategy'], ['casual', 'Casual']];
 
     const slides = this.featList.map((g, i) => {
@@ -344,6 +348,8 @@ class ArcadePortal {
 
       ${this.shellFooter()}
     `;
+
+    if (this.homeInfo) homeView.querySelector?.('#main-content')?.appendChild(this.homeInfo);
 
     // Carousel
     homeView.querySelectorAll('[data-play]').forEach(b => b.addEventListener('click', () => this.openGame(b.dataset.play)));
