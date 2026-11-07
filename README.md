@@ -96,7 +96,7 @@ npm test
    - Whack-a-Mole scoring, combo multipliers, and bomb penalties.
    - Arcade Portal search filtering and favorites persistence.
 
-4. `tests/site-structure.test.js`: Pages exist, unique titles/descriptions, one `<h1>` per page, canonical + Open Graph tags, shared nav/footer, working internal links and anchors, contact form fields and Formspree endpoint, privacy-policy storage-key audit, legal-page consistency (no leftover placeholders, no premature advertising or consent claims, no open-source licence claims), and sitemap/robots.
+4. `tests/site-structure.test.js`: Pages exist, unique titles/descriptions, one `<h1>` per page, canonical + Open Graph tags, shared nav/footer, working internal links and anchors, contact form fields and Formspree endpoint, privacy-policy storage-key audit, legal-page consistency (no leftover placeholders, no premature advertising or consent claims, no open-source licence claims), and sitemap/robots. It also validates the 10 `/play/` guide pages: unique metadata, canonical/Open Graph URLs, exact Play Now hash routes, JSON-LD consistency, no ads/ratings/play-count claims, no embedded games, `games.html` guide links, sitemap entries, and key facts checked against the engine source.
 
 ---
 
@@ -129,17 +129,28 @@ npm test
 ```
 mini-game-arcade/
 ├── index.html                     # Arcade hub (JS-rendered) + SEO tags + no-JS fallback
-├── games.html                     # Crawlable list of all 10 games
+├── games.html                     # Crawlable list of all 10 games (Play + Guide & Rules links)
 ├── about.html                     # About Us
 ├── contact.html                   # Contact form (static-hosting friendly)
 ├── privacy-policy.html            # Privacy Policy
 ├── terms.html                     # Terms & Conditions
 ├── 404.html                       # Custom not-found page
 ├── robots.txt                     # Crawler rules + sitemap location
-├── sitemap.xml                    # Sitemap of the 6 indexable pages
+├── sitemap.xml                    # Sitemap of the 16 indexable pages (6 site pages + 10 game guides)
 ├── vercel.json                    # Clean URLs + security headers
 ├── package.json                   # npm test / npm start / npm run set-domain
 ├── README.md
+├── play/                          # 10 SEO game guide pages (static HTML, one per game)
+│   ├── fruit-slice.html           # /play/fruit-slice
+│   ├── neon-snake.html            # /play/neon-snake
+│   ├── brick-breaker.html         # /play/brick-breaker
+│   ├── space-shooter.html         # /play/space-shooter
+│   ├── 2048-puzzle.html           # /play/2048-puzzle
+│   ├── tic-tac-toe.html           # /play/tic-tac-toe
+│   ├── memory-match.html          # /play/memory-match
+│   ├── endless-runner.html        # /play/endless-runner
+│   ├── block-puzzle.html          # /play/block-puzzle
+│   └── whack-a-mole.html          # /play/whack-a-mole
 ├── css/
 │   ├── style.css                  # Base arcade styles & Fruit Slice graphics
 │   ├── arcade.css                 # Arcade portal, hero, catalog, game viewports
@@ -160,6 +171,37 @@ mini-game-arcade/
     ├── arcade-games.test.js       # Test suite for all 10 games & portal
     └── site-structure.test.js     # Pages, SEO tags, links, nav/footer, storage-key audit
 ```
+
+---
+
+## 📖 Game Guide Pages (`/play/`)
+
+Each of the 10 games has a static, crawlable **Guide & Rules** page. The pages explain the rules, controls, scoring, special features, beginner tips and FAQs, using the real behaviour of the game engines. They do **not** contain the game itself: the **Play … now** button opens the existing arcade route, so all game engines and the hash-based routes keep working exactly as before.
+
+| Guide page | Play Now route (existing, unchanged) |
+|---|---|
+| `/play/fruit-slice` | `/#/game/fruit-slice` |
+| `/play/neon-snake` | `/#/game/snake` |
+| `/play/brick-breaker` | `/#/game/brick-breaker` |
+| `/play/space-shooter` | `/#/game/space-shooter` |
+| `/play/2048-puzzle` | `/#/game/puzzle-2048` |
+| `/play/tic-tac-toe` | `/#/game/tic-tac-toe` |
+| `/play/memory-match` | `/#/game/memory-match` |
+| `/play/endless-runner` | `/#/game/endless-runner` |
+| `/play/block-puzzle` | `/#/game/block-puzzle` |
+| `/play/whack-a-mole` | `/#/game/whack-a-mole` |
+
+**How they work**
+- Files live in `play/<slug>.html` and are served at `/play/<slug>` through the existing `cleanUrls` setting in `vercel.json` (no rewrite rule is needed).
+- They reuse the shared header, footer and the classes already in `css/pages.css` (`page-hero`, `toc`, `table-scroll`, `card-grid`, `info-card`, `faq-item`). Asset paths are absolute (`/css/...`) because the pages sit one folder deep.
+- Each page has a unique title, meta description, canonical URL, Open Graph and Twitter tags, and JSON-LD (`VideoGame`, `BreadcrumbList`, `FAQPage`). There are no ratings, review counts, play counts or advertising scripts.
+- `games.html` keeps its instant **Play** buttons and adds a **Guide & Rules** link to each card. `sitemap.xml` lists all 10 pages.
+
+**Keeping the guides accurate.** The guide text was written from the game source code. If you change a control, a scoring rule, a timer or a lives count in `js/game.js` or `js/games/*.js`, update the matching guide in `play/`. `npm test` checks the main numbers (board sizes, timers, lives, shield, AI chance) against the engine source and will fail if they drift.
+
+**Known notes on the guides.** Six guides tell players to resume a paused game with `P` / `Esc` because the on-screen **Resume** button currently restarts the round, and the Tic-Tac-Toe guide mentions a cosmetic win-line glow. If those engine behaviours are fixed in future, remove those "Good to know" notes.
+
+**Changing the domain.** `npm run set-domain` only rewrites files in the project root, so it does not update `play/*.html`. After changing the domain, also replace the old origin in `play/*.html` (canonical, `og:url` and JSON-LD). `npm test` fails if the guide pages and the rest of the site use different domains.
 
 ---
 
