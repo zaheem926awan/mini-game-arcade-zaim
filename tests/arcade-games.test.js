@@ -545,6 +545,23 @@ test('Portal search, category filters and favorites still work', () => {
   });
 });
 
+// 19. Static homepage section (index.html .home-info) is moved into the rendered page, never copied
+test('Portal home: the static intro/guide section is re-attached under the catalog on every render', () => {
+  withPortalDom((portal, els) => {
+    const info = { id: 'static-home-info' };
+    const appended = [];
+    const mainEl = { appendChild(node) { appended.push(node); } };
+    // Before the first render the home view still holds the static markup; afterwards it holds the arcade's <main>
+    const homeEl = global.document.getElementById('home-portal-view');   // creates the fake element
+    homeEl.querySelector = (sel) => (sel === '.home-info' ? info : sel === '#main-content' ? mainEl : null);
+    portal.renderHome();
+    portal.renderHome();   // e.g. a category filter or favorites click re-renders the home view
+    assert.deepStrictEqual(appended, [info, info], 'the same static node is re-attached after each render');
+    assert.strictEqual(portal.homeInfo, info, 'the node is remembered so later renders can still move it');
+    assert.ok(!els['home-portal-view'].innerHTML.includes('/play/'), 'arcade.js renders no second copy of the guide links');
+  });
+});
+
 console.log(`\nResults: ${passedTests}/${totalTests} tests passed.`);
 if (passedTests !== totalTests) {
   process.exit(1);
