@@ -156,11 +156,23 @@ test('Privacy policy lists every localStorage key used by the code', () => {
     if (e.isDirectory()) return walk(p);
     if (!p.endsWith('.js')) return;
     const src = fs.readFileSync(p, 'utf8');
-    for (const m of src.matchAll(/(?:storageKey\s*=|favKey\s*=|recentKey\s*=|localStorage\.(?:get|set)Item\()\s*'([a-z0-9_]+)'/gi)) keys.add(m[1]);
+    // Direct storage calls, key properties, and Fruit Slice's readStore()/writeStore() helpers in js/game.js
+    for (const m of src.matchAll(/(?:storageKey\s*=|favKey\s*=|recentKey\s*=|localStorage\.(?:get|set)Item\(|(?:readStore|writeStore)\()\s*'([a-z0-9_]+)'/gi)) keys.add(m[1]);
   });
   walk(path.join(ROOT, 'js'));
   assert(keys.size >= 12, `expected >= 12 storage keys, found ${keys.size}`);
   for (const k of keys) assert(priv.includes(k), `privacy policy does not mention storage key "${k}"`);
+
+  // The catalog's score keys (used to show best scores on the cards) must be among the detected keys
+  const { ARCADE_GAMES } = require('../js/arcade.js');
+  for (const g of ARCADE_GAMES.filter(g => g.scoreKey)) assert(keys.has(g.scoreKey), `catalog score key "${g.scoreKey}" was not detected in the code`);
+
+  // Reverse check: every storage key the policy lists is really used by the code
+  const listed = [...priv.matchAll(/<code>([^<]+)<\/code>/g)]
+    .flatMap(m => m[1].split(',').map(x => x.trim()))
+    .filter(x => /^[a-z0-9]+(_[a-z0-9]+)+$/.test(x));
+  assert(listed.length > 0, 'privacy policy should list storage keys');
+  for (const k of listed) assert(keys.has(k), `privacy policy lists "${k}" but no code uses it`);
 });
 
 test('Code sets no cookies (privacy policy statement stays true)', () => {
@@ -337,6 +349,218 @@ test('All Rights Reserved: no MIT/open-source licence claims in metadata, README
   for (const f of LEGAL_PAGES) assert(!/\bMIT\b/.test(read(f)), `${f}: must not mention the MIT licence`);
   assert(/All rights reserved/.test(read('js/site-shell.js')), 'portal footer must say All rights reserved');
   assert(/All rights reserved/.test(read('about.html')), 'static footer must say All rights reserved');
+});
+
+// ---------------------------------------------------------------------------
+// /play guide pages (Phase 1): one SEO content page per game, linking to the
+// existing hash routes. The game engines and routes themselves are untouched.
+// ---------------------------------------------------------------------------
+const PLAY_SLUGS = {
+  'fruit-slice': 'fruit-slice',
+  'snake': 'neon-snake',
+  'brick-breaker': 'brick-breaker',
+  'space-shooter': 'space-shooter',
+  'puzzle-2048': '2048-puzzle',
+  'tic-tac-toe': 'tic-tac-toe',
+  'memory-match': 'memory-match',
+  'endless-runner': 'endless-runner',
+  'block-puzzle': 'block-puzzle',
+  'whack-a-mole': 'whack-a-mole'
+};
+const PLAY_FILES = Object.values(PLAY_SLUGS).map(s => `play/${s}.html`);
+const decodeEntities = (s) => s.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&rsquo;/g, "'").replace(/&rsaquo;/g, '>');
+const playHtml = (slug) => read(`play/${slug}.html`);
+const metaOf = (h) => ({
+  title: decodeEntities((h.match(/<title>([^<]+)<\/title>/) || [])[1] || ''),
+  desc: decodeEntities((h.match(/<meta name="description" content="([^"]*)"/) || [])[1] || ''),
+  canonical: (h.match(/<link rel="canonical" href="([^"]+)"/) || [])[1],
+  h1: decodeEntities(((h.match(/<h1[^>]*>([\s\S]*?)<\/h1>/) || [])[1] || '').replace(/<[^>]+>/g, ''))
+});
+const jsonLdOf = (h) => JSON.parse(h.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
+
+test('Play guides: one page per game, mapped to the real route ids', () => {
+  const { ARCADE_GAMES } = require('../js/arcade.js');
+  assert.deepStrictEqual(Object.keys(PLAY_SLUGS).sort(), ARCADE_GAMES.map(g => g.id).sort(), 'PLAY_SLUGS must cover exactly the catalog ids');
+  assert.strictEqual(new Set(Object.values(PLAY_SLUGS)).size, 10, 'slugs must be unique');
+  for (const f of PLAY_FILES) {
+    assert(fs.existsSync(path.join(ROOT, f)), `${f} is missing`);
+    assert(read(f).trim().length > 5000, `${f} is too small to be a useful guide`);
+  }
+  const files = fs.readdirSync(path.join(ROOT, 'play')).filter(f => f.endsWith('.html')).sort();
+  assert.deepStrictEqual(files, Object.values(PLAY_SLUGS).map(s => s + '.html').sort(), 'play/ must contain exactly the 10 guide pages');
+});
+
+test('Play guides: title, description, lang, robots and exactly one h1', () => {
+  for (const slug of Object.values(PLAY_SLUGS)) {
+    const h = playHtml(slug), m = metaOf(h);
+    assert(/<html lang="en">/.test(h), `${slug}: missing lang`);
+    assert(m.title.length >= 15 && m.title.length <= 70, `${slug}: title length ${m.title.length}`);
+    assert(m.desc.length >= 50 && m.desc.length <= 170, `${slug}: description length ${m.desc.length}`);
+    assert(/<meta name="robots" content="index, follow">/.test(h), `${slug}: must be indexable`);
+    assert.strictEqual((h.match(/<h1[ >]/g) || []).length, 1, `${slug}: must have exactly one <h1>`);
+  }
+});
+
+test('Play guides: titles, descriptions and h1s are unique across the whole site', () => {
+  const titles = [], descs = [], h1s = [];
+  for (const f of Object.keys(PAGES)) {
+    const h = read(f);
+    titles.push(decodeEntities(h.match(/<title>([^<]+)<\/title>/)[1]));
+    descs.push(decodeEntities(h.match(/<meta name="description" content="([^"]+)"/)[1]));
+  }
+  for (const slug of Object.values(PLAY_SLUGS)) {
+    const m = metaOf(playHtml(slug));
+    titles.push(m.title); descs.push(m.desc); h1s.push(m.h1);
+  }
+  assert.strictEqual(new Set(titles).size, titles.length, 'duplicate <title> found');
+  assert.strictEqual(new Set(descs).size, descs.length, 'duplicate meta description found');
+  assert.strictEqual(new Set(h1s).size, h1s.length, 'duplicate <h1> among guide pages');
+});
+
+test('Play guides: canonical, Open Graph and Twitter tags use the site domain and the page URL', () => {
+  const origin = collectOrigins()[0].origin;
+  for (const slug of Object.values(PLAY_SLUGS)) {
+    const h = playHtml(slug), m = metaOf(h), url = `${origin}/play/${slug}`;
+    assert.strictEqual(m.canonical, url, `${slug}: canonical must be ${url}`);
+    assert(h.includes(`<meta property="og:url" content="${url}">`), `${slug}: og:url mismatch`);
+    for (const p of ['og:title', 'og:description', 'og:site_name', 'og:type']) assert(h.includes(`property="${p}"`), `${slug}: ${p} missing`);
+    assert(/name="twitter:title"/.test(h) && /name="twitter:description"/.test(h), `${slug}: twitter tags missing`);
+    const ogTitle = decodeEntities(h.match(/property="og:title" content="([^"]*)"/)[1]);
+    assert.strictEqual(ogTitle, m.title, `${slug}: og:title must match <title>`);
+  }
+});
+
+test('Play guides: shared navigation, footer and breadcrumb', () => {
+  for (const slug of Object.values(PLAY_SLUGS)) {
+    const h = playHtml(slug);
+    assert(/<nav class="arcade-navbar"/.test(h), `${slug}: navbar missing`);
+    assert(/<footer class="arcade-footer site-footer"/.test(h), `${slug}: footer missing`);
+    for (const l of REQUIRED_LINKS) assert(h.includes(`href="${l}"`), `${slug}: missing link to ${l}`);
+    assert(/<nav class="breadcrumbs"[^>]*>.*href="\/games".*<\/nav>/.test(h), `${slug}: breadcrumb must link to /games`);
+    for (const css of ['/css/style.css', '/css/arcade.css', '/css/pages.css']) assert(h.includes(`href="${css}"`), `${slug}: ${css} not loaded with an absolute path`);
+  }
+});
+
+test('Play guides: Play Now button points to the exact existing hash route and no other route', () => {
+  for (const [id, slug] of Object.entries(PLAY_SLUGS)) {
+    const h = playHtml(slug);
+    const route = `/#/game/${id}`;
+    assert(new RegExp(`<a class="btn-link" href="${route.replace(/[/#]/g, c => '\\' + c)}">Play [^<]+ now</a>`).test(h), `${slug}: Play Now button for ${route} missing`);
+    const heroEnd = h.indexOf('</section>', h.indexOf('class="page-hero"'));
+    assert(h.slice(0, heroEnd).includes(`href="${route}"`), `${slug}: Play Now must be inside the hero`);
+    const routes = [...h.matchAll(/href="(\/#\/game\/[^"]+)"/g)].map(m => m[1]);
+    assert(routes.length >= 2 && routes.every(r => r === route), `${slug}: every /#/game/ link must be ${route} (found ${[...new Set(routes)].join(', ')})`);
+  }
+});
+
+test('Play guides: internal links, assets and in-page anchors resolve', () => {
+  for (const slug of Object.values(PLAY_SLUGS)) {
+    const h = playHtml(slug);
+    for (const m of h.matchAll(/(?:href|src)="([^"]+)"/g)) {
+      const r = m[1];
+      if (/^(https?:|mailto:|data:|#|tel:)/.test(r)) continue;
+      assert(r.startsWith('/'), `${slug}: reference "${r}" must be root-relative`);
+      assert(resolves(r), `${slug}: broken reference "${r}"`);
+    }
+    const ids = new Set([...h.matchAll(/ id="([^"]+)"/g)].map(m => m[1]));
+    for (const m of h.matchAll(/href="#([^"]+)"/g)) assert(ids.has(m[1]), `${slug}: anchor #${m[1]} has no matching id`);
+  }
+});
+
+test('Play guides: every guide has the required content sections and 5+ FAQs', () => {
+  for (const slug of Object.values(PLAY_SLUGS)) {
+    const h = playHtml(slug);
+    for (const id of ['how-to-play', 'controls', 'scoring', 'how-it-ends', 'features', 'tips', 'faq', 'more-games']) {
+      assert(h.includes(`id="${id}"`), `${slug}: section #${id} missing`);
+    }
+    assert((h.match(/class="faq-item"/g) || []).length >= 5, `${slug}: needs at least 5 FAQs`);
+    assert((h.match(/<tr>/g) || []).length >= 8, `${slug}: controls and scoring tables look too thin`);
+    assert(/Free in your browser/.test(h), `${slug}: free-to-play note missing`);
+  }
+});
+
+test('Play guides: structured data (VideoGame, BreadcrumbList, FAQPage) is valid and consistent', () => {
+  const origin = collectOrigins()[0].origin;
+  for (const slug of Object.values(PLAY_SLUGS)) {
+    const h = playHtml(slug), url = `${origin}/play/${slug}`;
+    const g = jsonLdOf(h)['@graph'];
+    const game = g.find(x => x['@type'] === 'VideoGame');
+    const crumbs = g.find(x => x['@type'] === 'BreadcrumbList');
+    const faq = g.find(x => x['@type'] === 'FAQPage');
+    assert(game && crumbs && faq, `${slug}: JSON-LD must contain VideoGame, BreadcrumbList and FAQPage`);
+    assert.strictEqual(game.url, url, `${slug}: VideoGame url`);
+    assert.strictEqual(game.description, metaOf(h).desc, `${slug}: VideoGame description must equal the meta description`);
+    assert.strictEqual(game.isAccessibleForFree, true);
+    assert(game.potentialAction && game.potentialAction.target === `${origin}${h.match(/class="btn-link" href="([^"]+)"/)[1]}`, `${slug}: PlayAction target must be the Play Now route`);
+    assert.strictEqual(crumbs.itemListElement.length, 3, `${slug}: breadcrumb length`);
+    assert.strictEqual(crumbs.itemListElement[2].item, url, `${slug}: breadcrumb last item`);
+    assert.strictEqual(faq.mainEntity.length, (h.match(/class="faq-item"/g) || []).length, `${slug}: FAQ JSON-LD must match the visible FAQs`);
+    const dump = JSON.stringify(g);
+    assert(!/aggregateRating|ratingValue|ratingCount|reviewCount|\"review\"|interactionStatistic|userInteractionCount/i.test(dump), `${slug}: no ratings, reviews or play counts allowed`);
+  }
+});
+
+test('Play guides: no ads, third-party scripts, fake ratings, play counts or embedded games', () => {
+  for (const slug of Object.values(PLAY_SLUGS)) {
+    const h = playHtml(slug);
+    assert(!/adsbygoogle|googlesyndication|doubleclick|adsense/i.test(h), `${slug}: advertising code found`);
+    const scripts = [...h.matchAll(/<script[^>]+src="([^"]+)"/g)].map(m => m[1]);
+    assert.deepStrictEqual(scripts, ['/js/site-shell.js'], `${slug}: only site-shell.js may be loaded`);
+    assert(!/<canvas|js\/arcade\.js|js\/games\/|js\/game\.js/.test(h), `${slug}: games must not be embedded in Phase 1`);
+    const text = mainText(`play/${slug}.html`);
+    assert(!/\b(\d{1,3}(,\d{3})+|\d{3,}|\d+(\.\d+)?\s*(million|thousand|k))\+?\s*(players|plays|downloads|reviews|users|votes)\b/i.test(text), `${slug}: contains a play-count style claim`);
+    assert(!/\b(\d(\.\d)?\s*\/\s*5|\d(\.\d)?\s*stars? (rating|rated)|top[- ]rated|best[- ]selling|#1|award[- ]winning|number one)\b/i.test(text), `${slug}: contains a rating or ranking claim`);
+  }
+});
+
+test('Play guides: stated facts still match the game engine source', () => {
+  const src = (f) => read(f);
+  const page = (slug) => mainText(`play/${slug}.html`);
+  assert(/this\.gridSize = 22/.test(src('js/games/snake.js')) && /22 x 22/.test(page('neon-snake')), 'snake board size');
+  assert(/this\.baseSpeed = 120/.test(src('js/games/snake.js')) && /Math\.max\(65,/.test(src('js/games/snake.js')) && /120 milliseconds/.test(page('neon-snake')) && /65 milliseconds/.test(page('neon-snake')), 'snake speeds');
+  assert(/this\.maxLevels = 3/.test(src('js/games/brick-breaker.js')) && /this\.lives = 3/.test(src('js/games/brick-breaker.js')) && /Three/.test(page('brick-breaker')), 'brick breaker stages and lives');
+  assert(/maxShield: 3/.test(src('js/games/space-shooter.js')) && /shield of 3 points/i.test(page('space-shooter')), 'space shooter shield');
+  assert(/this\.maxTime = 60/.test(src('js/game.js')) && /this\.maxLives = 3/.test(src('js/game.js')) && /60 seconds/.test(page('fruit-slice')), 'fruit slice timer and lives');
+  assert(/this\.size = 4/.test(src('js/games/puzzle-2048.js')) && /4 x 4/.test(page('2048-puzzle')), '2048 board');
+  assert(/Math\.random\(\) < 0\.65/.test(src('js/games/tic-tac-toe.js')) && /65%/.test(page('tic-tac-toe')), 'tic-tac-toe medium AI');
+  assert((src('js/games/memory-match.js').match(/symbol: '/g) || []).length === 8 && /8 pairs/.test(page('memory-match')), 'memory match pairs');
+  assert(/this\.cols = 10/.test(src('js/games/block-puzzle.js')) && /this\.rows = 20/.test(src('js/games/block-puzzle.js')) && /10 x 20/.test(page('block-puzzle')), 'block puzzle board');
+  assert(/jumpsLeft = 2/.test(src('js/games/endless-runner.js')) && /double jump/i.test(page('endless-runner')), 'runner double jump');
+  assert(/this\.timer = 30/.test(src('js/games/whack-a-mole.js')) && /30 seconds/.test(page('whack-a-mole')), 'whack-a-mole timer');
+});
+
+test('Play guides: games.html keeps every instant Play link and adds a Guide & Rules link per game', () => {
+  const h = read('games.html');
+  for (const [id, slug] of Object.entries(PLAY_SLUGS)) {
+    assert(h.includes(`class="pgc-play" href="/#/game/${id}"`), `games.html: Play link for ${id} was removed or changed`);
+    assert(h.includes(`class="pgc-guide" href="/play/${slug}"`), `games.html: Guide & Rules link for ${slug} missing`);
+  }
+  assert.strictEqual((h.match(/class="pgc-guide"/g) || []).length, 10, 'exactly 10 guide links expected');
+});
+
+test('Play guides: sitemap lists all 10 pages once, with the real domain, plus the original pages', () => {
+  const sm = read('sitemap.xml');
+  const origin = collectOrigins()[0].origin;
+  for (const slug of Object.values(PLAY_SLUGS)) {
+    const loc = `<loc>${origin}/play/${slug}</loc>`;
+    assert.strictEqual(sm.split(loc).length - 1, 1, `sitemap must list ${loc} exactly once`);
+  }
+  for (const l of REQUIRED_LINKS) assert(sm.includes(`${l === '/' ? origin + '/' : origin + l}</loc>`), `sitemap lost ${l}`);
+  assert.strictEqual((sm.match(/<loc>/g) || []).length, 16, 'sitemap should list 6 original + 10 guide pages');
+});
+
+test('Play guides: README documents the new pages', () => {
+  const r = read('README.md');
+  assert(/\/play\//.test(r), 'README must mention the /play/ pages');
+  for (const slug of Object.values(PLAY_SLUGS)) assert(r.includes(slug), `README does not mention ${slug}`);
+});
+
+test('Play guides: existing hash-route portal is untouched (scripts and routes still present)', () => {
+  const idx = read('index.html'), arcade = read('js/arcade.js');
+  for (const g of ['snake', 'brick-breaker', 'space-shooter', 'puzzle-2048', 'tic-tac-toe', 'memory-match', 'endless-runner', 'block-puzzle', 'whack-a-mole']) {
+    assert(idx.includes(`js/games/${g}.js`), `index.html lost script for ${g}`);
+  }
+  assert(arcade.includes("hash.startsWith('#/game/')"), 'arcade.js hash route for games must remain');
 });
 
 console.log(`\nResults: ${passed}/${total} tests passed.`);
