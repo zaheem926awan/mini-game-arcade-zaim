@@ -563,6 +563,59 @@ test('Play guides: existing hash-route portal is untouched (scripts and routes s
   assert(arcade.includes("hash.startsWith('#/game/')"), 'arcade.js hash route for games must remain');
 });
 
+// ---------------------------------------------------------------------------
+// Accessibility (Google PageSpeed Insights): zoomable viewport + one <main> landmark
+// ---------------------------------------------------------------------------
+const ALL_HTML = ['index.html', '404.html', 'about.html', 'contact.html', 'games.html', 'privacy-policy.html', 'terms.html']
+  .concat(fs.readdirSync(path.join(ROOT, 'play')).filter(f => f.endsWith('.html')).map(f => `play/${f}`));
+// <template> content is inert (never part of the live DOM), so it is ignored
+const liveHtml = (f) => read(f).replace(/<template[\s\S]*?<\/template>/g, '');
+
+test('Accessibility: every HTML page uses the accessible viewport (pinch-zoom allowed)', () => {
+  assert(ALL_HTML.length >= 17, `expected at least 17 HTML pages, found ${ALL_HTML.length}`);
+  for (const f of ALL_HTML) {
+    const tags = read(f).match(/<meta\s+name="viewport"[^>]*>/g) || [];
+    assert.strictEqual(tags.length, 1, `${f}: must have exactly one viewport meta tag`);
+    assert(/content="width=device-width, initial-scale=1(\.0)?"/.test(tags[0]), `${f}: viewport must be width=device-width, initial-scale=1`);
+    assert(!/maximum-scale|minimum-scale|user-scalable/i.test(tags[0]), `${f}: viewport must not restrict zooming`);
+  }
+});
+
+test('Accessibility: every HTML page has exactly one <main>, with header/nav/footer outside it', () => {
+  for (const f of ALL_HTML) {
+    const h = liveHtml(f);
+    assert.strictEqual((h.match(/<main[\s>]/g) || []).length, 1, `${f}: must have exactly one <main>`);
+    assert.strictEqual((h.match(/<\/main>/g) || []).length, 1, `${f}: <main> must be closed exactly once`);
+    if (f === 'index.html') continue; // the portal's header/nav/footer are rendered by arcade.js (checked below)
+    const body = h.slice(h.indexOf('<main'), h.indexOf('</main>'));
+    assert(!/<footer[\s>]/.test(body), `${f}: footer must be outside <main>`);
+    assert(h.indexOf('<header') < h.indexOf('<main'), `${f}: header must come before <main>`);
+    assert(h.indexOf('<footer') > h.indexOf('</main>'), `${f}: footer must come after <main>`);
+  }
+});
+
+test('Accessibility: portal renders one <main> per view, keeping navbar, subnav and footer outside it', () => {
+  const idx = read('index.html'), arcade = read('js/arcade.js');
+  // No-JS fallback in index.html is the only live <main>; the Fruit Slice <template> must not add another
+  assert(/<main id="main-content" class="js-fallback">/.test(idx), 'index.html fallback content must be inside <main>');
+  const tpl = (idx.match(/<template[\s\S]*?<\/template>/g) || []).join('');
+  assert(!/<main[\s>]/.test(tpl), 'Fruit Slice template must not contain <main> (it is mounted inside the game view <main>)');
+  assert(/id="game-container"/.test(tpl), 'Fruit Slice template must keep #game-container');
+
+  const home = arcade.slice(arcade.indexOf('homeView.innerHTML = `'), arcade.indexOf('// Carousel'));
+  const game = arcade.slice(arcade.indexOf('gameView.innerHTML = `'), arcade.indexOf("document.getElementById('gv-btn-fav')?.addEventListener"));
+  for (const [name, t] of [['home view', home], ['game view', game]]) {
+    assert.strictEqual((t.match(/<main[\s>]/g) || []).length, 1, `${name}: exactly one <main>`);
+    assert.strictEqual((t.match(/<\/main>/g) || []).length, 1, `${name}: <main> closed once`);
+    const before = t.slice(0, t.indexOf('<main')), after = t.slice(t.indexOf('</main>'));
+    assert(before.includes('shellSubnav'), `${name}: site subnav must be before <main>`);
+    assert(after.includes('shellFooter'), `${name}: footer must be after <main>`);
+    assert(!t.slice(t.indexOf('<main'), t.indexOf('</main>')).includes('shellFooter'), `${name}: footer must not be inside <main>`);
+  }
+  assert(home.slice(0, home.indexOf('<main')).includes('arcade-navbar'), 'home view: navbar must be before <main>');
+  assert(home.slice(home.indexOf('<main'), home.indexOf('</main>')).includes('<h1'), 'home view: <h1> must be inside <main>');
+});
+
 console.log(`\nResults: ${passed}/${total} tests passed.`);
 
 // Report: domain status (placeholders are now a hard test failure above)
