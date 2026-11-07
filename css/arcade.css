@@ -652,6 +652,12 @@
   flex-direction: column;
   gap: 16px;
 }
+/* <main> wraps the game view's primary content; keeps the same vertical rhythm as before */
+#game-portal-view > .game-main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
 
 .game-view-header {
   display: flex;
