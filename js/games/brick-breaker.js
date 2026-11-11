@@ -86,7 +86,9 @@ class BrickBreakerGame {
 
     this.btnPlay.addEventListener('click', () => {
       this.sound?.playClick();
-      this.start();
+      // While paused this button is labelled RESUME: continue the run instead of restarting it.
+      if (this.state === 'PAUSED') this.resume();
+      else this.start();
     });
 
     this.btnPause.addEventListener('click', () => {
@@ -140,6 +142,8 @@ class BrickBreakerGame {
   }
 
   handleKeyDown(e) {
+    // Holding a pause key sends repeated keydown events; only the first press may toggle pause.
+    if (e.repeat && (e.key === 'p' || e.key === 'P' || e.key === 'Escape')) return;
     if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
       this.keys.left = true;
     } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
@@ -243,6 +247,7 @@ class BrickBreakerGame {
     if (this.state !== 'PAUSED') return;
     this.state = 'PLAYING';
     this.overlay.classList.add('hidden');
+    cancelAnimationFrame(this.animId); // never run two loops after a quick pause/resume
     this.animId = requestAnimationFrame(this.loop);
   }
 
