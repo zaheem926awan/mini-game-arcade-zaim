@@ -937,3 +937,21 @@ svg.ico { flex: none; vertical-align: middle; }
   .fx-slide.is-active .fx-art svg, .fx-slide.is-active .fx-copy > *, .game-card, .flame, .slash, .fx-dot.is-active::after, .game-card:hover .card-art::after { animation: none !important; }
   .fx-dot.is-active::after { transform: scaleX(1); }
 }
+
+/* ==========================================================================
+   DIRECT GAME PAGES (/game/<slug>)
+   Reuses the portal's #game-portal-view look. Only additions, no existing rule changed.
+   ========================================================================== */
+.game-page-view a.btn-back-arcade { text-decoration: none; }
+.game-page-view .breadcrumbs { padding: 0 4px; }
+.game-page-view .gd-col h2 { font-family: var(--font-arcade); font-weight: 800; letter-spacing: -0.03em; font-size: 1.15rem; color: var(--cyan); margin-bottom: 8px; }
+.game-noscript { max-width: 520px; text-align: center; color: var(--text-muted); padding: 24px; }
+
+/* Written content under the game: selectable text, same card/prose styles as the guides */
+.game-page-info,
+.game-page-info * { user-select: text; -webkit-user-select: text; }
+.game-page-info button,
+.game-page-info .btn-link { user-select: none; -webkit-user-select: none; }
+.game-page-info { display: flex; flex-direction: column; gap: 20px; }
+.game-details-box a { color: var(--cyan); }
+.game-details-box a:hover { text-decoration: none; }
