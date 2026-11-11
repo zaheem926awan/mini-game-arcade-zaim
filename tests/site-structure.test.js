@@ -133,8 +133,9 @@ test('Games page lists all 10 games with working play links', () => {
   assert.strictEqual(ARCADE_GAMES.length, 10);
   const h = read('games.html');
   for (const g of ARCADE_GAMES) {
-    assert(h.includes(`href="/#/game/${g.id}"`), `games.html: no link for ${g.id}`);
+    assert(h.includes(`href="/game/${g.slug}"`), `games.html: no link to the /game/${g.slug} page for ${g.id}`);
   }
+  assert(!h.includes('#/game/'), 'games.html must link to the direct game pages, not the hash routes');
 });
 
 test('Contact form: required fields, honeypot, consent, endpoint, script', () => {
@@ -441,15 +442,16 @@ test('Play guides: shared navigation, footer and breadcrumb', () => {
   }
 });
 
-test('Play guides: Play Now button points to the exact existing hash route and no other route', () => {
+test('Play guides: Play Now button points to the game\'s own /game/ page and no other game page', () => {
   for (const [id, slug] of Object.entries(PLAY_SLUGS)) {
     const h = playHtml(slug);
-    const route = `/#/game/${id}`;
-    assert(new RegExp(`<a class="btn-link" href="${route.replace(/[/#]/g, c => '\\' + c)}">Play [^<]+ now</a>`).test(h), `${slug}: Play Now button for ${route} missing`);
+    const route = `/game/${slug}`;
+    assert(new RegExp(`<a class="btn-link" href="${route.replace(/\//g, '\\/')}">Play [^<]+ now</a>`).test(h), `${slug}: Play Now button for ${route} missing`);
     const heroEnd = h.indexOf('</section>', h.indexOf('class="page-hero"'));
     assert(h.slice(0, heroEnd).includes(`href="${route}"`), `${slug}: Play Now must be inside the hero`);
-    const routes = [...h.matchAll(/href="(\/#\/game\/[^"]+)"/g)].map(m => m[1]);
-    assert(routes.length >= 2 && routes.every(r => r === route), `${slug}: every /#/game/ link must be ${route} (found ${[...new Set(routes)].join(', ')})`);
+    const routes = [...h.matchAll(/href="(\/game\/[^"]+)"/g)].map(m => m[1]);
+    assert(routes.length >= 2 && routes.every(r => r === route), `${slug}: every /game/ link must be ${route} (found ${[...new Set(routes)].join(', ')})`);
+    assert(!h.includes('#/game/'), `${slug}: guide must link to the direct game page, not the hash route`);
   }
 });
 
@@ -532,7 +534,7 @@ test('Play guides: stated facts still match the game engine source', () => {
 test('Play guides: games.html keeps every instant Play link and adds a Guide & Rules link per game', () => {
   const h = read('games.html');
   for (const [id, slug] of Object.entries(PLAY_SLUGS)) {
-    assert(h.includes(`class="pgc-play" href="/#/game/${id}"`), `games.html: Play link for ${id} was removed or changed`);
+    assert(h.includes(`class="pgc-play" href="/game/${slug}"`), `games.html: Play link for ${id} (/game/${slug}) was removed or changed`);
     assert(h.includes(`class="pgc-guide" href="/play/${slug}"`), `games.html: Guide & Rules link for ${slug} missing`);
   }
   assert.strictEqual((h.match(/class="pgc-guide"/g) || []).length, 10, 'exactly 10 guide links expected');
@@ -546,7 +548,7 @@ test('Play guides: sitemap lists all 10 pages once, with the real domain, plus t
     assert.strictEqual(sm.split(loc).length - 1, 1, `sitemap must list ${loc} exactly once`);
   }
   for (const l of REQUIRED_LINKS) assert(sm.includes(`${l === '/' ? origin + '/' : origin + l}</loc>`), `sitemap lost ${l}`);
-  assert.strictEqual((sm.match(/<loc>/g) || []).length, 16, 'sitemap should list 6 original + 10 guide pages');
+  assert.strictEqual((sm.match(/<loc>/g) || []).length, 26, 'sitemap should list 6 original + 10 guide + 10 game pages');
 });
 
 test('Play guides: README documents the new pages', () => {
@@ -693,6 +695,208 @@ test('Homepage static HTML: shown once - arcade.js moves the section instead of 
   assert(idx.includes('name="google-site-verification" content="EUzjwsrCJ7rOlLMAv9V49wVVUIMJ9vyyOce6aKRHFRs"'), 'Search Console verification tag must stay');
   assert(/<link rel="canonical" href="https:\/\/mini-game-arcade-zaim\.vercel\.app\/">/.test(idx), 'canonical must stay');
   assert(/<meta name="viewport" content="width=device-width, initial-scale=1.0">/.test(idx), 'accessible viewport must stay');
+});
+
+// ---------------------------------------------------------------------------
+// Direct game pages (C1): /game/<slug> plays one game; /play/<slug> stays its guide.
+// ---------------------------------------------------------------------------
+const GAME_FILES = fs.readdirSync(path.join(ROOT, 'game')).filter(f => f.endsWith('.html')).sort();
+const gameHtml = (slug) => read(`game/${slug}.html`);
+const ORIGIN = 'https://mini-game-arcade-zaim.vercel.app';
+const visibleText = (h) => decodeEntities(h.replace(/<script[\s\S]*?<\/script>/g, ' ').replace(/<template[\s\S]*?<\/template>/g, ' ').replace(/<style[\s\S]*?<\/style>/g, ' ').replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim();
+
+test('Game pages: exactly one page per game, named by the catalog slug', () => {
+  const { ARCADE_GAMES } = require('../js/arcade.js');
+  assert.deepStrictEqual(ARCADE_GAMES.map(g => g.slug).sort(), Object.values(PLAY_SLUGS).sort(), 'catalog slugs must equal the guide slugs');
+  assert.deepStrictEqual(GAME_FILES, Object.values(PLAY_SLUGS).map(s => s + '.html').sort(), 'game/ must contain exactly the 10 game pages');
+  for (const g of ARCADE_GAMES) assert(new RegExp(`<body data-game-page="${g.id}">`).test(gameHtml(g.slug)), `${g.slug}: <body data-game-page> must name the real game id "${g.id}"`);
+});
+
+test('Game pages: generated files are up to date with scripts/build-game-pages.js', () => {
+  const { page } = require('../scripts/build-game-pages.js');
+  const { ARCADE_GAMES } = require('../js/arcade.js');
+  for (const g of ARCADE_GAMES) assert.strictEqual(gameHtml(g.slug), page(g), `game/${g.slug}.html is stale: run "npm run build-game-pages"`);
+});
+
+test('Game pages: unique title, description, h1 and a canonical URL on the site domain', () => {
+  const titles = [], descs = [], h1s = [];
+  for (const slug of Object.values(PLAY_SLUGS)) {
+    const h = gameHtml(slug), m = metaOf(h);
+    assert(/<html lang="en">/.test(h), `${slug}: missing lang`);
+    assert(m.title.length >= 15 && m.title.length <= 70, `${slug}: title length ${m.title.length}`);
+    assert(m.desc.length >= 50 && m.desc.length <= 170, `${slug}: description length ${m.desc.length}`);
+    assert(/<meta name="robots" content="index, follow">/.test(h), `${slug}: must be indexable`);
+    assert.strictEqual((h.match(/<h1[ >]/g) || []).length, 1, `${slug}: exactly one <h1>`);
+    assert.strictEqual(m.canonical, `${ORIGIN}/game/${slug}`, `${slug}: canonical`);
+    assert(h.includes(`<meta property="og:url" content="${ORIGIN}/game/${slug}">`), `${slug}: og:url`);
+    assert(h.includes(`<meta property="og:title" content="${metaOf(h).title.replace(/&/g, '&amp;')}">`) || h.includes('og:title'), `${slug}: og:title`);
+    assert(/<meta name="twitter:title"/.test(h) && /<meta name="twitter:description"/.test(h), `${slug}: twitter tags`);
+    for (const css of ['/css/style.css', '/css/arcade.css', '/css/pages.css']) assert(h.includes(`href="${css}"`), `${slug}: ${css}`);
+    titles.push(m.title); descs.push(m.desc); h1s.push(m.h1);
+  }
+  for (const [name, list] of [['title', titles], ['description', descs], ['h1', h1s]]) assert.strictEqual(new Set(list).size, 10, `game pages: duplicate ${name}`);
+  // ...and nothing collides with any guide or original page either
+  const others = Object.values(PLAY_SLUGS).map(sl => metaOf(playHtml(sl))).concat(Object.keys(PAGES).map(f => metaOf(read(f))));
+  for (const o of others) {
+    assert(!titles.includes(o.title), `game page title duplicates another page: ${o.title}`);
+    assert(!descs.includes(o.desc), `game page description duplicates another page: ${o.desc}`);
+  }
+});
+
+test('Game pages: one <main>, header before it, footer after it, zoomable viewport, skip link', () => {
+  for (const slug of Object.values(PLAY_SLUGS)) {
+    const raw = gameHtml(slug), h = liveHtml(`game/${slug}.html`);
+    assert.strictEqual((raw.match(/<meta\s+name="viewport"[^>]*>/g) || []).length, 1, `${slug}: one viewport tag`);
+    assert(/content="width=device-width, initial-scale=1"/.test(raw) && !/maximum-scale|user-scalable/i.test(raw), `${slug}: viewport must allow zoom`);
+    assert.strictEqual((h.match(/<main[\s>]/g) || []).length, 1, `${slug}: exactly one <main>`);
+    assert(h.indexOf('<header') < h.indexOf('<main') && h.indexOf('<footer') > h.indexOf('</main>'), `${slug}: header/footer must sit outside <main>`);
+    assert(raw.includes('class="skip-link" href="#main-content"'), `${slug}: skip link`);
+    assert(/<main id="main-content"/.test(raw), `${slug}: main needs id for the skip link`);
+  }
+});
+
+test('Game pages: each loads only its own game script, arcade.js last, and the engine can mount it', () => {
+  const { ARCADE_GAMES } = require('../js/arcade.js');
+  const GAME_SCRIPTS = { 'fruit-slice': ['js/fruit.js', 'js/game.js'], snake: ['js/games/snake.js'], 'brick-breaker': ['js/games/brick-breaker.js'], 'space-shooter': ['js/games/space-shooter.js'], 'puzzle-2048': ['js/games/puzzle-2048.js'], 'tic-tac-toe': ['js/games/tic-tac-toe.js'], 'memory-match': ['js/games/memory-match.js'], 'endless-runner': ['js/games/endless-runner.js'], 'block-puzzle': ['js/games/block-puzzle.js'], 'whack-a-mole': ['js/games/whack-a-mole.js'] };
+  const everyGameScript = Object.values(GAME_SCRIPTS).flat();
+  for (const g of ARCADE_GAMES) {
+    const h = gameHtml(g.slug);
+    const scripts = [...h.matchAll(/<script[^>]+src="([^"]+)"/g)].map(m => m[1].replace(/^\//, ''));
+    for (const s of ['js/site-shell.js', 'js/audio.js', 'js/arcade.js'].concat(GAME_SCRIPTS[g.id])) assert(scripts.includes(s), `${g.slug}: missing ${s}`);
+    assert.strictEqual(scripts[scripts.length - 1], 'js/arcade.js', `${g.slug}: arcade.js must load last`);
+    for (const s of everyGameScript.filter(x => !GAME_SCRIPTS[g.id].includes(x))) assert(!scripts.includes(s), `${g.slug}: must not load ${s}`);
+    for (const s of scripts) assert(fs.existsSync(path.join(ROOT, s)), `${g.slug}: script ${s} does not exist`);
+    assert(/<div id="game-viewport" class="game-viewport">/.test(h), `${g.slug}: #game-viewport missing`);
+    assert(/<div class="gv-actions" id="game-actions">/.test(h), `${g.slug}: #game-actions missing`);
+    assert(/id="gd-best-score"/.test(h), `${g.slug}: #gd-best-score missing`);
+  }
+  const arcade = read('js/arcade.js');
+  assert(/initGamePage\(gameId\)/.test(arcade) && arcade.includes('dataset.gamePage'), 'arcade.js must support data-game-page');
+  // Fruit Slice is the only game that needs its markup template, and it must not add a second <main>
+  const fruit = gameHtml('fruit-slice');
+  assert(/<template id="fruit-slice-template">/.test(fruit) && /id="gameCanvas"/.test(fruit) && /id="game-container"/.test(fruit), 'fruit-slice page needs the game template');
+  assert(!/<main[\s>]/.test((fruit.match(/<template[\s\S]*?<\/template>/) || [''])[0]), 'template must not contain <main>');
+  for (const slug of Object.values(PLAY_SLUGS).filter(x => x !== 'fruit-slice')) assert(!/<template/.test(gameHtml(slug)), `${slug}: only fruit-slice needs a template`);
+});
+
+test('Game pages: link to their detailed guide, and each guide links back to the game', () => {
+  for (const slug of Object.values(PLAY_SLUGS)) {
+    const h = gameHtml(slug);
+    const toGuide = (h.match(new RegExp(`href="/play/${slug}"`, 'g')) || []).length;
+    assert(toGuide >= 3, `${slug}: expected at least 3 links to /play/${slug}, found ${toGuide}`);
+    assert(playHtml(slug).includes(`href="/game/${slug}"`), `${slug}: guide must link back to /game/${slug}`);
+  }
+});
+
+test('Game pages: breadcrumb, structured data (VideoGame + BreadcrumbList) is valid and consistent', () => {
+  for (const slug of Object.values(PLAY_SLUGS)) {
+    const h = gameHtml(slug), url = `${ORIGIN}/game/${slug}`, m = metaOf(h), ld = jsonLdOf(h);
+    assert(h.includes('class="breadcrumbs" aria-label="Breadcrumb"'), `${slug}: breadcrumb nav`);
+    const g = ld['@graph'].find(n => n['@type'] === 'VideoGame'), b = ld['@graph'].find(n => n['@type'] === 'BreadcrumbList');
+    assert(g && b, `${slug}: needs VideoGame and BreadcrumbList`);
+    assert.strictEqual(g.url, url); assert.strictEqual(g['@id'], `${url}#game`); assert.strictEqual(g.potentialAction.target, url);
+    assert.strictEqual(g.description, m.desc, `${slug}: JSON-LD description must equal the meta description`);
+    assert.strictEqual(g.isAccessibleForFree, true);
+    assert.deepStrictEqual(b.itemListElement.map(i => i.item), [`${ORIGIN}/`, `${ORIGIN}/games`, url]);
+    assert(!/aggregateRating|ratingValue|interactionStatistic|reviewCount/.test(h), `${slug}: no fake ratings or play counts`);
+  }
+});
+
+test('Game pages: useful game-specific content (intro, facts, controls table, tips, related games)', () => {
+  const { ARCADE_GAMES } = require('../js/arcade.js');
+  const intros = new Set();
+  for (const g of ARCADE_GAMES) {
+    const h = gameHtml(g.slug), t = visibleText(h);
+    const words = t.split(' ').length;
+    assert(words >= 300, `${g.slug}: only ${words} visible words, expected a useful page`);
+    for (const id of ['about-game', 'game-facts', 'game-controls', 'game-tips', 'more-games']) assert(h.includes(`id="${id}"`), `${g.slug}: missing section #${id}`);
+    assert((h.match(/<div class="info-card">/g) || []).length === 4, `${g.slug}: 4 fact cards`);
+    assert((h.match(/<tr><td>/g) || []).length >= 3, `${g.slug}: controls table needs 3+ rows`);
+    assert(((h.match(/id="game-tips"[\s\S]*?<\/ul>/) || [''])[0].match(/<li>/g) || []).length === 3, `${g.slug}: 3 tips`);
+    assert.strictEqual((h.match(/<article class="info-card">/g) || []).length, 3, `${g.slug}: 3 related games`);
+    const rel = [...h.matchAll(/<h3><a href="\/game\/([^"]+)">/g)].map(m => m[1]);
+    assert(rel.length === 3 && !rel.includes(g.slug) && new Set(rel).size === 3, `${g.slug}: related games must be 3 different other games`);
+    for (const r of rel) assert(Object.values(PLAY_SLUGS).includes(r), `${g.slug}: unknown related game ${r}`);
+    assert(t.includes(g.title), `${g.slug}: should name the game`);
+    const intro = (h.match(/id="about-game">[^<]*<\/h2>\s*<p>([^<]+)<\/p>/) || [])[1];
+    assert(intro && !intros.has(intro), `${g.slug}: intro paragraph must be unique`);
+    intros.add(intro);
+    assert(!/<p class="page-lead">/.test(h) && !t.includes(decodeEntities((playHtml(g.slug).match(/<p class="page-lead">([^<]+)</) || [])[1] || 'NO-GUIDE-LEAD')), `${g.slug}: must not copy the guide lead paragraph`);
+  }
+});
+
+test('Game pages: pause-key text matches the engine (only games with a pause key mention P / Esc)', () => {
+  const SRC = { 'fruit-slice': 'js/game.js', snake: 'js/games/snake.js', 'brick-breaker': 'js/games/brick-breaker.js', 'space-shooter': 'js/games/space-shooter.js', 'puzzle-2048': 'js/games/puzzle-2048.js', 'tic-tac-toe': 'js/games/tic-tac-toe.js', 'memory-match': 'js/games/memory-match.js', 'endless-runner': 'js/games/endless-runner.js', 'block-puzzle': 'js/games/block-puzzle.js', 'whack-a-mole': 'js/games/whack-a-mole.js' };
+  const { ARCADE_GAMES } = require('../js/arcade.js');
+  for (const g of ARCADE_GAMES) {
+    const hasPauseKey = /'Escape'/.test(read(SRC[g.id])) && /e\.key === 'p'|e\.key !== 'p'/.test(read(SRC[g.id]));
+    const mentions = /<tr><td>P or Esc<\/td>/.test(gameHtml(g.slug));
+    assert.strictEqual(mentions, hasPauseKey, `${g.slug}: page ${mentions ? 'mentions' : 'omits'} the P / Esc pause key but the engine ${hasPauseKey ? 'has' : 'has no'} one`);
+  }
+});
+
+test('Game pages: internal links, assets and in-page anchors resolve', () => {
+  const exists = (href) => {
+    const p = href.split('#')[0].split('?')[0];
+    if (p === '/' || p === '') return true;
+    return fs.existsSync(path.join(ROOT, p + '.html')) || fs.existsSync(path.join(ROOT, p));
+  };
+  for (const slug of Object.values(PLAY_SLUGS)) {
+    const h = gameHtml(slug);
+    for (const m of h.matchAll(/(?:href|src)="([^"]+)"/g)) {
+      const r = m[1];
+      if (/^(https?:|data:|mailto:)/.test(r)) continue;
+      if (r.startsWith('#')) { assert(h.includes(`id="${r.slice(1)}"`), `${slug}: anchor ${r} has no target`); continue; }
+      assert(r.startsWith('/'), `${slug}: internal link must be absolute: ${r}`);
+      assert(exists(r), `${slug}: broken internal link ${r}`);
+    }
+  }
+});
+
+test('Game pages: no ads, no third-party scripts, no tracking (AdSense is not added yet)', () => {
+  for (const slug of Object.values(PLAY_SLUGS)) {
+    const h = gameHtml(slug);
+    assert(!/adsbygoogle|googlesyndication|doubleclick|gtag\(|googletagmanager|google-analytics|fbq\(/i.test(h), `${slug}: ad/analytics code found`);
+    const scripts = [...h.matchAll(/<script[^>]+src="([^"]+)"/g)].map(m => m[1]);
+    assert(scripts.every(s => s.startsWith('/js/')), `${slug}: only same-site scripts allowed`);
+  }
+});
+
+test('Game pages: sitemap lists all 10 game pages exactly once, with the site domain', () => {
+  const sm = read('sitemap.xml');
+  for (const slug of Object.values(PLAY_SLUGS)) {
+    const loc = `<loc>${ORIGIN}/game/${slug}</loc>`;
+    assert.strictEqual(sm.split(loc).length - 1, 1, `sitemap must list ${loc} exactly once`);
+  }
+  assert(!/#/.test(sm), 'sitemap must not contain hash URLs');
+});
+
+test('Game pages: homepage, Games page, About page and guides all link to the direct pages', () => {
+  const idx = read('index.html'), games = read('games.html'), about = read('about.html');
+  for (const slug of Object.values(PLAY_SLUGS)) {
+    assert(idx.includes(`<a href="/game/${slug}">`), `index.html: static link to /game/${slug} missing`);
+    assert(games.includes(`class="pgc-play" href="/game/${slug}"`), `games.html: link to /game/${slug} missing`);
+    assert(about.includes(`href="/game/${slug}"`), `about.html: link to /game/${slug} missing`);
+  }
+  assert.strictEqual((idx.match(/href="\/game\/[a-z0-9-]+"/g) || []).length, 10, 'index.html: one /game/ link per game');
+});
+
+test('Game pages: the hash routes, Search Console tag and homepage content are preserved', () => {
+  const arcade = read('js/arcade.js'), idx = read('index.html');
+  for (const needle of ["hash.startsWith('#/game/')", "hash.startsWith('#/category/')", "hash === '#/favorites'", 'window.addEventListener(\'hashchange\'']) assert(arcade.includes(needle), `arcade.js lost hash routing: ${needle}`);
+  assert(idx.includes('google-site-verification" content="EUzjwsrCJ7rOlLMAv9V49wVVUIMJ9vyyOce6aKRHFRs"'), 'Search Console tag must stay');
+  assert(idx.includes('class="home-info"') && idx.includes('id="home-about-title"'), 'homepage SEO section must stay');
+  assert(!/data-game-page/.test(idx), 'index.html must stay the hash-route portal');
+});
+
+test('Gameplay notes in the guides no longer describe the fixed bugs', () => {
+  for (const slug of Object.values(PLAY_SLUGS)) {
+    const h = playHtml(slug);
+    assert(!/currently restarts/.test(h), `${slug}: stale note: Resume button restarting`);
+    assert(!/there is no keyboard shortcut in this game/.test(h), `${slug}: stale note: no pause shortcut`);
+    assert(!/can sometimes glow as if a line had been completed/.test(h), `${slug}: stale note: Tic-Tac-Toe glow`);
+  }
+  assert(/<tr><td><code>P<\/code> or <code>Esc<\/code><\/td>/.test(playHtml('whack-a-mole')), 'whack-a-mole guide must list the P / Esc pause key');
 });
 
 console.log(`\nResults: ${passed}/${total} tests passed.`);
