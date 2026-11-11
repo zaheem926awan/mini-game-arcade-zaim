@@ -4,9 +4,10 @@
   "private": true,
   "description": "A polished, responsive 60-second fruit slicing arcade mini-game built with vanilla HTML5, Canvas, CSS, and Web Audio API.",
   "scripts": {
-    "test": "node tests/game.test.js && node tests/render.test.js && node tests/arcade-games.test.js && node tests/site-structure.test.js",
+    "test": "node tests/game.test.js && node tests/render.test.js && node tests/arcade-games.test.js && node tests/gameplay-regression.test.js && node tests/site-structure.test.js && node tests/browser-regression.test.js",
     "start": "npx serve .",
-    "set-domain": "node scripts/set-domain.js"
+    "set-domain": "node scripts/set-domain.js",
+    "build-game-pages": "node scripts/build-game-pages.js"
   },
   "keywords": [
     "fruit-ninja",
