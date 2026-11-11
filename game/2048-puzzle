@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090d16">
+  <title>Play 2048 Puzzle Online Free | Neo Arcade Vault</title>
+  <meta name="description" content="Play 2048 Puzzle free online: slide and merge tiles on a 4 x 4 board to build a 2048 tile, with one-step undo. Keyboard or swipe. No download.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mini-game-arcade-zaim.vercel.app/game/2048-puzzle">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Neo Arcade Vault">
+  <meta property="og:title" content="Play 2048 Puzzle Online Free | Neo Arcade Vault">
+  <meta property="og:description" content="Play 2048 Puzzle free online: slide and merge tiles on a 4 x 4 board to build a 2048 tile, with one-step undo. Keyboard or swipe. No download.">
+  <meta property="og:url" content="https://mini-game-arcade-zaim.vercel.app/game/2048-puzzle">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Play 2048 Puzzle Online Free | Neo Arcade Vault">
+  <meta name="twitter:description" content="Play 2048 Puzzle free online: slide and merge tiles on a 4 x 4 board to build a 2048 tile, with one-step undo. Keyboard or swipe. No download.">
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "VideoGame",
+      "@id": "https://mini-game-arcade-zaim.vercel.app/game/2048-puzzle#game",
+      "name": "2048 Puzzle",
+      "description": "Play 2048 Puzzle free online: slide and merge tiles on a 4 x 4 board to build a 2048 tile, with one-step undo. Keyboard or swipe. No download.",
+      "url": "https://mini-game-arcade-zaim.vercel.app/game/2048-puzzle",
+      "genre": [
+        "Puzzle"
+      ],
+      "gamePlatform": "Web browser",
+      "applicationCategory": "Game",
+      "playMode": [
+        "SinglePlayer"
+      ],
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "publisher": {
+        "@type": "Organization",
+        "name": "Neo Arcade Vault",
+        "url": "https://mini-game-arcade-zaim.vercel.app/"
+      },
+      "potentialAction": {
+        "@type": "PlayAction",
+        "target": "https://mini-game-arcade-zaim.vercel.app/game/2048-puzzle"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://mini-game-arcade-zaim.vercel.app/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Games",
+          "item": "https://mini-game-arcade-zaim.vercel.app/games"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Play 2048 Puzzle",
+          "item": "https://mini-game-arcade-zaim.vercel.app/game/2048-puzzle"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/arcade.css">
+  <link rel="stylesheet" href="/css/pages.css">
+</head>
+<body data-game-page="puzzle-2048">
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <div class="arcade-background" aria-hidden="true">
+    <div class="arcade-grid"></div>
+    <div class="ambient-flare flare-1"></div>
+    <div class="ambient-flare flare-2"></div>
+  </div>
+
+  <div id="portal-app">
+    <header>
+      <nav class="arcade-navbar" aria-label="Main navigation">
+        <a class="nav-brand" href="/" aria-label="Neo Arcade Vault - home">
+          <span class="brand-bolt">⚡</span>
+          <span class="brand-text">NEO ARCADE</span>
+          <span class="brand-badge">VAULT</span>
+        </a>
+        <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/games">Games</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        </div>
+      </nav>
+    </header>
+
+    <div id="game-portal-view" class="game-page-view">
+      <main id="main-content" class="game-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/games">Games</a> &rsaquo; <span>2048 Puzzle</span></nav>
+
+        <div class="game-view-header">
+          <div class="gv-left">
+            <a class="btn-back-arcade" href="/games">&lsaquo; All games</a>
+            <div class="gv-title-meta">
+              <h1 class="gv-title">Play 2048 Puzzle Online</h1>
+              <span class="gv-cat-badge">Puzzle</span>
+            </div>
+          </div>
+          <div class="gv-actions" id="game-actions"></div>
+        </div>
+
+        <div id="game-viewport" class="game-viewport">
+          <p class="game-noscript">2048 Puzzle needs JavaScript to run. Please enable it in your browser, or read the <a href="/play/2048-puzzle">2048 Puzzle guide</a> for the rules.</p>
+        </div>
+
+        <div class="game-details-box">
+          <div class="gd-col">
+            <h2>How to play</h2>
+            <p>Arrow Keys / WASD, Swipe, or Touch D-Pad.</p>
+            <p style="margin-top: 8px; color: var(--text-muted); font-size: 0.88rem;">Smooth 4x4 tile-sliding puzzle. Merge matching powers of 2, plan with Undo, and engineer the mythical 2048 core!</p>
+            <p style="margin-top: 8px; font-size: 0.88rem;"><a href="/play/2048-puzzle">Read the full 2048 Puzzle guide: rules, scoring and tips</a></p>
+          </div>
+          <div class="gd-col stats-box">
+            <h2>Your records</h2>
+            <div class="gd-stat-row"><span>Category</span><span style="color: var(--accent-2);">Puzzle</span></div>
+            <div class="gd-stat-row"><span>Best score</span><span id="gd-best-score" style="color: var(--yellow);">No score yet</span></div>
+            <div class="gd-stat-row"><span>Saved</span><span>This device only</span></div>
+          </div>
+        </div>
+
+        <div class="game-page-info">
+          <section class="content-card prose" aria-labelledby="about-game">
+            <h2 id="about-game">About 2048 Puzzle</h2>
+            <p>2048 Puzzle is played on a 4 x 4 board. Each move slides every tile one way and merges equal neighbours into a tile of double the value, and a new tile appears after every move that works.</p>
+            <p>Reach 2048 to win, or keep going for a higher score. If a move goes wrong, the one-step undo can take it back.</p>
+            <p>It is free, runs in your browser and needs no download or account. Your best score stays on your own device.</p>
+          </section>
+
+          <section aria-labelledby="game-facts">
+            <h2 id="game-facts" class="sr-only">2048 Puzzle at a glance</h2>
+            <div class="card-grid">
+              <div class="info-card">
+                <h3>Category</h3>
+                <p>Puzzle</p>
+              </div>
+              <div class="info-card">
+                <h3>Board</h3>
+                <p>4 x 4</p>
+              </div>
+              <div class="info-card">
+                <h3>Goal</h3>
+                <p>Build a 2048 tile</p>
+              </div>
+              <div class="info-card">
+                <h3>Undo</h3>
+                <p>One step</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="content-card prose" aria-labelledby="game-controls">
+            <h2 id="game-controls">2048 Puzzle controls</h2>
+            <div class="table-scroll">
+              <table>
+                <thead><tr><th scope="col">Input</th><th scope="col">What it does</th></tr></thead>
+                <tbody>
+                  <tr><td>Arrow keys or W A S D</td><td>Slide all tiles up, down, left or right.</td></tr>
+                  <tr><td>Z or Backspace</td><td>Undo your last move.</td></tr>
+                  <tr><td>Swipe</td><td>Swipe on the board in the direction you want the tiles to slide.</td></tr>
+                  <tr><td>On-screen D-pad</td><td>Four arrow buttons below the board.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="content-card prose" aria-labelledby="game-tips">
+            <h2 id="game-tips">Quick tips for 2048 Puzzle</h2>
+            <ul>
+              <li>Undo right after a move you regret. It only goes back one move and cannot be used twice in a row.</li>
+              <li>Before each move, look for rows and columns with pairs that will merge, because each merge scores the new tile value.</li>
+              <li>A new tile appears after every move that works, so avoid filling the board with tiles that do not match.</li>
+            </ul>
+            <p>Want the full rules, scoring table and answers to common questions? Read the <a href="/play/2048-puzzle">2048 Puzzle guide</a>.</p>
+          </section>
+
+          <section class="content-card prose" aria-labelledby="more-games">
+            <h2 id="more-games">More games to play</h2>
+            <div class="card-grid">
+              <article class="info-card">
+                <h3><a href="/game/block-puzzle">Play Block Puzzle</a></h3>
+                <p>Clear lines on a 10 x 20 board with hold and ghost outline.</p>
+              </article>
+              <article class="info-card">
+                <h3><a href="/game/fruit-slice">Play Fruit Slice</a></h3>
+                <p>A 60-second blade game with combos and bombs.</p>
+              </article>
+              <article class="info-card">
+                <h3><a href="/game/neon-snake">Play Neon Snake</a></h3>
+                <p>Steer a growing snake around a 22 x 22 board.</p>
+              </article>
+            </div>
+            <div class="btn-row">
+              <a class="btn-link secondary" href="/play/2048-puzzle">2048 Puzzle guide</a>
+              <a class="btn-link secondary" href="/games">Browse all games</a>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <footer class="arcade-footer site-footer">
+      <div class="footer-brand"><span class="brand-bolt">⚡</span> NEO ARCADE</div>
+      <p>A free collection of 10 browser mini-games. No downloads, no sign-up.</p>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="/">Home</a>
+        <a href="/games">Games</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        <a href="/privacy-policy">Privacy Policy</a>
+        <a href="/terms">Terms &amp; Conditions</a>
+      </nav>
+      <p class="footer-copy">&copy; <span data-year>2026</span> Neo Arcade Vault. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <script src="/js/site-shell.js"></script>
+  <script src="/js/audio.js"></script>
+  <script src="/js/games/puzzle-2048.js"></script>
+  <script src="/js/arcade.js"></script>
+</body>
+</html>
