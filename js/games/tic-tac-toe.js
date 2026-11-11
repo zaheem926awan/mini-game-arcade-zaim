@@ -16,6 +16,11 @@ class TicTacToeGame {
     this.gameOver = false;
     this.winningCombo = null;
 
+    // The computer replies after a short delay. Keep a handle on that timer and a round number,
+    // so a reply that belongs to an old round can never be played into a new one.
+    this.aiTimer = null;
+    this.roundId = 0;
+
     this.stats = {
       xWins: 0,
       oWins: 0,
@@ -109,7 +114,19 @@ class TicTacToeGame {
     this.start();
   }
 
+  /** Cancel the computer's pending reply and invalidate the round it belonged to. */
+  cancelPendingAiMove() {
+    if (this.aiTimer !== null) {
+      clearTimeout(this.aiTimer);
+      this.aiTimer = null;
+    }
+    this.roundId++;
+  }
+
   start() {
+    // Reset, New Round, mode switch and difficulty change all come through here: the old round's
+    // pending computer move must not survive into the new round.
+    this.cancelPendingAiMove();
     this.board = Array(9).fill(null);
     this.currentPlayer = 'X';
     this.gameOver = false;
@@ -130,6 +147,7 @@ class TicTacToeGame {
     const winner = this.checkWinner(this.board);
 
     if (winner) {
+      this.winningCombo = this.getWinningCombo(this.board); // highlight only a line that really won
       this.handleGameEnd(winner);
     } else if (this.isBoardFull(this.board)) {
       this.handleGameEnd('tie');
@@ -143,7 +161,11 @@ class TicTacToeGame {
       this.render();
 
       if (this.mode === 'ai' && this.currentPlayer === 'O' && !this.gameOver) {
-        setTimeout(() => this.makeAiMove(), 320);
+        const round = this.roundId;
+        this.aiTimer = setTimeout(() => {
+          this.aiTimer = null;
+          if (round === this.roundId) this.makeAiMove();   // ignore a reply from an older round
+        }, 320);
       }
     }
 
@@ -151,7 +173,8 @@ class TicTacToeGame {
   }
 
   makeAiMove() {
-    if (this.gameOver) return;
+    // The computer only ever plays O, in computer mode, on its own turn.
+    if (this.gameOver || this.mode !== 'ai' || this.currentPlayer !== 'O') return;
 
     let move;
     if (this.difficulty === 'easy') {
@@ -222,15 +245,22 @@ class TicTacToeGame {
     }
   }
 
-  checkWinner(board) {
+  /**
+   * Pure lookup: returns the winning line [a, b, c] for a board, or null.
+   * It must not touch game state, because minimax calls checkWinner() on thousands of
+   * hypothetical boards while the computer is thinking.
+   */
+  getWinningCombo(board) {
     for (const combo of this.winningCombos) {
       const [a, b, c] = combo;
-      if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-        this.winningCombo = combo;
-        return board[a];
-      }
+      if (board[a] && board[a] === board[b] && board[a] === board[c]) return combo;
     }
     return null;
+  }
+
+  checkWinner(board) {
+    const combo = this.getWinningCombo(board);
+    return combo ? board[combo[0]] : null;
   }
 
   isBoardFull(board) {
@@ -298,7 +328,7 @@ class TicTacToeGame {
   }
 
   destroy() {
-    // nothing persistent
+    this.cancelPendingAiMove();   // a closed game must not keep playing
   }
 }
 
