@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090d16">
+  <title>Play Tic-Tac-Toe Online Free | Neo Arcade Vault</title>
+  <meta name="description" content="Play Tic-Tac-Toe free online against the computer on Easy, Medium or Invincible, or with a friend on one device. No download or sign-up.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mini-game-arcade-zaim.vercel.app/game/tic-tac-toe">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Neo Arcade Vault">
+  <meta property="og:title" content="Play Tic-Tac-Toe Online Free | Neo Arcade Vault">
+  <meta property="og:description" content="Play Tic-Tac-Toe free online against the computer on Easy, Medium or Invincible, or with a friend on one device. No download or sign-up.">
+  <meta property="og:url" content="https://mini-game-arcade-zaim.vercel.app/game/tic-tac-toe">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Play Tic-Tac-Toe Online Free | Neo Arcade Vault">
+  <meta name="twitter:description" content="Play Tic-Tac-Toe free online against the computer on Easy, Medium or Invincible, or with a friend on one device. No download or sign-up.">
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "VideoGame",
+      "@id": "https://mini-game-arcade-zaim.vercel.app/game/tic-tac-toe#game",
+      "name": "Tic-Tac-Toe",
+      "description": "Play Tic-Tac-Toe free online against the computer on Easy, Medium or Invincible, or with a friend on one device. No download or sign-up.",
+      "url": "https://mini-game-arcade-zaim.vercel.app/game/tic-tac-toe",
+      "genre": [
+        "Strategy"
+      ],
+      "gamePlatform": "Web browser",
+      "applicationCategory": "Game",
+      "playMode": [
+        "SinglePlayer",
+        "MultiPlayer"
+      ],
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "publisher": {
+        "@type": "Organization",
+        "name": "Neo Arcade Vault",
+        "url": "https://mini-game-arcade-zaim.vercel.app/"
+      },
+      "potentialAction": {
+        "@type": "PlayAction",
+        "target": "https://mini-game-arcade-zaim.vercel.app/game/tic-tac-toe"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://mini-game-arcade-zaim.vercel.app/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Games",
+          "item": "https://mini-game-arcade-zaim.vercel.app/games"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Play Tic-Tac-Toe",
+          "item": "https://mini-game-arcade-zaim.vercel.app/game/tic-tac-toe"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/arcade.css">
+  <link rel="stylesheet" href="/css/pages.css">
+</head>
+<body data-game-page="tic-tac-toe">
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <div class="arcade-background" aria-hidden="true">
+    <div class="arcade-grid"></div>
+    <div class="ambient-flare flare-1"></div>
+    <div class="ambient-flare flare-2"></div>
+  </div>
+
+  <div id="portal-app">
+    <header>
+      <nav class="arcade-navbar" aria-label="Main navigation">
+        <a class="nav-brand" href="/" aria-label="Neo Arcade Vault - home">
+          <span class="brand-bolt">⚡</span>
+          <span class="brand-text">NEO ARCADE</span>
+          <span class="brand-badge">VAULT</span>
+        </a>
+        <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/games">Games</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        </div>
+      </nav>
+    </header>
+
+    <div id="game-portal-view" class="game-page-view">
+      <main id="main-content" class="game-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/games">Games</a> &rsaquo; <span>Tic-Tac-Toe</span></nav>
+
+        <div class="game-view-header">
+          <div class="gv-left">
+            <a class="btn-back-arcade" href="/games">&lsaquo; All games</a>
+            <div class="gv-title-meta">
+              <h1 class="gv-title">Play Tic-Tac-Toe Online</h1>
+              <span class="gv-cat-badge">Strategy</span>
+            </div>
+          </div>
+          <div class="gv-actions" id="game-actions"></div>
+        </div>
+
+        <div id="game-viewport" class="game-viewport">
+          <p class="game-noscript">Tic-Tac-Toe needs JavaScript to run. Please enable it in your browser, or read the <a href="/play/tic-tac-toe">Tic-Tac-Toe guide</a> for the rules.</p>
+        </div>
+
+        <div class="game-details-box">
+          <div class="gd-col">
+            <h2>How to play</h2>
+            <p>Click or Tap cells to place X and O.</p>
+            <p style="margin-top: 8px; color: var(--text-muted); font-size: 0.88rem;">Cyber neon battle of wits! Challenge the unbeatable Minimax AI or pass-and-play locally with a friend on the same device.</p>
+            <p style="margin-top: 8px; font-size: 0.88rem;"><a href="/play/tic-tac-toe">Read the full Tic-Tac-Toe guide: rules, scoring and tips</a></p>
+          </div>
+          <div class="gd-col stats-box">
+            <h2>Your records</h2>
+            <div class="gd-stat-row"><span>Category</span><span style="color: var(--accent-2);">Strategy</span></div>
+            <div class="gd-stat-row"><span>Best score</span><span id="gd-best-score" style="color: var(--yellow);">Not tracked</span></div>
+            <div class="gd-stat-row"><span>Saved</span><span>This device only</span></div>
+          </div>
+        </div>
+
+        <div class="game-page-info">
+          <section class="content-card prose" aria-labelledby="about-game">
+            <h2 id="about-game">About Tic-Tac-Toe</h2>
+            <p>Tic-Tac-Toe here has two modes: a computer opponent set to Easy, Medium or Invincible, or two players sharing one device. In the computer mode you play X and move first.</p>
+            <p>A win tally is kept while the page stays open, and a completed line is highlighted so you can see exactly how the round ended.</p>
+            <p>It is free, runs in your browser and needs no download or account. Your best score stays on your own device.</p>
+          </section>
+
+          <section aria-labelledby="game-facts">
+            <h2 id="game-facts" class="sr-only">Tic-Tac-Toe at a glance</h2>
+            <div class="card-grid">
+              <div class="info-card">
+                <h3>Category</h3>
+                <p>Strategy</p>
+              </div>
+              <div class="info-card">
+                <h3>Modes</h3>
+                <p>Vs Computer or 2 Players</p>
+              </div>
+              <div class="info-card">
+                <h3>Difficulty</h3>
+                <p>Easy, Medium, Invincible</p>
+              </div>
+              <div class="info-card">
+                <h3>Score</h3>
+                <p>Win tally, not saved</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="content-card prose" aria-labelledby="game-controls">
+            <h2 id="game-controls">Tic-Tac-Toe controls</h2>
+            <div class="table-scroll">
+              <table>
+                <thead><tr><th scope="col">Input</th><th scope="col">What it does</th></tr></thead>
+                <tbody>
+                  <tr><td>Mouse or touch</td><td>Click or tap an empty cell to place your mark.</td></tr>
+                  <tr><td>VS COMPUTER / 2 PLAYERS</td><td>Switch mode. This starts a fresh board.</td></tr>
+                  <tr><td>Difficulty menu</td><td>Choose Invincible, Medium or Easy in the computer mode.</td></tr>
+                  <tr><td>New round button</td><td>Clear the board and start again with X to move.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="content-card prose" aria-labelledby="game-tips">
+            <h2 id="game-tips">Quick tips for Tic-Tac-Toe</h2>
+            <ul>
+              <li>You move first as X, so you can claim the centre or a corner on your first turn.</li>
+              <li>Every turn, check whether your opponent has two in a line with an empty third cell, and block it.</li>
+              <li>Against Invincible, aim not to lose. A draw is the best possible result.</li>
+            </ul>
+            <p>Want the full rules, scoring table and answers to common questions? Read the <a href="/play/tic-tac-toe">Tic-Tac-Toe guide</a>.</p>
+          </section>
+
+          <section class="content-card prose" aria-labelledby="more-games">
+            <h2 id="more-games">More games to play</h2>
+            <div class="card-grid">
+              <article class="info-card">
+                <h3><a href="/game/fruit-slice">Play Fruit Slice</a></h3>
+                <p>A 60-second blade game with combos and bombs.</p>
+              </article>
+              <article class="info-card">
+                <h3><a href="/game/neon-snake">Play Neon Snake</a></h3>
+                <p>Steer a growing snake around a 22 x 22 board.</p>
+              </article>
+              <article class="info-card">
+                <h3><a href="/game/brick-breaker">Play Brick Breaker</a></h3>
+                <p>Clear three stages of bricks with a paddle and a ball.</p>
+              </article>
+            </div>
+            <div class="btn-row">
+              <a class="btn-link secondary" href="/play/tic-tac-toe">Tic-Tac-Toe guide</a>
+              <a class="btn-link secondary" href="/games">Browse all games</a>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <footer class="arcade-footer site-footer">
+      <div class="footer-brand"><span class="brand-bolt">⚡</span> NEO ARCADE</div>
+      <p>A free collection of 10 browser mini-games. No downloads, no sign-up.</p>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="/">Home</a>
+        <a href="/games">Games</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        <a href="/privacy-policy">Privacy Policy</a>
+        <a href="/terms">Terms &amp; Conditions</a>
+      </nav>
+      <p class="footer-copy">&copy; <span data-year>2026</span> Neo Arcade Vault. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <script src="/js/site-shell.js"></script>
+  <script src="/js/audio.js"></script>
+  <script src="/js/games/tic-tac-toe.js"></script>
+  <script src="/js/arcade.js"></script>
+</body>
+</html>
