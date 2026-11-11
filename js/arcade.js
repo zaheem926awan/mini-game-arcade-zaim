@@ -40,17 +40,18 @@ function ico(name, size) {
 }
 function artFor(id) { return GAME_ART[id] || ''; }
 
+// `slug` is the public URL name: the page /game/<slug> plays the game; its written guide uses the same slug.
 const ARCADE_GAMES = [
-  { id: 'fruit-slice', title: 'Fruit Slice', category: 'action', badge: 'REFLEX', icon: '🍉', gradient: 'linear-gradient(135deg, #ff3d54 0%, #ff9a3c 100%)', description: 'Swift blade slashing arcade! Slice juicy watermelons, oranges, and pineapples in 60 seconds while avoiding hazard skull bombs.', featured: true, tags: ['blade', 'fruits', 'slicing', 'reflex'], controls: 'Mouse Drag or Touch Swipe across flying fruits.', scoreKey: 'fruit_arcade_high_score', scoreLabel: 'Best score', scoreUnit: '' },
-  { id: 'snake', title: 'Neon Snake', category: 'arcade', badge: 'CLASSIC', icon: '🐍', gradient: 'linear-gradient(135deg, #0a8f7c 0%, #35d9a0 100%)', description: 'Cybernetic slither game! Eat glowing apples, track down golden stars for 50-point bonuses, and conquer the cyber grid.', featured: true, tags: ['retro', 'grid', 'cyber', 'classic'], controls: 'Arrow Keys / WASD, Swipe, or Virtual D-Pad.', scoreKey: 'arcade_snake_highscore', scoreLabel: 'Best score', scoreUnit: '' },
-  { id: 'brick-breaker', title: 'Brick Breaker', category: 'arcade', badge: 'BREAKOUT', icon: '🧱', gradient: 'linear-gradient(135deg, #e5483a 0%, #f7a23b 100%)', description: 'High-octane breakout action with angle deflections, multi-ball capsules, paddle expanders, and 3 progressive stages.', featured: false, tags: ['breakout', 'paddle', 'ball', 'powerups'], controls: 'Mouse Drag, Left/Right Arrows, or Touch Screen.', scoreKey: 'arcade_bricks_highscore', scoreLabel: 'Best score', scoreUnit: '' },
-  { id: 'space-shooter', title: 'Space Shooter', category: 'action', badge: 'SHOOTER', icon: '🚀', gradient: 'linear-gradient(135deg, #2a1c8c 0%, #2e8fe0 100%)', description: 'Vertical parallax space combat! Blast alien drones, dodge laser cruisers, crack tumbling asteroids, and trigger smart bombs.', featured: true, tags: ['space', 'aliens', 'lasers', 'shooter'], controls: 'Arrow Keys / Mouse / Drag to fly + Spacebar or Fire button.', scoreKey: 'arcade_space_highscore', scoreLabel: 'Best score', scoreUnit: '' },
-  { id: 'puzzle-2048', title: '2048 Puzzle', category: 'puzzle', badge: 'BRAIN', icon: '🔢', gradient: 'linear-gradient(135deg, #5b3df5 0%, #a76bff 100%)', description: 'Smooth 4x4 tile-sliding puzzle. Merge matching powers of 2, plan with Undo, and engineer the mythical 2048 core!', featured: false, tags: ['numbers', 'merge', 'logic', 'strategy'], controls: 'Arrow Keys / WASD, Swipe, or Touch D-Pad.', scoreKey: 'arcade_2048_highscore', scoreLabel: 'Best score', scoreUnit: '' },
-  { id: 'tic-tac-toe', title: 'Tic-Tac-Toe', category: 'strategy', badge: 'VERSUS', icon: '✕◯', gradient: 'linear-gradient(135deg, #0e7cc4 0%, #e8537a 100%)', description: 'Cyber neon battle of wits! Challenge the unbeatable Minimax AI or pass-and-play locally with a friend on the same device.', featured: false, tags: ['minimax', 'ai', 'pvp', 'turn-based'], controls: 'Click or Tap cells to place X and O.', scoreKey: null, scoreLabel: 'Best score', scoreUnit: '' },
-  { id: 'memory-match', title: 'Memory Match', category: 'casual', badge: 'NEW', icon: '🃏', gradient: 'linear-gradient(135deg, #14a06f 0%, #6fdcae 100%)', description: 'Interactive 3D card-flipping brain teaser with 8 pairs of arcade relics, match streaks, timer, and 3-star ratings.', featured: false, tags: ['cards', 'flip', 'pairs', 'memory'], controls: 'Click or Tap cards to reveal matching pairs.', scoreKey: 'arcade_memory_best', scoreLabel: 'Fewest moves', scoreUnit: ' moves', scoreLowerIsBetter: true },
-  { id: 'endless-runner', title: 'Endless Runner', category: 'action', badge: 'RUNNER', icon: '🏃', gradient: 'linear-gradient(135deg, #1f6fe0 0%, #ffa94d 100%)', description: 'Sprint across neon rooftops! Leap spikes with double-jump and duck under laser drones with fluid slide maneuvers.', featured: false, tags: ['ninja', 'parkour', 'jump', 'slide'], controls: 'Space / Up Arrow to Jump, Down Arrow to Slide.', scoreKey: 'arcade_runner_highscore', scoreLabel: 'Best score', scoreUnit: '' },
-  { id: 'block-puzzle', title: 'Block Puzzle', category: 'puzzle', badge: 'RETRO', icon: '🟦', gradient: 'linear-gradient(135deg, #2c1f94 0%, #17b8c9 100%)', description: 'Timeless falling polyominoes arcade with 7 tetrominoes, ghost landing projection, next preview queue, hold piece, and hard drop.', featured: true, tags: ['tetris', 'blocks', 'lines', 'retro'], controls: 'Left/Right, Up to Rotate, Space for Hard Drop, C to Hold.', scoreKey: 'arcade_blocks_highscore', scoreLabel: 'Best score', scoreUnit: '' },
-  { id: 'whack-a-mole', title: 'Whack-a-Mole', category: 'casual', badge: 'NEW', icon: '🔨', gradient: 'linear-gradient(135deg, #f0554d 0%, #ffc247 100%)', description: 'Rapid-fire cyber reflex test! Whack pop-up moles, rack up combo multipliers, bag golden stars, and dodge ticking hazard bombs.', featured: false, tags: ['reflex', 'hammer', 'whack', 'combo'], controls: 'Click or Tap moles as fast as they appear.', scoreKey: 'arcade_mole_highscore', scoreLabel: 'Best score', scoreUnit: '' }
+  { id: 'fruit-slice', slug: 'fruit-slice', title: 'Fruit Slice', category: 'action', badge: 'REFLEX', icon: '🍉', gradient: 'linear-gradient(135deg, #ff3d54 0%, #ff9a3c 100%)', description: 'Swift blade slashing arcade! Slice juicy watermelons, oranges, and pineapples in 60 seconds while avoiding hazard skull bombs.', featured: true, tags: ['blade', 'fruits', 'slicing', 'reflex'], controls: 'Mouse Drag or Touch Swipe across flying fruits.', scoreKey: 'fruit_arcade_high_score', scoreLabel: 'Best score', scoreUnit: '' },
+  { id: 'snake', slug: 'neon-snake', title: 'Neon Snake', category: 'arcade', badge: 'CLASSIC', icon: '🐍', gradient: 'linear-gradient(135deg, #0a8f7c 0%, #35d9a0 100%)', description: 'Cybernetic slither game! Eat glowing apples, track down golden stars for 50-point bonuses, and conquer the cyber grid.', featured: true, tags: ['retro', 'grid', 'cyber', 'classic'], controls: 'Arrow Keys / WASD, Swipe, or Virtual D-Pad.', scoreKey: 'arcade_snake_highscore', scoreLabel: 'Best score', scoreUnit: '' },
+  { id: 'brick-breaker', slug: 'brick-breaker', title: 'Brick Breaker', category: 'arcade', badge: 'BREAKOUT', icon: '🧱', gradient: 'linear-gradient(135deg, #e5483a 0%, #f7a23b 100%)', description: 'High-octane breakout action with angle deflections, multi-ball capsules, paddle expanders, and 3 progressive stages.', featured: false, tags: ['breakout', 'paddle', 'ball', 'powerups'], controls: 'Mouse Drag, Left/Right Arrows, or Touch Screen.', scoreKey: 'arcade_bricks_highscore', scoreLabel: 'Best score', scoreUnit: '' },
+  { id: 'space-shooter', slug: 'space-shooter', title: 'Space Shooter', category: 'action', badge: 'SHOOTER', icon: '🚀', gradient: 'linear-gradient(135deg, #2a1c8c 0%, #2e8fe0 100%)', description: 'Vertical parallax space combat! Blast alien drones, dodge laser cruisers, crack tumbling asteroids, and trigger smart bombs.', featured: true, tags: ['space', 'aliens', 'lasers', 'shooter'], controls: 'Arrow Keys / Mouse / Drag to fly + Spacebar or Fire button.', scoreKey: 'arcade_space_highscore', scoreLabel: 'Best score', scoreUnit: '' },
+  { id: 'puzzle-2048', slug: '2048-puzzle', title: '2048 Puzzle', category: 'puzzle', badge: 'BRAIN', icon: '🔢', gradient: 'linear-gradient(135deg, #5b3df5 0%, #a76bff 100%)', description: 'Smooth 4x4 tile-sliding puzzle. Merge matching powers of 2, plan with Undo, and engineer the mythical 2048 core!', featured: false, tags: ['numbers', 'merge', 'logic', 'strategy'], controls: 'Arrow Keys / WASD, Swipe, or Touch D-Pad.', scoreKey: 'arcade_2048_highscore', scoreLabel: 'Best score', scoreUnit: '' },
+  { id: 'tic-tac-toe', slug: 'tic-tac-toe', title: 'Tic-Tac-Toe', category: 'strategy', badge: 'VERSUS', icon: '✕◯', gradient: 'linear-gradient(135deg, #0e7cc4 0%, #e8537a 100%)', description: 'Cyber neon battle of wits! Challenge the unbeatable Minimax AI or pass-and-play locally with a friend on the same device.', featured: false, tags: ['minimax', 'ai', 'pvp', 'turn-based'], controls: 'Click or Tap cells to place X and O.', scoreKey: null, scoreLabel: 'Best score', scoreUnit: '' },
+  { id: 'memory-match', slug: 'memory-match', title: 'Memory Match', category: 'casual', badge: 'NEW', icon: '🃏', gradient: 'linear-gradient(135deg, #14a06f 0%, #6fdcae 100%)', description: 'Interactive 3D card-flipping brain teaser with 8 pairs of arcade relics, match streaks, timer, and 3-star ratings.', featured: false, tags: ['cards', 'flip', 'pairs', 'memory'], controls: 'Click or Tap cards to reveal matching pairs.', scoreKey: 'arcade_memory_best', scoreLabel: 'Fewest moves', scoreUnit: ' moves', scoreLowerIsBetter: true },
+  { id: 'endless-runner', slug: 'endless-runner', title: 'Endless Runner', category: 'action', badge: 'RUNNER', icon: '🏃', gradient: 'linear-gradient(135deg, #1f6fe0 0%, #ffa94d 100%)', description: 'Sprint across neon rooftops! Leap spikes with double-jump and duck under laser drones with fluid slide maneuvers.', featured: false, tags: ['ninja', 'parkour', 'jump', 'slide'], controls: 'Space / Up Arrow to Jump, Down Arrow to Slide.', scoreKey: 'arcade_runner_highscore', scoreLabel: 'Best score', scoreUnit: '' },
+  { id: 'block-puzzle', slug: 'block-puzzle', title: 'Block Puzzle', category: 'puzzle', badge: 'RETRO', icon: '🟦', gradient: 'linear-gradient(135deg, #2c1f94 0%, #17b8c9 100%)', description: 'Timeless falling polyominoes arcade with 7 tetrominoes, ghost landing projection, next preview queue, hold piece, and hard drop.', featured: true, tags: ['tetris', 'blocks', 'lines', 'retro'], controls: 'Left/Right, Up to Rotate, Space for Hard Drop, C to Hold.', scoreKey: 'arcade_blocks_highscore', scoreLabel: 'Best score', scoreUnit: '' },
+  { id: 'whack-a-mole', slug: 'whack-a-mole', title: 'Whack-a-Mole', category: 'casual', badge: 'NEW', icon: '🔨', gradient: 'linear-gradient(135deg, #f0554d 0%, #ffc247 100%)', description: 'Rapid-fire cyber reflex test! Whack pop-up moles, rack up combo multipliers, bag golden stars, and dodge ticking hazard bombs.', featured: false, tags: ['reflex', 'hammer', 'whack', 'combo'], controls: 'Click or Tap moles as fast as they appear.', scoreKey: 'arcade_mole_highscore', scoreLabel: 'Best score', scoreUnit: '' }
 ];
 
 /**
@@ -543,6 +544,7 @@ class ArcadePortal {
           <h3>${ico('gamepad', 20)} How to play</h3>
           <p>${game.controls}</p>
           <p style="margin-top: 8px; color: var(--text-muted); font-size: 0.88rem;">${game.description}</p>
+          <p style="margin-top: 8px; font-size: 0.88rem;"><a href="/game/${game.slug}">Open ${game.title} on its own page</a></p>
         </div>
         <div class="gd-col stats-box">
           <h3>${ico('trophy', 20)} Your records</h3>
@@ -609,6 +611,54 @@ class ArcadePortal {
     }
   }
 
+  /**
+   * Direct game page (/game/<slug>): the page is plain static HTML and this mounts one game
+   * into its #game-viewport. No hash routing is involved, so a refresh or a direct visit
+   * always loads the same game.
+   */
+  initGamePage(gameId) {
+    const game = this.games.find(g => g.id === gameId);
+    const viewport = document.getElementById('game-viewport');
+    if (!game || !viewport) return;
+    window.ArcadePortal = this;
+    this.currentRoute = 'game';
+    this.currentGameId = gameId;
+    this.recordPlay(gameId);
+
+    // Toolbar (favorite, restart, sound, fullscreen), same ids and behavior as the portal's game view
+    const bar = document.getElementById('game-actions');
+    if (bar) {
+      const isFav = this.favorites.includes(game.id);
+      bar.innerHTML = `
+        <button id="gv-btn-fav" class="gv-btn ${isFav ? 'active' : ''}" title="Favorite" aria-label="Favorite">${ico(isFav ? 'heartFill' : 'heart')}</button>
+        <button id="gv-btn-restart" class="gv-btn" title="Restart" aria-label="Restart">${ico('refresh')}</button>
+        <button id="gv-btn-sound" class="gv-btn" title="Toggle sound" aria-label="Toggle sound">${ico(this.sound.enabled ? 'volume' : 'mute')}</button>
+        <button id="gv-btn-fullscreen" class="gv-btn" title="Fullscreen" aria-label="Fullscreen">${ico('expand')}</button>`;
+      bar.querySelector('#gv-btn-fav').addEventListener('click', () => this.toggleFavorite(game.id));
+      bar.querySelector('#gv-btn-restart').addEventListener('click', () => {
+        this.sound?.playClick();
+        if (this.activeGameInstance?.restart) this.activeGameInstance.restart();
+        else if (this.activeGameInstance?.start) this.activeGameInstance.start();
+        else this.mountGame(game.id, viewport);
+      });
+      bar.querySelector('#gv-btn-sound').addEventListener('click', (e) => {
+        this.sound.toggle();
+        e.currentTarget.innerHTML = ico(this.sound.enabled ? 'volume' : 'mute');
+      });
+      bar.querySelector('#gv-btn-fullscreen').addEventListener('click', () => {
+        if (!document.fullscreenElement) viewport.requestFullscreen?.().catch(() => {});
+        else document.exitFullscreen?.().catch(() => {});
+      });
+    }
+
+    viewport.innerHTML = '';   // drop the "needs JavaScript" notice
+    this.mountGame(game.id, viewport);
+
+    const best = document.getElementById('gd-best-score');
+    if (best) best.textContent = this.bestScoreText(game);
+    this.startBestScoreRefresh(game);
+  }
+
   mountGame(gameId, viewport) {
     if (!viewport) return;
 
@@ -660,7 +710,10 @@ class ArcadePortal {
 if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
   window.addEventListener('DOMContentLoaded', () => {
     const portal = new ArcadePortal();
-    portal.init();
+    // A direct game page (/game/<slug>) declares its game on <body data-game-page="...">
+    const pageGame = document.body && document.body.dataset ? document.body.dataset.gamePage : null;
+    if (pageGame) portal.initGamePage(pageGame);
+    else portal.init();
   });
 }
 
