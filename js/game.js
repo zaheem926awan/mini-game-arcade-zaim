@@ -626,6 +626,7 @@ class FruitArcadeGame {
     // Keyboard: Escape / P pause-resume, M mute
     this.listen(window, 'keydown', (e) => {
       if (e.key === 'Escape' || e.key === 'p' || e.key === 'P') {
+        if (e.repeat) return; // holding the key must not flicker pause/resume
         if (this.state === 'PLAYING') {
           this.pauseGame();
         } else if (this.state === 'PAUSED') {
