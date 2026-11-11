@@ -26,6 +26,7 @@ class WhackAMoleGame {
     this.activeMoles = Array(9).fill(null); // null or { type: 'mole'|'gold'|'bomb', timeout: id }
 
     this.state = 'START';
+    this.keyHandler = this.handleKeyDown.bind(this);
   }
 
   init() {
@@ -71,7 +72,9 @@ class WhackAMoleGame {
 
     this.btnPlay.addEventListener('click', () => {
       this.sound?.playClick();
-      this.start();
+      // While paused this button is labelled RESUME: continue the run instead of restarting it.
+      if (this.state === 'PAUSED') this.resume();
+      else this.start();
     });
 
     this.btnPause.addEventListener('click', () => {
@@ -84,7 +87,17 @@ class WhackAMoleGame {
       this.restart();
     });
 
+    window.addEventListener('keydown', this.keyHandler);
+
     this.buildGrid();
+  }
+
+  /** P / Esc pause and resume, matching every other pausable game. */
+  handleKeyDown(e) {
+    if (e.key !== 'p' && e.key !== 'P' && e.key !== 'Escape') return;
+    if (e.repeat) return;
+    if (this.state === 'PLAYING') this.pause();
+    else if (this.state === 'PAUSED') this.resume();
   }
 
   buildGrid() {
@@ -173,6 +186,7 @@ class WhackAMoleGame {
   }
 
   scheduleNextSpawn() {
+    clearTimeout(this.spawnTimeout); // keep exactly one spawn chain alive across pause/resume
     if (this.state !== 'PLAYING') return;
     const delay = 450 + Math.random() * 450;
     this.spawnTimeout = setTimeout(() => {
@@ -314,6 +328,7 @@ class WhackAMoleGame {
   }
 
   destroy() {
+    window.removeEventListener('keydown', this.keyHandler);
     this.clearAllMoles();
     clearInterval(this.timerInterval);
     clearInterval(this.spawnInterval);
