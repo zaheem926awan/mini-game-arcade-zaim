@@ -293,13 +293,15 @@ test('Public email and 12-hour response time appear consistently; no postal addr
   }
 });
 
-test('Privacy Policy discloses Formspree, Vercel, Google Fonts; no analytics; retention; 13+', () => {
+test('Privacy Policy discloses Formspree, Vercel, Google Fonts, Google Analytics 4; retention; 13+', () => {
   const h = read('privacy-policy.html');
   const t = mainText('privacy-policy.html');
   assert(h.includes(CONFIRMED.formspreePrivacy), 'missing Formspree privacy link');
   assert(h.includes(CONFIRMED.vercelPrivacy), 'missing Vercel privacy link');
   assert(/Formspree/.test(t) && /Vercel/.test(t) && /Google Fonts/.test(t), 'must name all three services');
-  assert(/do not currently use analytics/i.test(t), 'must state that analytics are not currently used');
+  assert(/Google Analytics 4/.test(t) && /cookies and similar technologies/.test(t), 'must disclose Google Analytics 4 and its cookies');
+  assert(!/do not (currently )?use analytics|do not currently use analytics tools|before we enable advertising or analytics/i.test(t), 'must not contain the outdated no-analytics statements');
+  assert(/id="google-analytics"/.test(h) && /href="#google-analytics"/.test(h), 'Google Analytics section and Contents entry must exist');
   assert(/12 months/.test(t), 'must state the 12-month retention period');
   assert(/at least 13/.test(t) && /not specifically directed at children/.test(t), 'must state the 13+ general-audience position');
   assert(/Last updated: \d{1,2} [A-Z][a-z]+ 20\d\d/.test(t), 'must show a Last updated date');
@@ -502,12 +504,13 @@ test('Play guides: structured data (VideoGame, BreadcrumbList, FAQPage) is valid
   }
 });
 
-test('Play guides: no ads, third-party scripts, fake ratings, play counts or embedded games', () => {
+test('Play guides: no ads, third-party scripts besides GA4, fake ratings, play counts or embedded games', () => {
   for (const slug of Object.values(PLAY_SLUGS)) {
     const h = playHtml(slug);
     assert(!/adsbygoogle|googlesyndication|doubleclick|adsense/i.test(h), `${slug}: advertising code found`);
     const scripts = [...h.matchAll(/<script[^>]+src="([^"]+)"/g)].map(m => m[1]);
-    assert.deepStrictEqual(scripts, ['/js/site-shell.js'], `${slug}: only site-shell.js may be loaded`);
+    assert.deepStrictEqual(scripts, ['https://www.googletagmanager.com/gtag/js?id=G-LJY94260LN', '/js/site-shell.js'], `${slug}: only the GA4 tag and site-shell.js may be loaded`);
+    assert.strictEqual((h.match(/gtag\('config'/g) || []).length, 1, `${slug}: GA4 config must appear exactly once`);
     assert(!/<canvas|js\/arcade\.js|js\/games\/|js\/game\.js/.test(h), `${slug}: games must not be embedded in Phase 1`);
     const text = mainText(`play/${slug}.html`);
     assert(!/\b(\d{1,3}(,\d{3})+|\d{3,}|\d+(\.\d+)?\s*(million|thousand|k))\+?\s*(players|plays|downloads|reviews|users|votes)\b/i.test(text), `${slug}: contains a play-count style claim`);
@@ -765,7 +768,7 @@ test('Game pages: each loads only its own game script, arcade.js last, and the e
     for (const s of ['js/site-shell.js', 'js/audio.js', 'js/arcade.js'].concat(GAME_SCRIPTS[g.id])) assert(scripts.includes(s), `${g.slug}: missing ${s}`);
     assert.strictEqual(scripts[scripts.length - 1], 'js/arcade.js', `${g.slug}: arcade.js must load last`);
     for (const s of everyGameScript.filter(x => !GAME_SCRIPTS[g.id].includes(x))) assert(!scripts.includes(s), `${g.slug}: must not load ${s}`);
-    for (const s of scripts) assert(fs.existsSync(path.join(ROOT, s)), `${g.slug}: script ${s} does not exist`);
+    for (const s of scripts.filter(x => !/^https:\/\/www\.googletagmanager\.com\/gtag\/js\?id=G-LJY94260LN$/.test(x))) assert(fs.existsSync(path.join(ROOT, s)), `${g.slug}: script ${s} does not exist`);
     assert(/<div id="game-viewport" class="game-viewport">/.test(h), `${g.slug}: #game-viewport missing`);
     assert(/<div class="gv-actions" id="game-actions">/.test(h), `${g.slug}: #game-actions missing`);
     assert(/id="gd-best-score"/.test(h), `${g.slug}: #gd-best-score missing`);
@@ -853,12 +856,14 @@ test('Game pages: internal links, assets and in-page anchors resolve', () => {
   }
 });
 
-test('Game pages: no ads, no third-party scripts, no tracking (AdSense is not added yet)', () => {
+test('Game pages: no ads, no ads, only the GA4 tag as third-party script', () => {
   for (const slug of Object.values(PLAY_SLUGS)) {
     const h = gameHtml(slug);
-    assert(!/adsbygoogle|googlesyndication|doubleclick|gtag\(|googletagmanager|google-analytics|fbq\(/i.test(h), `${slug}: ad/analytics code found`);
+    assert(!/adsbygoogle|googlesyndication|doubleclick|google-analytics|fbq\(/i.test(h), `${slug}: ad/other tracking code found`);
+    assert.strictEqual((h.match(/gtag\('config'/g) || []).length, 1, `${slug}: GA4 config must appear exactly once`);
     const scripts = [...h.matchAll(/<script[^>]+src="([^"]+)"/g)].map(m => m[1]);
-    assert(scripts.every(s => s.startsWith('/js/')), `${slug}: only same-site scripts allowed`);
+    assert.strictEqual(scripts[0], 'https://www.googletagmanager.com/gtag/js?id=G-LJY94260LN', `${slug}: GA4 tag must load first`);
+    assert(scripts.slice(1).every(s => s.startsWith('/js/')), `${slug}: only same-site scripts allowed besides GA4`);
   }
 });
 
