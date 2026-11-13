@@ -156,6 +156,17 @@ const BLURB = {
   'whack-a-mole': 'A 30-second reflex game on a 3 x 3 board.'
 };
 
+const GA_ID = 'G-LJY94260LN';
+const GA_SNIPPET = `  <!-- Google tag (gtag.js) - GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=${GA_ID}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '${GA_ID}');
+  </script>
+`;
+
 const urlOf = (g) => `${ORIGIN}/game/${g.slug}`;
 
 function related(game) {
@@ -210,7 +221,7 @@ function page(game) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#090d16">
-  <title>${esc(title)}</title>
+${GA_SNIPPET}  <title>${esc(title)}</title>
   <meta name="description" content="${esc(c.metaDesc)}">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="${url}">
