@@ -904,6 +904,141 @@ test('Gameplay notes in the guides no longer describe the fixed bugs', () => {
   assert(/<tr><td><code>P<\/code> or <code>Esc<\/code><\/td>/.test(playHtml('whack-a-mole')), 'whack-a-mole guide must list the P / Esc pause key');
 });
 
+// ---------------------------------------------------------------------------
+// SEO audit tests for the 10 game pages (titles, descriptions, headings, links,
+// unique content, and the configuration that must never change).
+// ---------------------------------------------------------------------------
+const seoMain = (h) => (h.replace(/<template[\s\S]*?<\/template>/g, '').match(/<main[\s\S]*<\/main>/) || [''])[0];
+const seoParas = (html) => [...html.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/g)].map(m => decodeEntities(m[1].replace(/<[^>]+>/g, '')).replace(/\s+/g, ' ').trim());
+
+test('SEO: game page titles are 40-65 characters, name the game and match og/twitter titles', () => {
+  const { ARCADE_GAMES } = require('../js/arcade.js');
+  for (const g of ARCADE_GAMES) {
+    const h = gameHtml(g.slug), m = metaOf(h);
+    assert(m.title.length >= 40 && m.title.length <= 65, `${g.slug}: title length ${m.title.length}`);
+    assert(m.title.includes(g.title), `${g.slug}: title must name the game`);
+    assert(m.title.endsWith('| Neo Arcade Vault'), `${g.slug}: title must end with the brand`);
+    const enc = (s) => s.replace(/&/g, '&amp;');
+    assert(h.includes(`<meta property="og:title" content="${enc(m.title)}">`), `${g.slug}: og:title must equal <title>`);
+    assert(h.includes(`<meta name="twitter:title" content="${enc(m.title)}">`), `${g.slug}: twitter:title must equal <title>`);
+  }
+});
+
+test('SEO: game page meta descriptions are 150-160 characters, unique and name the game', () => {
+  const { ARCADE_GAMES } = require('../js/arcade.js');
+  const seen = new Set();
+  for (const g of ARCADE_GAMES) {
+    const h = gameHtml(g.slug), m = metaOf(h);
+    assert(m.desc.length >= 150 && m.desc.length <= 160, `${g.slug}: description length ${m.desc.length}`);
+    assert(m.desc.includes(g.title) || (g.id === 'puzzle-2048' && m.desc.includes('2048')), `${g.slug}: description must name the game`);
+    assert(!seen.has(m.desc), `${g.slug}: duplicate description`);
+    seen.add(m.desc);
+    for (const attr of ['og:description', 'twitter:description']) {
+      const re = new RegExp(`<meta (?:property|name)="${attr}" content="([^"]*)"`);
+      assert.strictEqual(decodeEntities((h.match(re) || [])[1] || ''), m.desc, `${g.slug}: ${attr} must equal the meta description`);
+    }
+  }
+});
+
+test('SEO: game pages have one h1 first, and headings never skip a level', () => {
+  const { ARCADE_GAMES } = require('../js/arcade.js');
+  for (const g of ARCADE_GAMES) {
+    const h = liveHtml(`game/${g.slug}.html`).replace(/<script[\s\S]*?<\/script>/g, '');
+    const levels = [...h.matchAll(/<h([1-6])[\s>]/g)].map(m => Number(m[1]));
+    assert.strictEqual(levels[0], 1, `${g.slug}: the first heading must be the h1`);
+    assert.strictEqual(levels.filter(l => l === 1).length, 1, `${g.slug}: exactly one h1`);
+    for (let i = 1; i < levels.length; i++) assert(levels[i] <= levels[i - 1] + 1, `${g.slug}: heading level jumps from h${levels[i - 1]} to h${levels[i]}`);
+    const texts = [...h.matchAll(/<h([2-3])[^>]*>([\s\S]*?)<\/h\1>/g)].map(m => m[2].replace(/<[^>]+>/g, '').trim());
+    assert(texts.every(t => t.length > 0), `${g.slug}: empty heading`);
+    const h2s = [...h.matchAll(/<h2[^>]*>([\s\S]*?)<\/h2>/g)].map(m => m[1].replace(/<[^>]+>/g, '').trim());
+    assert.strictEqual(new Set(h2s).size, h2s.length, `${g.slug}: duplicate h2 text on the same page`);
+    assert(h2s.filter(t => t.includes(g.title)).length >= 4, `${g.slug}: most h2 headings should name the game`);
+  }
+});
+
+test('SEO: related games are balanced (3 inbound links each) and every card also links to that game\'s guide', () => {
+  const { ARCADE_GAMES } = require('../js/arcade.js');
+  const inbound = Object.fromEntries(ARCADE_GAMES.map(g => [g.slug, 0]));
+  for (const g of ARCADE_GAMES) {
+    const sect = (gameHtml(g.slug).match(/aria-labelledby="more-games"[\s\S]*?<\/section>/) || [''])[0];
+    const cards = [...sect.matchAll(/<article class="info-card">([\s\S]*?)<\/article>/g)].map(m => m[1]);
+    assert.strictEqual(cards.length, 3, `${g.slug}: 3 related cards`);
+    for (const c of cards) {
+      const game = (c.match(/<h3><a href="\/game\/([^"]+)">Play [^<]+ online<\/a><\/h3>/) || [])[1];
+      assert(game, `${g.slug}: related card needs a descriptive "Play X online" game link`);
+      assert(c.includes(`<a href="/play/${game}">`), `${g.slug}: related card for ${game} must link to its guide`);
+      inbound[game]++;
+    }
+  }
+  for (const [slug, n] of Object.entries(inbound)) assert.strictEqual(n, 3, `${slug}: gets ${n} related links, expected 3`);
+});
+
+test('SEO: game pages link back to /games with descriptive anchor text', () => {
+  const { ARCADE_GAMES } = require('../js/arcade.js');
+  for (const g of ARCADE_GAMES) {
+    const main = seoMain(gameHtml(g.slug));
+    const anchors = [...main.matchAll(/<a [^>]*href="\/games"[^>]*>([\s\S]*?)<\/a>/g)].map(m => decodeEntities(m[1].replace(/<[^>]+>/g, '')).trim());
+    assert(anchors.includes('Browse all 10 free browser games'), `${g.slug}: missing "Browse all 10 free browser games" link`);
+    assert(anchors.includes('Neo Arcade Vault games collection'), `${g.slug}: missing in-text link to the games collection`);
+    assert(!anchors.some(a => /^(click here|here|link|more)$/i.test(a)), `${g.slug}: non-descriptive anchor text`);
+  }
+});
+
+test('SEO: every game page has a short, unique Quick start and no paragraph repeated on another game page', () => {
+  const { ARCADE_GAMES } = require('../js/arcade.js');
+  const quick = new Set(), closings = new Set(), counts = new Map();
+  for (const g of ARCADE_GAMES) {
+    const h = gameHtml(g.slug);
+    const sect = (h.match(/aria-labelledby="game-quickstart">[\s\S]*?<\/section>/) || [''])[0];
+    assert(sect.includes(`Quick start for ${g.title}`), `${g.slug}: missing Quick start section`);
+    const q = seoParas(sect)[0] || '';
+    const words = q.split(' ').length;
+    assert(words >= 30 && words <= 70, `${g.slug}: Quick start should be 30-70 words, found ${words}`);
+    assert(!quick.has(q), `${g.slug}: Quick start is not unique`);
+    quick.add(q);
+    const about = seoParas((h.match(/aria-labelledby="about-game">[\s\S]*?<\/section>/) || [''])[0]);
+    const closing = about[about.length - 1];
+    assert(closing.startsWith(g.title), `${g.slug}: closing paragraph must be game-specific`);
+    assert(!closings.has(closing), `${g.slug}: closing paragraph is not unique`);
+    closings.add(closing);
+    const unique = new Set(seoParas(seoMain(h).replace(/<section[^>]*aria-labelledby="more-games"[\s\S]*?<\/section>/, '')).filter(p => p.length >= 40));
+    for (const p of unique) counts.set(p, (counts.get(p) || 0) + 1);
+  }
+  const repeated = [...counts].filter(([, n]) => n > 1).map(([p]) => p.slice(0, 70));
+  assert.deepStrictEqual(repeated, [], 'paragraphs repeated across game pages');
+});
+
+test('SEO: canonical, robots and structured data on game pages are consistent', () => {
+  const { ARCADE_GAMES } = require('../js/arcade.js');
+  const sitemap = read('sitemap.xml');
+  for (const g of ARCADE_GAMES) {
+    const h = gameHtml(g.slug), url = `${ORIGIN}/game/${g.slug}`;
+    assert.strictEqual((h.match(/<link rel="canonical"/g) || []).length, 1, `${g.slug}: exactly one canonical`);
+    assert.strictEqual(metaOf(h).canonical, url, `${g.slug}: canonical`);
+    assert.strictEqual((h.match(/<meta name="robots"/g) || []).length, 1, `${g.slug}: exactly one robots tag`);
+    assert(h.includes('<meta name="robots" content="index, follow">'), `${g.slug}: robots`);
+    assert(sitemap.includes(`<loc>${url}</loc>`), `${g.slug}: missing from sitemap.xml`);
+    const names = jsonLdOf(h)['@graph'].find(n => n['@type'] === 'BreadcrumbList').itemListElement.map(i => i.name);
+    assert.strictEqual(names[2], `Play ${g.title}`);
+    assert(h.includes(`<span>Play ${g.title}</span></nav>`), `${g.slug}: visible breadcrumb must match the JSON-LD name`);
+  }
+});
+
+test('SEO: AdSense, GA4, Search Console, ads.txt, robots.txt and sitemap configuration are untouched', () => {
+  const idx = read('index.html');
+  assert(idx.includes('https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8741071461836921'), 'AdSense script must stay on index.html');
+  assert(idx.includes('name="google-site-verification" content="EUzjwsrCJ7rOlLMAv9V49wVVUIMJ9vyyOce6aKRHFRs"'), 'Search Console tag must stay');
+  assert.strictEqual(read('ads.txt').trim(), 'google.com, pub-8741071461836921, DIRECT, f08c47fec0942fa0');
+  assert.strictEqual(read('robots.txt').trim(), `User-agent: *\nAllow: /\n\nSitemap: ${ORIGIN}/sitemap.xml`);
+  assert.strictEqual((read('sitemap.xml').match(/<loc>/g) || []).length, 26, 'sitemap must keep its 26 URLs');
+  for (const g of Object.values(PLAY_SLUGS)) {
+    const h = gameHtml(g);
+    assert.strictEqual((h.match(/googletagmanager\.com\/gtag\/js\?id=G-LJY94260LN/g) || []).length, 1, `${g}: GA4 loader exactly once`);
+    assert.strictEqual((h.match(/gtag\('config', 'G-LJY94260LN'\)/g) || []).length, 1, `${g}: GA4 config exactly once`);
+    assert(!/pagead2\.googlesyndication|adsbygoogle/.test(h), `${g}: game pages must not gain ad code as part of the SEO change`);
+  }
+});
+
 console.log(`\nResults: ${passed}/${total} tests passed.`);
 
 // Report: domain status (placeholders are now a hard test failure above)
