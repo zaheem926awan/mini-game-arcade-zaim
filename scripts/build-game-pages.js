@@ -237,12 +237,17 @@ function fruitTemplate() {
   return m[0].replace('<h1 class="game-title">FRUIT SLICE</h1>', '<h2 class="game-title">FRUIT SLICE</h2>');
 }
 
+// Marquee Vault design: shared logomark used in the header and footer of every page.
+const BRAND_MARK = '<svg class="vx-mark" viewBox="0 0 32 32" width="32" height="32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="7" fill="var(--signal)"/><path fill="var(--ink-0)" d="M6 7h5v5H6zM21 7h5v5h-5zM9 12h5v5H9zM18 12h5v5h-5zM12 17h8v5h-8zM13 22h6v4h-6z"/></svg>';
+
 function page(game) {
   const c = GAMES[game.id];
   const url = urlOf(game);
   const title = `${c.seoTitle} | Neo Arcade Vault`;
   const h1 = `Play ${game.title} Online`;
   const cat = game.category.charAt(0).toUpperCase() + game.category.slice(1);
+  const cols = String(game.gradient || '').match(/#[0-9a-fA-F]{3,8}/g) || [];
+  const themeStyle = `--m1:${cols[0] || '#ff5c39'};--m2:${cols[1] || cols[0] || '#ff8a4c'};--kicker:'${game.title} \u00b7 ${cat}'`;
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -272,7 +277,7 @@ function page(game) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#090d16">
+  <meta name="theme-color" content="#0f0d0b">
 ${GA_SNIPPET}  <title>${esc(title)}</title>
   <meta name="description" content="${esc(c.metaDesc)}">
   <meta name="robots" content="index, follow">
@@ -294,11 +299,13 @@ ${JSON.stringify(jsonLd, null, 2)}
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/arcade.css">
   <link rel="stylesheet" href="/css/pages.css">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/vault.css">
 </head>
 <body data-game-page="${game.id}">
   <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -309,25 +316,29 @@ ${JSON.stringify(jsonLd, null, 2)}
     <div class="ambient-flare flare-2"></div>
   </div>
 
-  <div id="portal-app">
+  <div id="portal-app" class="vault vault-game" style="${esc(themeStyle)}">
     <header>
       <nav class="arcade-navbar" aria-label="Main navigation">
         <a class="nav-brand" href="/" aria-label="Neo Arcade Vault - home">
-          <span class="brand-bolt">⚡</span>
+          ${BRAND_MARK}
           <span class="brand-text">NEO ARCADE</span>
           <span class="brand-badge">VAULT</span>
         </a>
+        <div class="vx-menu" id="vx-menu">
         <div class="nav-links">
         <a href="/">Home</a>
         <a href="/games">Games</a>
         <a href="/about">About</a>
         <a href="/contact">Contact</a>
         </div>
+        </div>
+        <button class="vx-menu-btn" id="nav-btn-menu" type="button" aria-label="Menu" aria-expanded="false" aria-controls="vx-menu"><svg class="ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
       </nav>
     </header>
 
     <div id="game-portal-view" class="game-page-view">
       <main id="main-content" class="game-main">
+        <div class="vx-stage">
         <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/games">Games</a> &rsaquo; <span>${esc(`Play ${game.title}`)}</span></nav>
 
         <div class="game-view-header">
@@ -358,6 +369,7 @@ ${JSON.stringify(jsonLd, null, 2)}
             <div class="gd-stat-row"><span>${esc(game.scoreLabel)}</span><span id="gd-best-score" style="color: var(--yellow);">${game.scoreKey ? 'No score yet' : 'Not tracked'}</span></div>
             <div class="gd-stat-row"><span>Saved</span><span>This device only</span></div>
           </div>
+        </div>
         </div>
 
         <div class="game-page-info">
@@ -414,7 +426,7 @@ ${related(game).map(o => `              <article class="info-card">\n           
     </div>
 
     <footer class="arcade-footer site-footer">
-      <div class="footer-brand"><span class="brand-bolt">⚡</span> NEO ARCADE</div>
+      <div class="footer-brand">${BRAND_MARK} NEO ARCADE</div>
       <p>A free collection of 10 browser mini-games. No downloads, no sign-up.</p>
       <nav class="footer-nav" aria-label="Footer">
         <a href="/">Home</a>
