@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#090d16">
+  <meta name="theme-color" content="#0f0d0b">
   <!-- Google tag (gtag.js) - GA4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-LJY94260LN"></script>
   <script>
@@ -140,11 +140,13 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/arcade.css">
   <link rel="stylesheet" href="/css/pages.css">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/vault.css">
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -155,20 +157,23 @@
     <div class="ambient-flare flare-2"></div>
   </div>
 
-  <div id="portal-app">
+  <div id="portal-app" class="vault vault-page">
     <header>
       <nav class="arcade-navbar" aria-label="Main navigation">
         <a class="nav-brand" href="/" aria-label="Neo Arcade Vault - home">
-          <span class="brand-bolt">⚡</span>
+          <svg class="vx-mark" viewBox="0 0 32 32" width="32" height="32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="7" fill="var(--signal)"/><path fill="var(--ink-0)" d="M6 7h5v5H6zM21 7h5v5h-5zM9 12h5v5H9zM18 12h5v5h-5zM12 17h8v5h-8zM13 22h6v4h-6z"/></svg>
           <span class="brand-text">NEO ARCADE</span>
           <span class="brand-badge">VAULT</span>
         </a>
+        <div class="vx-menu" id="vx-menu">
         <div class="nav-links">
         <a href="/">Home</a>
         <a href="/games">Games</a>
         <a href="/about">About</a>
         <a href="/contact">Contact</a>
         </div>
+        </div>
+        <button class="vx-menu-btn" id="nav-btn-menu" type="button" aria-label="Menu" aria-expanded="false" aria-controls="vx-menu"><svg class="ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
       </nav>
     </header>
 
@@ -348,7 +353,7 @@
     </main>
 
     <footer class="arcade-footer site-footer">
-      <div class="footer-brand"><span class="brand-bolt">⚡</span> NEO ARCADE</div>
+      <div class="footer-brand"><svg class="vx-mark" viewBox="0 0 32 32" width="32" height="32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="7" fill="var(--signal)"/><path fill="var(--ink-0)" d="M6 7h5v5H6zM21 7h5v5h-5zM9 12h5v5H9zM18 12h5v5h-5zM12 17h8v5h-8zM13 22h6v4h-6z"/></svg> NEO ARCADE</div>
       <p>A free collection of 10 browser mini-games. No downloads, no sign-up.</p>
       <nav class="footer-nav" aria-label="Footer">
         <a href="/">Home</a>
