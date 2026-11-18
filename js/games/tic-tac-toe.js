@@ -53,9 +53,9 @@ class TicTacToeGame {
         </div>
 
         <div class="game-hud">
-          <div class="hud-stat"><span class="icon" style="color: #00d2d3;">✕</span> X: <span id="ttt-x-score" class="val">0</span></div>
-          <div class="hud-stat"><span class="icon">⚖️</span> TIES: <span id="ttt-ties-score" class="val">0</span></div>
-          <div class="hud-stat"><span class="icon" style="color: #ff4757;">◯</span> O: <span id="ttt-o-score" class="val">0</span></div>
+          <div class="hud-stat"><span class="icon" style="color: #00d2d3;">✕</span><span class="lbl">X</span><span id="ttt-x-score" class="val">0</span></div>
+          <div class="hud-stat"><span class="icon">⚖️</span><span class="lbl">TIES</span><span id="ttt-ties-score" class="val">0</span></div>
+          <div class="hud-stat"><span class="icon" style="color: #ff4757;">◯</span><span class="lbl">O</span><span id="ttt-o-score" class="val">0</span></div>
           <div class="hud-controls-bar">
             <button id="ttt-btn-reset" class="arcade-hud-btn" title="New Round">🔄</button>
           </div>

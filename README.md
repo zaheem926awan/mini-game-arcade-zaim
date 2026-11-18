@@ -241,15 +241,16 @@ Every game has its own playable URL, so it can be linked, bookmarked, refreshed 
 The About, Contact, Privacy Policy and Terms pages are complete and contain no placeholders. `npm test` fails if a `PLACEHOLDER:` marker, the placeholder domain or the placeholder form ID ever reappears.
 
 **Current status (keep these statements true):**
-- No advertising is running and no consent-management tool is installed. The Privacy Policy, Terms and About page say this explicitly.
-- No analytics are used. Contact form messages are processed by Formspree, hosting is on Vercel, and fonts load from Google Fonts. All of this is disclosed in the Privacy Policy.
+- **Analytics:** Google Analytics 4 (measurement ID `G-LJY94260LN`) is installed on all 27 pages (the 7 root pages, the 10 game pages and the 10 guide pages). The Privacy Policy describes it in its Google Analytics section.
+- **Advertising:** a Google AdSense application has been submitted and the review is still in progress. Ads are **not yet approved and none are displayed**. The AdSense loader script (publisher `ca-pub-8741071461836921`) is included in `index.html` only, and `ads.txt` lists the same publisher, but no ad units are placed on any page and no consent-management tool is installed. The Privacy Policy, Terms and About page say that advertising is not running yet.
+- **Other third parties:** contact form messages are processed by Formspree, hosting is on Vercel, and fonts load from Google Fonts. All of this is disclosed in the Privacy Policy.
 
-**Before enabling Google AdSense, you must:**
+**Before enabling Google AdSense (that is, before any ads are displayed once Google approves the site), you must:**
 1. Set up a consent solution (for example Google's Privacy & messaging) for visitors in the EEA, UK and Switzerland, and test it.
 2. Update `privacy-policy.html` §3, §5, §6 and §8, `terms.html` §6 and `about.html` ("Funding and advertising") so they describe what is really running, including how visitors can change their choices. Do **not** mention a consent link until it exists.
 3. Update the "Last updated" date on the Privacy Policy and Terms.
-4. Add the AdSense code to the pages where ads are allowed, and add the `ads.txt` file Google provides.
-5. Re-run `npm test` and review the "Code sets no cookies" and storage-key tests, which describe the site's own code and will need a conscious update once third-party scripts are added.
+4. Place the ad units on the pages where ads are allowed. The AdSense loader is currently only in `index.html`, and `ads.txt` is already in place; keep it matching the publisher ID shown in your AdSense account.
+5. Re-run `npm test` and review the "Code sets no cookies" and storage-key tests, which describe the site's own code and will need a conscious update once ad units or a consent tool are added.
 
 **Domain:** `npm run set-domain -- https://new-domain --from https://old-domain` updates canonical links, Open Graph URLs, JSON-LD, the sitemap, robots.txt and the host named in the Privacy Policy.
 
@@ -265,6 +266,22 @@ Have the Privacy Policy and Terms reviewed by a qualified professional for your 
 
 - Parts of this project, including some code and content, were created with the assistance of AI tools. No claim is made to material that cannot be protected under applicable law.
 - Third-party components remain under their own licences and are not owned by Neo Arcade Vault:
-  - **Outfit** font - SIL Open Font License 1.1, (c) 2021 The Outfit Project Authors (loaded from Google Fonts).
-  - **Luckiest Guy** font - Apache License 2.0, (c) 2010 Brian J. Bonislawsky DBA Astigmatic (loaded from Google Fonts).
+  - **Big Shoulders** font - SIL Open Font License 1.1, (c) 2019 The Big Shoulders Project Authors (loaded from Google Fonts).
+  - **Instrument Sans** font - SIL Open Font License 1.1, (c) 2022 The Instrument Sans Project Authors (loaded from Google Fonts).
+  - **JetBrains Mono** font - SIL Open Font License 1.1, (c) 2020 The JetBrains Mono Project Authors (loaded from Google Fonts).
 - No third-party JavaScript libraries are used.
+
+## Design system ("Marquee Vault")
+
+The visual identity lives in two stylesheets loaded **after** the legacy `style.css`, `arcade.css` and `pages.css` on every page:
+
+- `css/tokens.css` - the single source of truth: colours (warm black `--ink-*`, bone paper `--bone*`, signal lime `--signal`), type (`--f-display` Big Shoulders, `--f-body` Instrument Sans, `--f-mono` JetBrains Mono), radii, spacing and the CSS-mask icons. It also remaps the legacy variable names so older rules inherit the new palette and fonts.
+- `css/vault.css` - the components: header, footer, hero, game cards, the cabinet "stage" for game pages, the bone "paper" sections, content pages and responsive rules.
+
+Conventions:
+
+- Warm black is for play areas; bone paper is for reading areas. Dark and paper meet at a "ticket-tear" edge.
+- Every game owns a marquee colour pair (`--m1`, `--m2`), taken from its existing `gradient` in `js/arcade.js`. Game pages set it inline on `#portal-app`; the in-page game view sets it on `#game-portal-view`.
+- Game HUD labels use `<span class="lbl">`; the start-screen kicker comes from the `--kicker` custom property.
+- Generated pages (`game/*.html`) come from `npm run build-game-pages` (`scripts/build-game-pages.js`). Edit the generator, not the output.
+- Motion is limited to short transitions and is disabled under `prefers-reduced-motion`.

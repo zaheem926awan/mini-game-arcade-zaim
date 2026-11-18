@@ -335,8 +335,7 @@ test('Terms: 13+, Pakistan governing law, Pakistani courts, third-party font lic
   assert(/at least 13 years old/.test(t), 'terms must state the minimum age');
   assert(/laws of Pakistan/.test(t) && /courts of Pakistan/.test(t), 'terms must state governing law and courts');
   assert(/mandatory consumer protections/.test(t), 'terms must keep mandatory consumer protections');
-  assert(/Outfit/.test(t) && /SIL Open Font License/.test(t), 'terms must credit the Outfit licence');
-  assert(/Luckiest Guy/.test(t) && /Apache License, Version 2\.0/.test(t), 'terms must credit the Luckiest Guy licence');
+  assert(/Big Shoulders/.test(t) && /Instrument Sans/.test(t) && /JetBrains Mono/.test(t) && /SIL Open Font License/.test(t), 'terms must credit the Big Shoulders, Instrument Sans and JetBrains Mono licences');
   assert(/created with the assistance of AI tools/.test(t), 'terms must describe AI assistance carefully');
   assert(/Last updated: \d{1,2} [A-Z][a-z]+ 20\d\d/.test(t), 'terms must show a Last updated date');
 });

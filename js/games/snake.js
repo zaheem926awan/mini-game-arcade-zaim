@@ -39,9 +39,9 @@ class NeonSnakeGame {
     this.container.innerHTML = `
       <div class="game-wrapper snake-arcade">
         <div class="game-hud">
-          <div class="hud-stat"><span class="icon">🍎</span> SCORE: <span id="snake-score" class="val">0</span></div>
-          <div class="hud-stat"><span class="icon">🏆</span> BEST: <span id="snake-high-score" class="val">${this.highScore}</span></div>
-          <div class="hud-stat"><span class="icon">📏</span> LENGTH: <span id="snake-length" class="val">3</span></div>
+          <div class="hud-stat"><span class="icon">🍎</span><span class="lbl">SCORE</span><span id="snake-score" class="val">0</span></div>
+          <div class="hud-stat"><span class="icon">🏆</span><span class="lbl">BEST</span><span id="snake-high-score" class="val">${this.highScore}</span></div>
+          <div class="hud-stat"><span class="icon">📏</span><span class="lbl">LENGTH</span><span id="snake-length" class="val">3</span></div>
           <div class="hud-controls-bar">
             <button id="snake-btn-pause" class="arcade-hud-btn" title="Pause Game (P)">⏸️</button>
             <button id="snake-btn-restart" class="arcade-hud-btn" title="Restart Game">🔄</button>

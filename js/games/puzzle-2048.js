@@ -27,8 +27,8 @@ class Puzzle2048Game {
     this.container.innerHTML = `
       <div class="game-wrapper puzzle-arcade">
         <div class="game-hud">
-          <div class="hud-stat"><span class="icon">🔢</span> SCORE: <span id="p2048-score" class="val">0</span></div>
-          <div class="hud-stat"><span class="icon">🏆</span> BEST: <span id="p2048-high-score" class="val">${this.highScore}</span></div>
+          <div class="hud-stat"><span class="icon">🔢</span><span class="lbl">SCORE</span><span id="p2048-score" class="val">0</span></div>
+          <div class="hud-stat"><span class="icon">🏆</span><span class="lbl">BEST</span><span id="p2048-high-score" class="val">${this.highScore}</span></div>
           <div class="hud-controls-bar">
             <button id="p2048-btn-undo" class="arcade-hud-btn" title="Undo Last Move">↩️</button>
             <button id="p2048-btn-restart" class="arcade-hud-btn" title="New Game">🔄</button>

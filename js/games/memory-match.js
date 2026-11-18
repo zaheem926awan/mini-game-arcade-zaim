@@ -35,9 +35,9 @@ class MemoryMatchGame {
     this.container.innerHTML = `
       <div class="game-wrapper memory-arcade">
         <div class="game-hud">
-          <div class="hud-stat"><span class="icon">🔄</span> MOVES: <span id="mem-moves" class="val">0</span></div>
-          <div class="hud-stat"><span class="icon">⏱️</span> TIME: <span id="mem-time" class="val">0s</span></div>
-          <div class="hud-stat"><span class="icon">🏆</span> BEST: <span id="mem-best" class="val">${this.bestMoves === 999 ? '-' : this.bestMoves}</span></div>
+          <div class="hud-stat"><span class="icon">🔄</span><span class="lbl">MOVES</span><span id="mem-moves" class="val">0</span></div>
+          <div class="hud-stat"><span class="icon">⏱️</span><span class="lbl">TIME</span><span id="mem-time" class="val">0s</span></div>
+          <div class="hud-stat"><span class="icon">🏆</span><span class="lbl">BEST</span><span id="mem-best" class="val">${this.bestMoves === 999 ? '-' : this.bestMoves}</span></div>
           <div class="hud-controls-bar">
             <button id="mem-btn-restart" class="arcade-hud-btn" title="Restart Game">🔄</button>
           </div>

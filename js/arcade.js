@@ -32,6 +32,7 @@ const ICONS = {
   help: '<circle cx="12" cy="12" r="10"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 1-1 1.7M12 17h.01"/>',
   trophy: '<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/>',
   clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
   gamepad: '<path d="M6 12h4M8 10v4M15 13h.01M18 11h.01"/><rect x="2" y="6" width="20" height="12" rx="6"/>'
 };
 function ico(name, size) {
@@ -39,6 +40,15 @@ function ico(name, size) {
   return '<svg class="ico" width="' + s + '" height="' + s + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICONS[name] || '') + '</svg>';
 }
 function artFor(id) { return GAME_ART[id] || ''; }
+
+// Each game's "marquee" colours, taken from its existing gradient so no catalog data changes.
+function marqueeVars(game) {
+  const m = String((game && game.gradient) || '').match(/#[0-9a-fA-F]{3,8}/g) || [];
+  return '--m1:' + (m[0] || '#ff5c39') + ';--m2:' + (m[1] || m[0] || '#ff8a4c') + ';';
+}
+
+// Logomark: a pixel "V" on a signal-coloured tile (replaces the empty emoji tile).
+const BRAND_MARK = '<svg class="vx-mark" viewBox="0 0 32 32" width="32" height="32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="7" fill="var(--signal)"/><path fill="var(--ink-0)" d="M6 7h5v5H6zM21 7h5v5h-5zM9 12h5v5H9zM18 12h5v5h-5zM12 17h8v5h-8zM13 22h6v4h-6z"/></svg>';
 
 // `slug` is the public URL name: the page /game/<slug> plays the game; its written guide uses the same slug.
 const ARCADE_GAMES = [
@@ -166,16 +176,16 @@ class ArcadePortal {
   }
 
   goSlide(i) {
-    const root = document.querySelector('.fx');
+    const root = document.querySelector('.vx-hero');
     if (!root || !this.featList.length) return;
     const n = this.featList.length;
     this.featIndex = (i + n) % n;
-    root.querySelectorAll('.fx-slide').forEach((s, k) => {
+    root.querySelectorAll('.vx-slide').forEach((s, k) => {
       const on = k === this.featIndex;
       s.classList.toggle('is-active', on);
       s.setAttribute('aria-hidden', String(!on));
     });
-    root.querySelectorAll('.fx-dot').forEach((d, k) => {
+    root.querySelectorAll('.vx-tab').forEach((d, k) => {
       d.classList.remove('is-active');
       if (k === this.featIndex) { void d.offsetWidth; d.classList.add('is-active'); }
     });
@@ -275,57 +285,63 @@ class ArcadePortal {
 
     const cats = [['all', 'All games'], ['action', 'Action'], ['arcade', 'Arcade'], ['puzzle', 'Puzzle'], ['strategy', 'Strategy'], ['casual', 'Casual']];
 
+    const total = String(this.featList.length).padStart(2, '0');
     const slides = this.featList.map((g, i) => {
       const fav = this.favorites.includes(g.id);
       const best = this.getBestScore(g);
       return `
-        <article class="fx-slide ${i === 0 ? 'is-active' : ''}" style="--g: ${g.gradient}" aria-hidden="${i !== 0}">
-          <div class="fx-copy">
-            <span class="fx-kicker">${ico('gamepad', 16)} Featured · ${categoryLabel(g)}</span>
-            <h2 class="fx-title">${g.title}</h2>
-            <p class="fx-desc">${g.description}</p>
-            <div class="fx-meta">
-              <span class="fx-chip">${ico('trophy', 15)} ${best === null ? 'Set your first score' : 'Your best: ' + formatBestScore(g, best)}</span>
-              <span class="fx-chip">Free · No sign-up</span>
-            </div>
-            <div class="fx-actions">
-              <button class="fx-play" data-play="${g.id}">${ico('play', 18)} Play now</button>
-              <button class="fx-save ${fav ? 'favorited' : ''}" data-fav="${g.id}">${ico(fav ? 'heartFill' : 'heart')}${fav ? 'Saved' : 'Save'}</button>
+        <article class="vx-slide ${i === 0 ? 'is-active' : ''}" style="${marqueeVars(g)}" aria-hidden="${i !== 0}">
+          <div class="vx-copy">
+            <p class="vx-kicker"><span class="vx-idx">${String(i + 1).padStart(2, '0')}<i>/${total}</i></span><span>Featured · ${categoryLabel(g)}</span></p>
+            <h2 class="vx-title">${g.title}</h2>
+            <p class="vx-desc">${g.description}</p>
+            <ul class="vx-chips">
+              <li>${ico('trophy', 14)} ${best === null ? 'Set your first score' : 'Your best: ' + formatBestScore(g, best)}</li>
+              <li>Free · No sign-up</li>
+            </ul>
+            <div class="vx-actions">
+              <button class="vx-play" data-play="${g.id}">${ico('play', 16)} Play now</button>
+              <button class="vx-save ${fav ? 'favorited' : ''}" data-fav="${g.id}">${ico(fav ? 'heartFill' : 'heart')}${fav ? 'Saved' : 'Save'}</button>
             </div>
           </div>
-          <div class="fx-art" aria-hidden="true">${artFor(g.id)}</div>
+          <div class="vx-art" aria-hidden="true"><div class="vx-art-inner">${artFor(g.id)}</div></div>
         </article>`;
     }).join('');
 
     homeView.innerHTML = `
-      <nav class="arcade-navbar">
-        <div class="nav-brand" onclick="window.location.hash = '#'">
-          <span class="brand-bolt">⚡</span>
-          <span class="brand-text">NEO ARCADE</span>
-          <span class="brand-badge">VAULT</span>
-        </div>
+      <header class="vx-header">
+        <div class="arcade-navbar">
+          <a class="nav-brand" href="/" aria-label="Neo Arcade Vault - home" onclick="if (window.ArcadePortal) { event.preventDefault(); window.location.hash = '#'; }">
+            ${BRAND_MARK}
+            <span class="brand-text">NEO ARCADE</span>
+            <span class="brand-badge">VAULT</span>
+          </a>
 
-        <div class="nav-search-bar">
-          <span class="search-icon">${ico('search', 18)}</span>
-          <input type="text" id="arcade-search-input" placeholder="Search games, genres, tags" aria-label="Search games" value="${this.searchQuery}">
-          ${this.searchQuery ? '<button id="arcade-search-clear" class="search-clear-btn" aria-label="Clear search">✕</button>' : ''}
-        </div>
+          <div class="vx-menu" id="vx-menu">
+            ${this.shellSubnav('/')}
+          </div>
 
-        <div class="nav-actions">
-          <button id="nav-btn-random" class="nav-icon-btn" title="Play a random game">${ico('shuffle')}<span class="lbl">Random</span></button>
-          <button id="nav-btn-favs" class="nav-icon-btn ${this.selectedCategory === 'favorites' ? 'active' : ''}" title="View favorites">${ico('heart')}<span class="lbl">Favorites</span> <span id="fav-count">${this.favorites.length}</span></button>
-          <button id="nav-btn-sound" class="nav-icon-btn" title="Toggle sound" aria-label="Toggle sound">${ico(this.sound.enabled ? 'volume' : 'mute')}</button>
-        </div>
-      </nav>
+          <div class="nav-search-bar">
+            <span class="search-icon">${ico('search', 18)}</span>
+            <input type="text" id="arcade-search-input" placeholder="Search games, genres, tags" aria-label="Search games" value="${this.searchQuery}">
+            ${this.searchQuery ? '<button id="arcade-search-clear" class="search-clear-btn" aria-label="Clear search">✕</button>' : ''}
+          </div>
 
-      ${this.shellSubnav('/')}
+          <div class="nav-actions">
+            <button id="nav-btn-random" class="nav-icon-btn" title="Play a random game" aria-label="Play a random game">${ico('shuffle')}<span class="lbl">Random</span></button>
+            <button id="nav-btn-favs" class="nav-icon-btn ${this.selectedCategory === 'favorites' ? 'active' : ''}" title="View favorites" aria-label="View favorites">${ico('heart')}<span class="lbl">Favorites</span> <span id="fav-count">${this.favorites.length}</span></button>
+            <button id="nav-btn-sound" class="nav-icon-btn" title="Toggle sound" aria-label="Toggle sound">${ico(this.sound.enabled ? 'volume' : 'mute')}</button>
+            <button id="nav-btn-menu" class="vx-menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="vx-menu">${ico('menu')}</button>
+          </div>
+        </div>
+      </header>
 
       <main id="main-content">
       <h1 class="sr-only">Neo Arcade Vault: free online mini-games</h1>
-      <section class="fx" aria-roledescription="carousel" aria-label="Featured games">
-        ${slides}
-        <div class="fx-dots">
-          ${this.featList.map((g, i) => `<button class="fx-dot ${i === 0 ? 'is-active' : ''}" data-slide="${i}" aria-label="Show ${g.title}"></button>`).join('')}
+      <section class="vx-hero" aria-roledescription="carousel" aria-label="Featured games">
+        <div class="vx-slides">${slides}</div>
+        <div class="vx-tabs">
+          ${this.featList.map((g, i) => `<button class="vx-tab ${i === 0 ? 'is-active' : ''}" data-slide="${i}" aria-label="Show ${g.title}"><span class="vx-tab-bar"></span><span class="vx-tab-n">${String(i + 1).padStart(2, '0')}</span><span class="vx-tab-t">${g.title}</span></button>`).join('')}
         </div>
       </section>
 
@@ -335,7 +351,7 @@ class ArcadePortal {
           <span class="section-counter" id="catalog-game-count">${this.games.length} games</span>
         </div>
         <div class="category-pills-bar">
-          ${cats.map(([k, label]) => `<button class="cat-pill ${this.selectedCategory === k ? 'active' : ''}" data-cat="${k}">${label}</button>`).join('')}
+          ${cats.map(([k, label]) => `<button class="cat-pill ${this.selectedCategory === k ? 'active' : ''}" data-cat="${k}">${label}<span class="cat-n">${k === 'all' ? this.games.length : this.games.filter(g => g.category === k).length}</span></button>`).join('')}
           <button class="cat-pill ${this.selectedCategory === 'favorites' ? 'active' : ''}" data-cat="favorites">Favorites (<span id="pill-fav-count">${this.favorites.length}</span>)</button>
         </div>
       </section>
@@ -355,8 +371,8 @@ class ArcadePortal {
     // Carousel
     homeView.querySelectorAll('[data-play]').forEach(b => b.addEventListener('click', () => this.openGame(b.dataset.play)));
     homeView.querySelectorAll('[data-fav]').forEach(b => b.addEventListener('click', () => this.toggleFavorite(b.dataset.fav)));
-    homeView.querySelectorAll('.fx-dot').forEach(d => d.addEventListener('click', () => this.goSlide(parseInt(d.dataset.slide, 10))));
-    const fx = homeView.querySelector('.fx');
+    homeView.querySelectorAll('.vx-tab').forEach(d => d.addEventListener('click', () => this.goSlide(parseInt(d.dataset.slide, 10))));
+    const fx = homeView.querySelector('.vx-hero');
     fx?.addEventListener('mouseenter', () => { fx.classList.add('is-paused'); this.stopHero(); });
     fx?.addEventListener('mouseleave', () => { fx.classList.remove('is-paused'); this.goSlide(this.featIndex); });
     this.startHero();
@@ -367,7 +383,7 @@ class ArcadePortal {
 
     searchInput?.addEventListener('input', (e) => {
       this.searchQuery = e.target.value.toLowerCase().trim();
-      this.renderCatalog();
+      this.renderCatalog(true);
     });
     searchClear?.addEventListener('click', () => {
       this.searchQuery = '';
@@ -389,18 +405,17 @@ class ArcadePortal {
       this.sound.toggle();
       e.currentTarget.innerHTML = ico(this.sound.enabled ? 'volume' : 'mute');
     });
-
     homeView.querySelectorAll('.cat-pill').forEach(pill => {
       pill.addEventListener('click', () => {
         this.sound?.playClick();
         this.selectedCategory = pill.getAttribute('data-cat');
         homeView.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
         pill.classList.add('active');
-        this.renderCatalog();
+        this.renderCatalog(true);
       });
     });
 
-    this.renderCatalog();
+    this.renderCatalog(true);
   }
 
   renderRecentGamesSection() {
@@ -436,12 +451,18 @@ class ArcadePortal {
     });
   }
 
-  renderCatalog() {
+  renderCatalog(animate) {
     const grid = document.getElementById('games-grid');
     const countEl = document.getElementById('catalog-game-count');
     if (!grid) return;
 
     const filtered = this.getFilteredGames();
+    // Full catalog gets the 2 + 8 "showcase" rhythm; filtered lists use a uniform grid. Cards only
+    // animate in on first render / filter change, never when a heart is toggled.
+    if (grid.classList) {
+      grid.classList.toggle('is-showcase', filtered.length === this.games.length);
+      grid.classList.toggle('is-entering', !!animate);
+    }
     if (countEl) countEl.textContent = `${filtered.length} game${filtered.length === 1 ? '' : 's'}`;
 
     if (filtered.length === 0) {
@@ -455,12 +476,13 @@ class ArcadePortal {
       return;
     }
 
-    grid.innerHTML = filtered.map(game => {
+    grid.innerHTML = filtered.map((game, idx) => {
       const isFav = this.favorites.includes(game.id);
       const best = this.getBestScore(game);
       return `
-        <article class="game-card" data-id="${game.id}" onclick="window.ArcadePortal.openGame('${game.id}')">
-          <div class="card-art" style="background: ${game.gradient};">
+        <article class="game-card" data-id="${game.id}" style="${marqueeVars(game)}--i:${idx}" tabindex="0" onclick="window.ArcadePortal.openGame('${game.id}')" onkeydown="if (event.target === this && event.key === 'Enter') window.ArcadePortal.openGame('${game.id}')">
+          <div class="card-art">
+            <span class="card-index">${String(this.games.indexOf(game) + 1).padStart(2, '0')}</span>
             <div class="card-art-icon">${artFor(game.id)}</div>
             <span class="card-badge">${game.badge}</span>
             <button class="card-fav-btn ${isFav ? 'active' : ''}" aria-label="${isFav ? 'Remove from favorites' : 'Add to favorites'}"
@@ -469,6 +491,7 @@ class ArcadePortal {
           </div>
           <div class="card-info">
             <div class="card-header-row"><h3 class="card-title">${game.title}</h3></div>
+            <p class="card-blurb">${game.description}</p>
             <div class="card-footer-row">
               <span class="card-cat-tag">${categoryLabel(game)}</span>
               ${best === null ? '' : `<span class="card-rating" title="Your best on this device">${ico('trophy', 14)} ${formatBestScore(game, best)}</span>`}
@@ -516,10 +539,27 @@ class ArcadePortal {
     if (!gameView) return;
     const isFav = this.favorites.includes(game.id);
 
+    // Marquee Vault: each game carries its own colours (from its existing gradient) and start-screen kicker
+    if (gameView.classList) gameView.classList.add('vault-game');
+    if (gameView.setAttribute) gameView.setAttribute('style', `${marqueeVars(game)}--kicker:'${game.title} \u00b7 ${categoryLabel(game)}'`);
+
     gameView.innerHTML = `
-      ${this.shellSubnav(null)}
+      <header class="vx-header">
+        <div class="arcade-navbar">
+          <a class="nav-brand" href="/" aria-label="Neo Arcade Vault - home" onclick="if (window.ArcadePortal) { event.preventDefault(); window.location.hash = '#'; }">
+            ${BRAND_MARK}
+            <span class="brand-text">NEO ARCADE</span>
+            <span class="brand-badge">VAULT</span>
+          </a>
+          <div class="vx-menu" id="vx-menu">
+            ${this.shellSubnav(null)}
+          </div>
+          <button id="nav-btn-menu" class="vx-menu-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="vx-menu">${ico('menu')}</button>
+        </div>
+      </header>
 
       <main class="game-main">
+      <div class="vx-stage">
       <div class="game-view-header">
         <div class="gv-left">
           <button class="btn-back-arcade" onclick="window.ArcadePortal.showHomeView()">${ico('back', 16)} Back to arcade</button>
@@ -541,30 +581,31 @@ class ArcadePortal {
 
       <div class="game-details-box">
         <div class="gd-col">
-          <h3>${ico('gamepad', 20)} How to play</h3>
+          <h3>How to play</h3>
           <p>${game.controls}</p>
           <p style="margin-top: 8px; color: var(--text-muted); font-size: 0.88rem;">${game.description}</p>
           <p style="margin-top: 8px; font-size: 0.88rem;"><a href="/game/${game.slug}">Open ${game.title} on its own page</a></p>
         </div>
         <div class="gd-col stats-box">
-          <h3>${ico('trophy', 20)} Your records</h3>
+          <h3>Your records</h3>
           <div class="gd-stat-row"><span>Category</span><span style="color: var(--accent-2);">${categoryLabel(game)}</span></div>
           <div class="gd-stat-row"><span>${game.scoreLabel}</span><span id="gd-best-score" style="color: var(--yellow);">${this.bestScoreText(game)}</span></div>
           <div class="gd-stat-row"><span>Saved</span><span>This device only</span></div>
         </div>
       </div>
+      </div>
 
       <div class="gv-suggested-section">
         <h3 class="gv-suggested-title">More games</h3>
         <div class="gv-suggested-grid">
-          ${this.games.filter(g => g.id !== game.id).slice(0, 4).map(other => `
-            <div class="suggested-card" onclick="window.ArcadePortal.openGame('${other.id}')">
-              <span class="sc-icon" style="--g: ${other.gradient}">${artFor(other.id)}</span>
+          ${this.games.filter(g => g.id !== game.id).slice(0, 4).map((other, n) => `
+            <div class="suggested-card" style="${marqueeVars(other)}" tabindex="0" onclick="window.ArcadePortal.openGame('${other.id}')" onkeydown="if (event.target === this && event.key === 'Enter') window.ArcadePortal.openGame('${other.id}')">
+              <span class="sc-icon">${artFor(other.id)}</span>
               <div class="sc-info">
                 <span class="sc-title">${other.title}</span>
                 <span class="sc-cat">${categoryLabel(other)}</span>
               </div>
-              <button class="sc-btn">Play ${ico('play', 12)}</button>
+              <button class="sc-btn" tabindex="-1">Play ${ico('play', 12)}</button>
             </div>`).join('')}
         </div>
       </div>

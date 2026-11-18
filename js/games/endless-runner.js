@@ -69,10 +69,10 @@ class EndlessRunnerGame {
     this.container.innerHTML = `
       <div class="game-wrapper runner-arcade">
         <div class="game-hud">
-          <div class="hud-stat"><span class="icon">🏃</span> DIST: <span id="run-dist" class="val">0m</span></div>
-          <div class="hud-stat"><span class="icon">💎</span> CRYSTALS: <span id="run-crystals" class="val">0</span></div>
-          <div class="hud-stat"><span class="icon">⭐</span> SCORE: <span id="run-score" class="val">0</span></div>
-          <div class="hud-stat"><span class="icon">🏆</span> BEST: <span id="run-best" class="val">${this.highScore}</span></div>
+          <div class="hud-stat"><span class="icon">🏃</span><span class="lbl">DIST</span><span id="run-dist" class="val">0m</span></div>
+          <div class="hud-stat"><span class="icon">💎</span><span class="lbl">CRYSTALS</span><span id="run-crystals" class="val">0</span></div>
+          <div class="hud-stat"><span class="icon">⭐</span><span class="lbl">SCORE</span><span id="run-score" class="val">0</span></div>
+          <div class="hud-stat"><span class="icon">🏆</span><span class="lbl">BEST</span><span id="run-best" class="val">${this.highScore}</span></div>
           <div class="hud-controls-bar">
             <button id="run-btn-pause" class="arcade-hud-btn" title="Pause Game (P)">⏸️</button>
             <button id="run-btn-restart" class="arcade-hud-btn" title="Restart Game">🔄</button>
