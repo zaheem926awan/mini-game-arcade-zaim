@@ -1,0 +1,69 @@
+/* ==========================================================================
+   NEO ARCADE VAULT - DESIGN TOKENS ("Marquee Vault")
+   Single source of truth for colour, type, shape and icons. Loaded before
+   vault.css on every page. Legacy variable names are remapped at the bottom so
+   older rules inherit the new typefaces.
+   ========================================================================== */
+
+:root {
+  /* surfaces */
+  --ink-0: #0f0d0b;
+  --ink-1: #171310;
+  --ink-2: #211c17;
+  --ink-line: rgba(244, 238, 227, 0.13);
+  --ink-text: #f4eee3;
+  --ink-muted: #a69c8d;
+  --ink-soft: #cfc6b8;
+  --bone: #f3ede2;
+  --bone-2: #e8dfcf;
+  --bone-line: #cfc4b0;
+  --paper-ink: #1b1612;
+  --paper-muted: #5c5245;
+  /* accent */
+  --signal: #d6ff3d;
+  /* shape + rhythm */
+  --r-s: 6px;
+  --r-l: 14px;
+  --gutter: clamp(16px, 4vw, 40px);
+  --maxw: 1240px;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  /* type */
+  --f-display: 'Big Shoulders', 'Big Shoulders Display', 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif;
+  --f-body: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --f-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  /* default marquee colours (each game overrides) */
+  --m1: #ff5c39;
+  --m2: #ff8a4c;
+  /* icons used as CSS masks (so no emoji is needed in the UI) */
+  --i-pause: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 5h3.5v14H7zM13.5 5H17v14h-3.5z'/%3E%3C/svg%3E");
+  --i-restart: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 12a8 8 0 1 1-2.6-5.9M20 4v5h-5'/%3E%3C/svg%3E");
+  --i-play: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 4.5v15l13-7.5z'/%3E%3C/svg%3E");
+  --i-fire: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3v14M6 9l6-6 6 6M8 21h8'/%3E%3C/svg%3E");
+  --i-undo: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 14L4 9l5-5M4 9h10a6 6 0 0 1 0 12h-3'/%3E%3C/svg%3E");
+  --i-dots: radial-gradient(rgba(15, 13, 11, 0.22) 1.4px, transparent 1.6px);
+
+  /* legacy colour variables -> Marquee Vault palette (older rules in style/arcade/pages.css keep working) */
+  --portal-bg: var(--ink-0);
+  --portal-surface: var(--ink-1);
+  --portal-surface-hover: var(--ink-2);
+  --portal-border: var(--ink-line);
+  --portal-border-glow: rgba(214, 255, 61, 0.4);
+  --accent: var(--signal);
+  --accent-2: var(--signal);
+  --cyan: var(--signal);
+  --neon-blue: var(--signal);
+  --yellow: var(--signal);
+  --text-main: var(--ink-text);
+  --text-primary: var(--ink-text);
+  --text-muted: var(--ink-muted);
+  --bg-color-1: #14110e;
+  --bg-color-2: #211c17;
+  --surface-glass: rgba(23, 19, 16, 0.82);
+  --surface-glass-border: var(--ink-line);
+  --fs-pill-bg: var(--ink-1);
+
+  /* legacy variable names -> new typefaces (legacy files loaded the fonts below, which are retired) */
+  --font-portal: var(--f-body);
+  --font-family: var(--f-body);
+  --font-arcade: var(--f-body);
+}
