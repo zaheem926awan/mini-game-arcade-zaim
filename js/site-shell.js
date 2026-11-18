@@ -44,7 +44,7 @@
       const year = new Date().getFullYear();
       return `
         <footer class="arcade-footer site-footer">
-          <div class="footer-brand"><span class="brand-bolt">⚡</span> NEO ARCADE</div>
+          <div class="footer-brand"><svg class="vx-mark" viewBox="0 0 32 32" width="32" height="32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="7" fill="var(--signal)"/><path fill="var(--ink-0)" d="M6 7h5v5H6zM21 7h5v5h-5zM9 12h5v5H9zM18 12h5v5h-5zM12 17h8v5h-8zM13 22h6v4h-6z"/></svg> NEO ARCADE</div>
           <p>A free collection of 10 browser mini-games. No downloads, no sign-up.</p>
           <nav class="footer-nav" aria-label="Footer">
             ${linkList(SITE_LINKS, null)}${linkList(LEGAL_LINKS, null)}
@@ -55,6 +55,19 @@
   };
 
   root.SiteShell = SiteShell;
+
+  // Small-screen menu: one delegated handler serves every page (the portal renders its header with JS).
+  if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
+    document.addEventListener('click', (e) => {
+      const btn = e.target && e.target.closest ? e.target.closest('#nav-btn-menu') : null;
+      if (!btn) return;
+      const bar = btn.closest('.arcade-navbar');
+      if (!bar) return;
+      const open = !bar.classList.contains('is-open');
+      bar.classList.toggle('is-open', open);
+      btn.setAttribute('aria-expanded', String(open));
+    });
+  }
 
   // Keep the copyright year current on the static pages.
   if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
