@@ -33,10 +33,10 @@ class WhackAMoleGame {
     this.container.innerHTML = `
       <div class="game-wrapper mole-arcade">
         <div class="game-hud">
-          <div class="hud-stat"><span class="icon">🎯</span> SCORE: <span id="mole-score" class="val">0</span></div>
-          <div class="hud-stat"><span class="icon">⏱️</span> TIME: <span id="mole-time" class="val">30s</span></div>
-          <div class="hud-stat"><span class="icon">⚡</span> COMBO: <span id="mole-combo" class="val">0x</span></div>
-          <div class="hud-stat"><span class="icon">🏆</span> BEST: <span id="mole-best" class="val">${this.highScore}</span></div>
+          <div class="hud-stat"><span class="icon">🎯</span><span class="lbl">SCORE</span><span id="mole-score" class="val">0</span></div>
+          <div class="hud-stat"><span class="icon">⏱️</span><span class="lbl">TIME</span><span id="mole-time" class="val">30s</span></div>
+          <div class="hud-stat"><span class="icon">⚡</span><span class="lbl">COMBO</span><span id="mole-combo" class="val">0x</span></div>
+          <div class="hud-stat"><span class="icon">🏆</span><span class="lbl">BEST</span><span id="mole-best" class="val">${this.highScore}</span></div>
           <div class="hud-controls-bar">
             <button id="mole-btn-pause" class="arcade-hud-btn" title="Pause Game (P)">⏸️</button>
             <button id="mole-btn-restart" class="arcade-hud-btn" title="Restart Game">🔄</button>

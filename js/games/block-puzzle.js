@@ -46,10 +46,10 @@ class BlockPuzzleGame {
     this.container.innerHTML = `
       <div class="game-wrapper block-arcade">
         <div class="game-hud">
-          <div class="hud-stat"><span class="icon">🟦</span> SCORE: <span id="block-score" class="val">0</span></div>
-          <div class="hud-stat"><span class="icon">🏆</span> BEST: <span id="block-high-score" class="val">${this.highScore}</span></div>
-          <div class="hud-stat"><span class="icon">📏</span> LINES: <span id="block-lines" class="val">0</span></div>
-          <div class="hud-stat"><span class="icon">⚡</span> LVL: <span id="block-level" class="val">1</span></div>
+          <div class="hud-stat"><span class="icon">🟦</span><span class="lbl">SCORE</span><span id="block-score" class="val">0</span></div>
+          <div class="hud-stat"><span class="icon">🏆</span><span class="lbl">BEST</span><span id="block-high-score" class="val">${this.highScore}</span></div>
+          <div class="hud-stat"><span class="icon">📏</span><span class="lbl">LINES</span><span id="block-lines" class="val">0</span></div>
+          <div class="hud-stat"><span class="icon">⚡</span><span class="lbl">LVL</span><span id="block-level" class="val">1</span></div>
           <div class="hud-controls-bar">
             <button id="block-btn-pause" class="arcade-hud-btn" title="Pause Game (P)">⏸️</button>
             <button id="block-btn-restart" class="arcade-hud-btn" title="Restart Game">🔄</button>

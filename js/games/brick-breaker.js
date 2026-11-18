@@ -43,10 +43,10 @@ class BrickBreakerGame {
     this.container.innerHTML = `
       <div class="game-wrapper bricks-arcade">
         <div class="game-hud">
-          <div class="hud-stat"><span class="icon">🧱</span> SCORE: <span id="bricks-score" class="val">0</span></div>
-          <div class="hud-stat"><span class="icon">🏆</span> BEST: <span id="bricks-high-score" class="val">${this.highScore}</span></div>
-          <div class="hud-stat"><span class="icon">❤️</span> LIVES: <span id="bricks-lives" class="val">❤️❤️❤️</span></div>
-          <div class="hud-stat"><span class="icon">🗺️</span> LVL: <span id="bricks-level" class="val">1</span></div>
+          <div class="hud-stat"><span class="icon">🧱</span><span class="lbl">SCORE</span><span id="bricks-score" class="val">0</span></div>
+          <div class="hud-stat"><span class="icon">🏆</span><span class="lbl">BEST</span><span id="bricks-high-score" class="val">${this.highScore}</span></div>
+          <div class="hud-stat"><span class="icon">❤️</span><span class="lbl">LIVES</span><span id="bricks-lives" class="val">❤️❤️❤️</span></div>
+          <div class="hud-stat"><span class="icon">🗺️</span><span class="lbl">LVL</span><span id="bricks-level" class="val">1</span></div>
           <div class="hud-controls-bar">
             <button id="bricks-btn-pause" class="arcade-hud-btn" title="Pause Game (P)">⏸️</button>
             <button id="bricks-btn-restart" class="arcade-hud-btn" title="Restart Game">🔄</button>

@@ -69,10 +69,10 @@ class SpaceShooterGame {
     this.container.innerHTML = `
       <div class="game-wrapper space-arcade">
         <div class="game-hud">
-          <div class="hud-stat"><span class="icon">🚀</span> SCORE: <span id="space-score" class="val">0</span></div>
-          <div class="hud-stat"><span class="icon">🏆</span> BEST: <span id="space-high-score" class="val">${this.highScore}</span></div>
-          <div class="hud-stat"><span class="icon">🛡️</span> SHIELD: <span id="space-shield" class="val">3/3</span></div>
-          <div class="hud-stat"><span class="icon">🌌</span> WAVE: <span id="space-wave" class="val">1</span></div>
+          <div class="hud-stat"><span class="icon">🚀</span><span class="lbl">SCORE</span><span id="space-score" class="val">0</span></div>
+          <div class="hud-stat"><span class="icon">🏆</span><span class="lbl">BEST</span><span id="space-high-score" class="val">${this.highScore}</span></div>
+          <div class="hud-stat"><span class="icon">🛡️</span><span class="lbl">SHIELD</span><span id="space-shield" class="val">3/3</span></div>
+          <div class="hud-stat"><span class="icon">🌌</span><span class="lbl">WAVE</span><span id="space-wave" class="val">1</span></div>
           <div class="hud-controls-bar">
             <button id="space-btn-pause" class="arcade-hud-btn" title="Pause Game (P)">⏸️</button>
             <button id="space-btn-restart" class="arcade-hud-btn" title="Restart Game">🔄</button>
