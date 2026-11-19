@@ -562,6 +562,78 @@ test('Portal home: the static intro/guide section is re-attached under the catal
   });
 });
 
+// 20. Favorites / Continue Playing show genuine visitor activity only (no invented defaults)
+// Builds a portal on top of a localStorage that already holds `seed` (like a returning visitor).
+function withSavedStorage(seed, fn) {
+  const prevSound = global.SoundManager;
+  global.SoundManager = class { constructor() { this.enabled = true; } playClick() {} toggle() {} };
+  localStorage.clear();
+  Object.keys(seed).forEach(k => localStorage.setItem(k, seed[k]));
+  try {
+    return fn(new ArcadePortal());
+  } finally {
+    global.SoundManager = prevSound;
+    localStorage.clear();
+  }
+}
+
+test('Brand-new visitor: no default favorites, no Continue Playing entry, nothing written to storage', () => {
+  withSavedStorage({}, (portal) => {
+    assert.deepStrictEqual(portal.favorites, [], 'no invented favorites (was Fruit Slice + Neon Snake)');
+    assert.deepStrictEqual(portal.recentlyPlayed, [], 'no invented recently played (was Fruit Slice)');
+    assert.strictEqual(portal.renderRecentGamesSection(), '', 'the Continue Playing section is not rendered at all');
+    assert.strictEqual(localStorage.getItem('arcade_favorites'), null, 'reading must not write favorites');
+    assert.strictEqual(localStorage.getItem('arcade_recently_played'), null, 'reading must not write recents');
+  });
+});
+
+test('Brand-new visitor: the first real favorite and first real play are the only saved entries', () => {
+  withPortalDom((portal) => {
+    assert.deepStrictEqual(portal.favorites, []);
+    portal.toggleFavorite('brick-breaker');
+    assert.deepStrictEqual(JSON.parse(localStorage.getItem('arcade_favorites')), ['brick-breaker'], 'no fake favorites get saved along with it');
+    portal.recordPlay('snake');
+    assert.deepStrictEqual(JSON.parse(localStorage.getItem('arcade_recently_played')), ['snake'], 'no fake Fruit Slice entry gets saved along with it');
+    assert.ok(portal.renderRecentGamesSection().includes('Neon Snake'), 'a real play does appear under Continue Playing');
+    assert.ok(!portal.renderRecentGamesSection().includes('Fruit Slice'), 'and Fruit Slice does not');
+  });
+});
+
+test('Returning visitor: saved favorites and play history load unchanged and are not rewritten', () => {
+  const favRaw = JSON.stringify(['brick-breaker', 'fruit-slice', 'whack-a-mole']);
+  const recentRaw = JSON.stringify(['whack-a-mole', 'snake', 'tic-tac-toe']);
+  withSavedStorage({ arcade_favorites: favRaw, arcade_recently_played: recentRaw }, (portal) => {
+    assert.deepStrictEqual(portal.favorites, ['brick-breaker', 'fruit-slice', 'whack-a-mole']);
+    assert.deepStrictEqual(portal.recentlyPlayed, ['whack-a-mole', 'snake', 'tic-tac-toe']);
+    assert.strictEqual(localStorage.getItem('arcade_favorites'), favRaw, 'stored favorites are byte-for-byte untouched');
+    assert.strictEqual(localStorage.getItem('arcade_recently_played'), recentRaw, 'stored recents are byte-for-byte untouched');
+    const html = portal.renderRecentGamesSection();
+    assert.ok(html.includes('Whack-a-Mole') && html.includes('Neon Snake') && html.includes('Tic-Tac-Toe'), 'real history still renders');
+  });
+});
+
+test('Returning visitor: a user who saved Fruit Slice / Neon Snake themselves keeps them; an emptied list stays empty', () => {
+  withSavedStorage({ arcade_favorites: '["fruit-slice","snake"]', arcade_recently_played: '["fruit-slice"]' }, (portal) => {
+    assert.deepStrictEqual(portal.favorites, ['fruit-slice', 'snake'], 'saved values are never second-guessed');
+    assert.deepStrictEqual(portal.recentlyPlayed, ['fruit-slice']);
+  });
+  withSavedStorage({ arcade_favorites: '[]', arcade_recently_played: '[]' }, (portal) => {
+    assert.deepStrictEqual(portal.favorites, [], 'a visitor who removed every favorite sees none');
+    assert.deepStrictEqual(portal.recentlyPlayed, []);
+  });
+});
+
+test('Damaged saved data does not crash the portal and is not overwritten by reading it', () => {
+  ['not json', 'null', '{"a":1}', '"snake"'].forEach(raw => {
+    withSavedStorage({ arcade_favorites: raw, arcade_recently_played: raw }, (portal) => {
+      assert.deepStrictEqual(portal.favorites, [], `favorites fall back to empty for ${raw}`);
+      assert.deepStrictEqual(portal.recentlyPlayed, [], `recents fall back to empty for ${raw}`);
+      assert.strictEqual(localStorage.getItem('arcade_favorites'), raw, 'the stored value is left as it was');
+      assert.strictEqual(localStorage.getItem('arcade_recently_played'), raw, 'the stored value is left as it was');
+    });
+  });
+});
+
 console.log(`\nResults: ${passedTests}/${totalTests} tests passed.`);
 if (passedTests !== totalTests) {
   process.exit(1);
