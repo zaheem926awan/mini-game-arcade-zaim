@@ -92,6 +92,23 @@ function categoryLabel(game) {
   return game.category.charAt(0).toUpperCase() + game.category.slice(1);
 }
 
+/**
+ * Reads a saved list of game ids (favorites / recently played) from storage.
+ * A brand-new visitor has nothing saved, so the list is empty: these sections only ever show
+ * the visitor's own activity. Read-only - it never writes, so saved data is never replaced.
+ * A stored value that is not a JSON array (damaged data) is ignored for this visit only.
+ */
+function readStoredIdList(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    if (raw === null || raw === '') return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (e) {
+    return [];
+  }
+}
+
 class ArcadePortal {
   constructor() {
     this.sound = new SoundManager();
@@ -108,8 +125,8 @@ class ArcadePortal {
 
     this.favKey = 'arcade_favorites';
     this.recentKey = 'arcade_recently_played';
-    this.favorites = JSON.parse(localStorage.getItem(this.favKey) || '["fruit-slice", "snake"]');
-    this.recentlyPlayed = JSON.parse(localStorage.getItem(this.recentKey) || '["fruit-slice"]');
+    this.favorites = readStoredIdList(this.favKey);
+    this.recentlyPlayed = readStoredIdList(this.recentKey);
 
     this.handleHashChange = this.handleHashChange.bind(this);
   }
