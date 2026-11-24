@@ -240,6 +240,82 @@ function fruitTemplate() {
 // Marquee Vault design: shared logomark used in the header and footer of every page.
 const BRAND_MARK = '<svg class="vx-mark" viewBox="0 0 32 32" width="32" height="32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="7" fill="var(--signal)"/><path fill="var(--ink-0)" d="M6 7h5v5H6zM21 7h5v5h-5zM9 12h5v5H9zM18 12h5v5h-5zM12 17h8v5h-8zM13 22h6v4h-6z"/></svg>';
 
+// ---- injected by SEO update: per-game FAQs (play-intent questions; the guides answer the rules questions) ----
+const FAQ = {
+  'fruit-slice': [
+    ['How long does a Fruit Slice round last?', 'A round is 60 seconds long. It can end sooner if you slice bombs three times, because every bomb costs one of your three lives.'],
+    ['Why did my slice not count?', 'Only a real swipe slices. A pointer resting on a fruit does nothing, so keep the mouse or your finger moving through the fruit.'],
+    ['Can I change the look of the blade?', 'Yes. The start screen offers four blade glow colours: Electric Cyan, Flame Red, Golden Sun and Neon Purple. Your choice is remembered in this browser.'],
+    ['What happens if I switch to another tab mid-round?', 'The game pauses by itself when you leave the browser tab, so your round is still waiting when you come back.']
+  ],
+  'snake': [
+    ['Is there a difficulty setting in Neon Snake?', 'No. There are no difficulty settings or extra modes. The challenge rises on its own, because the snake gets faster as you eat apples until it reaches a fixed top speed.'],
+    ['Does the golden star count towards the next star?', 'No. Only apples count towards the next star, so picking one up does not bring the following star any closer.'],
+    ['What happens to the golden star if I pause?', 'You can pause with P or Esc and resume with the same key, but the star\u2019s 6-second timer keeps running while the game is paused.'],
+    ['What does the game-over screen tell me?', 'It shows your final score, snake length, apples eaten and your best score, along with how the run ended: hitting the wall or running into yourself.']
+  ],
+  'brick-breaker': [
+    ['Do I get time to aim the first ball?', 'No. The ball launches as soon as you press LAUNCH BALL, and the next ball launches straight away after you lose a life, so get the paddle in position first.'],
+    ['How do I send the ball into the corners?', 'Where the ball lands on the paddle sets its bounce angle. Near the centre it goes almost straight up, and near either edge it leaves at a steep angle of up to 70 degrees.'],
+    ['Which bricks take more than one hit?', 'Gold bricks take 3 hits, cyan and purple take 2, and red and green take 1. A brick that needs more hits shows the hits remaining as a small number.'],
+    ['What happens when I clear a stage?', 'The next layout is built and the ball and paddle reset, while your score and remaining lives carry over. Clearing all bricks on stage 3 wins the game.']
+  ],
+  'space-shooter': [
+    ['Which enemy should I shoot first?', 'The heavy cruiser. It is the only enemy that fires back, and it takes three hits to destroy, so it is worth dealing with early.'],
+    ['What do the enemy colours mean?', 'Red drones take one hit and score 20 points, orange heavy cruisers take three hits and score 50, and grey asteroids take two hits and score 30.'],
+    ['How long does the triple shot last?', 'A triple shot lasts 9 seconds. About 16% of destroyed enemies drop a power-up, and you collect it by flying into it.'],
+    ['What happens when I get hit?', 'A cruiser bolt or a collision costs 1 shield point and gives you 1.2 seconds of invulnerability. That window is best used to reposition rather than to take more risk.']
+  ],
+  'puzzle-2048': [
+    ['Which keys control 2048 Puzzle?', 'Arrow keys or W A S D slide the tiles, Z or Backspace undoes your last move, and Space or Enter starts a new game after a game over.'],
+    ['How is the score worked out?', 'Each merge scores the value of the new tile, so merging two 8s gives +16. Sliding without a merge scores nothing.'],
+    ['Can I drag tiles with the mouse?', 'No. Dragging with the mouse does not move tiles. Use the keyboard or click the on-screen arrow buttons, or swipe on a touch screen.'],
+    ['What happens if I press a direction that cannot move?', 'No new tile is added, so nothing is lost. It does count as your latest step for Undo, though, so Undo after a blocked press will not take you back any further.']
+  ],
+  'tic-tac-toe': [
+    ['Which difficulty should I start with?', 'Easy always plays a random legal move, and Medium plays the best move about 65% of the time. Invincible looks ahead through every continuation, so the best you can get against it is a draw.'],
+    ['Who moves first?', 'X always moves first. Against the computer you are X, and in 2 Players mode X and O take turns on the same screen.'],
+    ['What does the win tally keep track of?', 'X wins, ties and O wins while the page stays open. Changing mode or difficulty gives you a fresh board but keeps the tally, and reloading the page resets it.'],
+    ['How do I know a round is over?', 'The status line announces the result, and a completed row, column or diagonal is highlighted in gold. A full board with no line is a draw.']
+  ],
+  'memory-match': [
+    ['How many moves does a perfect game take?', 'Eight, which means finding every pair on the first try. Fourteen moves or fewer earns the full three stars.'],
+    ['Can I pause Memory Match?', 'No. There is no pause button, and the timer starts when the board appears. Because time does not affect your stars or your best score, there is no penalty for taking it slowly.'],
+    ['Which symbols are on the cards?', 'Eight symbols, each on two cards: \uD83D\uDC7E \uD83D\uDE80 \uD83D\uDC8E \u26A1 \uD83C\uDFAE \uD83C\uDF52 \uD83D\uDCA3 and \uD83D\uDC51.'],
+    ['How long do mismatched cards stay visible?', 'They flip back after about three-quarters of a second, and you cannot flip anything else during that moment.']
+  ],
+  'endless-runner': [
+    ['How fast does the runner get?', 'Speed rises with your distance until it reaches a top speed after about 4,400 m, and the gaps between obstacles get shorter at higher speeds.'],
+    ['Are close calls forgiven?', 'Slightly. The collision box is a little forgiving, so very close misses do not always count as hits.'],
+    ['Where do the energy crystals appear?', 'About 70% of the time a trail of three crystals follows an obstacle. After a drone they sit near the ground, and after a spike they hang at jump height. Each crystal is worth 25 points.'],
+    ['What is the easiest way to play on a phone?', 'Tap the game area to jump, which is quicker than reaching for the JUMP button, and hold the SLIDE button to pass under drones.']
+  ],
+  'block-puzzle': [
+    ['How does the Hold slot work?', 'It stores one piece. You can hold once per turn: the first hold brings in the next piece, and later holds swap the current piece with the held one after the next piece has locked.'],
+    ['What is the best way to score big?', 'Clear several lines at once. Four lines in one go is worth 800 x your level, compared with 100 x your level for a single line.'],
+    ['Are there swipe controls on a phone?', 'No. There are no swipe gestures on the board. Use the on-screen buttons for left, rotate, right, hold, soft drop and hard drop.'],
+    ['Why did my next pieces drop straight away?', 'Space is the hard drop, and holding the key down may repeat it and drop the following pieces too. Press it once per piece.']
+  ],
+  'whack-a-mole': [
+    ['What appears in the holes?', 'Every 0.45 to 0.9 seconds something pops up in a random empty hole. Roughly 58% of the time it is a mole, 22% a golden star and 20% a bomb.'],
+    ['Does missing a mole break my combo?', 'No. A mole or star that gets away does not break it, and clicking an empty hole does nothing. Only hitting a bomb resets the combo.'],
+    ['How long do moles stay up?', 'About 0.9 to 1.3 seconds. Golden stars are quicker at 0.75 seconds, and bombs stay for about 1.1 seconds.'],
+    ['What happens when I pause?', 'Press P or Esc to pause and again to resume. The 30-second clock stays frozen, but moles that are showing when you pause may disappear in the meantime.']
+  ]
+};
+
+function sameCategory(game) {
+  return ARCADE_GAMES.filter(g => g.category === game.category && g.id !== game.id);
+}
+
+function categoryLine(game) {
+  const cat = game.category.charAt(0).toUpperCase() + game.category.slice(1);
+  const others = sameCategory(game);
+  if (!others.length) return { text: `It is the only ${game.category} game in the vault.`, cat };
+  return { text: `It is one of ${others.length + 1} ${game.category} games in the vault, together with ${others.map(o => o.title).join(' and ')}.`, cat };
+}
+// ---- end of injected block ----
+
 function page(game) {
   const c = GAMES[game.id];
   const url = urlOf(game);
@@ -257,6 +333,10 @@ function page(game) {
         inLanguage: 'en', isAccessibleForFree: true,
         publisher: { '@type': 'Organization', name: 'Neo Arcade Vault', url: `${ORIGIN}/` },
         potentialAction: { '@type': 'PlayAction', target: url }
+      },
+      {
+        '@type': 'FAQPage', '@id': `${url}#faq`,
+        mainEntity: FAQ[game.id].map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } }))
       },
       {
         '@type': 'BreadcrumbList',
@@ -376,7 +456,7 @@ ${JSON.stringify(jsonLd, null, 2)}
           <section class="content-card prose" aria-labelledby="about-game">
             <h2 id="about-game">About ${esc(game.title)}</h2>
 ${c.intro.map(p => `            <p>${esc(p)}</p>`).join('\n')}
-            <p>${esc(c.closing)} It is one of 10 free games in the <a href="/games">Neo Arcade Vault games collection</a>.</p>
+            <p>${esc(c.closing)} ${esc(categoryLine(game).text)} See the <a href="/games#${game.category}">${esc(categoryLine(game).cat)} games</a> or the full <a href="/games">Neo Arcade Vault games collection</a>.</p>
           </section>
 
           <section class="content-card prose" aria-labelledby="game-quickstart">
@@ -409,6 +489,11 @@ ${c.controls.map(([k, v]) => `                  <tr><td>${esc(k)}</td><td>${esc(
 ${c.tips.map(t => `              <li>${esc(t)}</li>`).join('\n')}
             </ul>
             <p>Want the full rules, scoring table and answers to common questions? Read the <a href="/play/${game.slug}">${esc(game.title)} guide</a>.</p>
+          </section>
+
+          <section class="content-card prose" aria-labelledby="game-faq">
+            <h2 id="game-faq">${esc(game.title)} questions answered</h2>
+${FAQ[game.id].map(([q, a]) => `            <div class="faq-item">\n              <h3>${esc(q)}</h3>\n              <p>${esc(a)}</p>\n            </div>`).join('\n')}
           </section>
 
           <section class="content-card prose" aria-labelledby="more-games">
