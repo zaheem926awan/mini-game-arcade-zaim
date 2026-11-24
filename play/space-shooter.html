@@ -32,30 +32,23 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "VideoGame",
-      "@id": "https://mini-game-arcade-zaim.vercel.app/play/space-shooter#game",
-      "name": "Space Shooter",
+      "@type": "Article",
+      "@id": "https://mini-game-arcade-zaim.vercel.app/play/space-shooter#article",
+      "headline": "How to Play Space Shooter: Rules, Controls & Tips",
       "description": "How to play Space Shooter: flying and firing controls, drones, cruisers and asteroids, power-ups, shield and wave rules and tips for a higher score.",
       "url": "https://mini-game-arcade-zaim.vercel.app/play/space-shooter",
-      "genre": [
-        "Action",
-        "Shooter"
-      ],
-      "gamePlatform": "Web browser",
-      "applicationCategory": "Game",
-      "playMode": [
-        "SinglePlayer"
-      ],
+      "mainEntityOfPage": "https://mini-game-arcade-zaim.vercel.app/play/space-shooter",
       "inLanguage": "en",
-      "isAccessibleForFree": true,
+      "about": {
+        "@type": "VideoGame",
+        "@id": "https://mini-game-arcade-zaim.vercel.app/game/space-shooter#game",
+        "name": "Space Shooter",
+        "url": "https://mini-game-arcade-zaim.vercel.app/game/space-shooter"
+      },
       "publisher": {
         "@type": "Organization",
         "name": "Neo Arcade Vault",
         "url": "https://mini-game-arcade-zaim.vercel.app/"
-      },
-      "potentialAction": {
-        "@type": "PlayAction",
-        "target": "https://mini-game-arcade-zaim.vercel.app/game/space-shooter"
       }
     },
     {
@@ -223,6 +216,7 @@
           <li><a href="#features">Special features</a></li>
           <li><a href="#tips">Tips for beginners</a></li>
           <li><a href="#good-to-know">Good to know</a></li>
+          <li><a href="#common-mistakes">Common mistakes</a></li>
           <li><a href="#faq">Space Shooter FAQ</a></li>
         </ol>
       </nav>
@@ -313,6 +307,15 @@
         <h2 id="good-to-know">Good to know</h2>
         <ul>
           <li>Pause with <code>P</code> or <code>Esc</code> and resume with the same key, or click the on-screen Resume button. Either way the run carries on exactly where you stopped.</li>
+        </ul>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="common-mistakes">
+        <h2 id="common-mistakes">Common mistakes in Space Shooter</h2>
+        <ul>
+          <li><strong>Ramming enemies to get out of trouble.</strong> A collision destroys the enemy but gives you no points and costs 1 shield point. Do not spend your 3 shield points on anything you could have dodged.</li>
+          <li><strong>Chasing enemies off the bottom of the screen.</strong> An enemy that flies past costs you nothing, so let it go rather than flying into danger for 20 points.</li>
+          <li><strong>Expecting the mouse to fire.</strong> The mouse only moves the ship. Hold Space or Enter, or hold the on-screen FIRE button, to shoot.</li>
         </ul>
       </section>
 

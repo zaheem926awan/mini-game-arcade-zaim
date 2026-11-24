@@ -32,30 +32,23 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "VideoGame",
-      "@id": "https://mini-game-arcade-zaim.vercel.app/play/2048-puzzle#game",
-      "name": "2048 Puzzle",
+      "@type": "Article",
+      "@id": "https://mini-game-arcade-zaim.vercel.app/play/2048-puzzle#article",
+      "headline": "How to Play 2048 Puzzle: Rules, Controls & Tips",
       "description": "How to play 2048 Puzzle: arrow key and swipe controls, how tiles merge, how scoring works, the one-step undo, and tips for building a 2048 tile.",
       "url": "https://mini-game-arcade-zaim.vercel.app/play/2048-puzzle",
-      "genre": [
-        "Puzzle",
-        "Strategy"
-      ],
-      "gamePlatform": "Web browser",
-      "applicationCategory": "Game",
-      "playMode": [
-        "SinglePlayer"
-      ],
+      "mainEntityOfPage": "https://mini-game-arcade-zaim.vercel.app/play/2048-puzzle",
       "inLanguage": "en",
-      "isAccessibleForFree": true,
+      "about": {
+        "@type": "VideoGame",
+        "@id": "https://mini-game-arcade-zaim.vercel.app/game/2048-puzzle#game",
+        "name": "2048 Puzzle",
+        "url": "https://mini-game-arcade-zaim.vercel.app/game/2048-puzzle"
+      },
       "publisher": {
         "@type": "Organization",
         "name": "Neo Arcade Vault",
         "url": "https://mini-game-arcade-zaim.vercel.app/"
-      },
-      "potentialAction": {
-        "@type": "PlayAction",
-        "target": "https://mini-game-arcade-zaim.vercel.app/game/2048-puzzle"
       }
     },
     {
@@ -222,6 +215,7 @@
           <li><a href="#how-it-ends">How a round ends</a></li>
           <li><a href="#features">Special features</a></li>
           <li><a href="#tips">Tips for beginners</a></li>
+          <li><a href="#common-mistakes">Common mistakes</a></li>
           <li><a href="#faq">2048 Puzzle FAQ</a></li>
         </ol>
       </nav>
@@ -287,6 +281,15 @@
           <li>Slide towards the wall in a regular pattern. A common way to play is to keep your biggest tile in one corner, though the game does not require it.</li>
           <li>Before a move, check rows and columns for pairs that will merge together, because each merge scores the new tile value.</li>
           <li>Remember that a new tile appears after every move that works, so avoid filling the board with tiles that do not match.</li>
+        </ul>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="common-mistakes">
+        <h2 id="common-mistakes">Common mistakes in 2048 Puzzle</h2>
+        <ul>
+          <li><strong>Sliding in random directions.</strong> A new tile appears after every move that works, so a board full of unrelated tiles fills up quickly. Use a regular pattern, such as keeping your biggest tile in one corner.</li>
+          <li><strong>Pressing a blocked direction and then reaching for Undo.</strong> A move that changes nothing adds no tile, but it still counts as your latest step. Undo after a blocked press will not take you back any further.</li>
+          <li><strong>Expecting the board to be there when you return.</strong> Only your best score is saved in this browser. The board you are playing is not.</li>
         </ul>
       </section>
 

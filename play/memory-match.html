@@ -32,30 +32,23 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "VideoGame",
-      "@id": "https://mini-game-arcade-zaim.vercel.app/play/memory-match#game",
-      "name": "Memory Match",
+      "@type": "Article",
+      "@id": "https://mini-game-arcade-zaim.vercel.app/play/memory-match#article",
+      "headline": "How to Play Memory Match: Rules, Controls & Tips",
       "description": "How to play Memory Match: flip two cards at a time, match 8 pairs, how moves, the timer and the 1 to 3 star rating work, and tips to clear the board.",
       "url": "https://mini-game-arcade-zaim.vercel.app/play/memory-match",
-      "genre": [
-        "Casual",
-        "Puzzle"
-      ],
-      "gamePlatform": "Web browser",
-      "applicationCategory": "Game",
-      "playMode": [
-        "SinglePlayer"
-      ],
+      "mainEntityOfPage": "https://mini-game-arcade-zaim.vercel.app/play/memory-match",
       "inLanguage": "en",
-      "isAccessibleForFree": true,
+      "about": {
+        "@type": "VideoGame",
+        "@id": "https://mini-game-arcade-zaim.vercel.app/game/memory-match#game",
+        "name": "Memory Match",
+        "url": "https://mini-game-arcade-zaim.vercel.app/game/memory-match"
+      },
       "publisher": {
         "@type": "Organization",
         "name": "Neo Arcade Vault",
         "url": "https://mini-game-arcade-zaim.vercel.app/"
-      },
-      "potentialAction": {
-        "@type": "PlayAction",
-        "target": "https://mini-game-arcade-zaim.vercel.app/game/memory-match"
       }
     },
     {
@@ -223,6 +216,7 @@
           <li><a href="#features">Special features</a></li>
           <li><a href="#tips">Tips for beginners</a></li>
           <li><a href="#good-to-know">Good to know</a></li>
+          <li><a href="#common-mistakes">Common mistakes</a></li>
           <li><a href="#faq">Memory Match FAQ</a></li>
         </ol>
       </nav>
@@ -293,6 +287,15 @@
         <h2 id="good-to-know">Good to know</h2>
         <ul>
           <li>The timer cannot be paused. It starts when the board appears.</li>
+        </ul>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="common-mistakes">
+        <h2 id="common-mistakes">Common mistakes in Memory Match</h2>
+        <ul>
+          <li><strong>Rushing.</strong> Stars depend on moves, not time, and there is no time limit. Fast flipping only means fewer cards remembered.</li>
+          <li><strong>Ignoring mismatches.</strong> Both cards you just saw are information. Remember where they are, because one of them may be the partner of a card you flip later.</li>
+          <li><strong>Flipping a new card after you have already seen the partner.</strong> When your first card shows a symbol you have seen before, flip the card you remember to make the match. Flipping an unknown card instead spends a move for nothing.</li>
         </ul>
       </section>
 

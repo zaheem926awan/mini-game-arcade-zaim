@@ -32,30 +32,23 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "VideoGame",
-      "@id": "https://mini-game-arcade-zaim.vercel.app/play/block-puzzle#game",
-      "name": "Block Puzzle",
+      "@type": "Article",
+      "@id": "https://mini-game-arcade-zaim.vercel.app/play/block-puzzle#article",
+      "headline": "How to Play Block Puzzle: Rules, Controls & Tips",
       "description": "How to play Block Puzzle: falling block controls, ghost landing outline, hold slot, line clear and level scoring, plus tips for clearing four lines at once.",
       "url": "https://mini-game-arcade-zaim.vercel.app/play/block-puzzle",
-      "genre": [
-        "Puzzle",
-        "Arcade"
-      ],
-      "gamePlatform": "Web browser",
-      "applicationCategory": "Game",
-      "playMode": [
-        "SinglePlayer"
-      ],
+      "mainEntityOfPage": "https://mini-game-arcade-zaim.vercel.app/play/block-puzzle",
       "inLanguage": "en",
-      "isAccessibleForFree": true,
+      "about": {
+        "@type": "VideoGame",
+        "@id": "https://mini-game-arcade-zaim.vercel.app/game/block-puzzle#game",
+        "name": "Block Puzzle",
+        "url": "https://mini-game-arcade-zaim.vercel.app/game/block-puzzle"
+      },
       "publisher": {
         "@type": "Organization",
         "name": "Neo Arcade Vault",
         "url": "https://mini-game-arcade-zaim.vercel.app/"
-      },
-      "potentialAction": {
-        "@type": "PlayAction",
-        "target": "https://mini-game-arcade-zaim.vercel.app/game/block-puzzle"
       }
     },
     {
@@ -223,6 +216,7 @@
           <li><a href="#features">Special features</a></li>
           <li><a href="#tips">Tips for beginners</a></li>
           <li><a href="#good-to-know">Good to know</a></li>
+          <li><a href="#common-mistakes">Common mistakes</a></li>
           <li><a href="#faq">Block Puzzle FAQ</a></li>
         </ol>
       </nav>
@@ -304,6 +298,15 @@
         <h2 id="good-to-know">Good to know</h2>
         <ul>
           <li>Pause with <code>P</code> or <code>Esc</code> and resume with the same key, or click the on-screen Resume button. Either way the run carries on exactly where you stopped.</li>
+        </ul>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="common-mistakes">
+        <h2 id="common-mistakes">Common mistakes in Block Puzzle</h2>
+        <ul>
+          <li><strong>Holding Space down.</strong> Space is the hard drop, and holding it may repeat and drop the following pieces straight away. Press it once per piece.</li>
+          <li><strong>Letting the stack grow tall.</strong> The game ends as soon as a new piece has no room to appear at the top. Keep the stack low and flat.</li>
+          <li><strong>Expecting to hold twice in a row.</strong> You can hold once per turn. A second hold is only possible after the next piece has locked in place.</li>
         </ul>
       </section>
 

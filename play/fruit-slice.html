@@ -32,30 +32,23 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "VideoGame",
-      "@id": "https://mini-game-arcade-zaim.vercel.app/play/fruit-slice#game",
-      "name": "Fruit Slice",
+      "@type": "Article",
+      "@id": "https://mini-game-arcade-zaim.vercel.app/play/fruit-slice#article",
+      "headline": "How to Play Fruit Slice: Rules, Controls & Tips",
       "description": "Learn how to play Fruit Slice: swipe controls, fruit and combo scoring, bomb penalties, 3 lives, the 60-second timer and tips for a higher score.",
       "url": "https://mini-game-arcade-zaim.vercel.app/play/fruit-slice",
-      "genre": [
-        "Action",
-        "Arcade"
-      ],
-      "gamePlatform": "Web browser",
-      "applicationCategory": "Game",
-      "playMode": [
-        "SinglePlayer"
-      ],
+      "mainEntityOfPage": "https://mini-game-arcade-zaim.vercel.app/play/fruit-slice",
       "inLanguage": "en",
-      "isAccessibleForFree": true,
+      "about": {
+        "@type": "VideoGame",
+        "@id": "https://mini-game-arcade-zaim.vercel.app/game/fruit-slice#game",
+        "name": "Fruit Slice",
+        "url": "https://mini-game-arcade-zaim.vercel.app/game/fruit-slice"
+      },
       "publisher": {
         "@type": "Organization",
         "name": "Neo Arcade Vault",
         "url": "https://mini-game-arcade-zaim.vercel.app/"
-      },
-      "potentialAction": {
-        "@type": "PlayAction",
-        "target": "https://mini-game-arcade-zaim.vercel.app/game/fruit-slice"
       }
     },
     {
@@ -223,6 +216,7 @@
           <li><a href="#features">Special features</a></li>
           <li><a href="#tips">Tips for beginners</a></li>
           <li><a href="#good-to-know">Good to know</a></li>
+          <li><a href="#common-mistakes">Common mistakes</a></li>
           <li><a href="#faq">Fruit Slice FAQ</a></li>
         </ol>
       </nav>
@@ -312,6 +306,15 @@
         <h2 id="good-to-know">Good to know</h2>
         <ul>
           <li>A bomb also costs one of your 3 lives. The in-game How to Play card only mentions the points and time penalty.</li>
+        </ul>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="common-mistakes">
+        <h2 id="common-mistakes">Common mistakes in Fruit Slice</h2>
+        <ul>
+          <li><strong>Swiping at every fruit.</strong> A missed fruit costs nothing, but a bomb costs 10 points (never below 0), 5 seconds and one of your 3 lives. Look at what is flying before you commit to a stroke.</li>
+          <li><strong>Slicing a cluster in short, separate strokes.</strong> Combos are counted per swipe and paid out when you release or about 0.4 seconds after your last slice. One long stroke through four fruits earns +10 on top of the fruit, while four separate cuts earn no bonus at all.</li>
+          <li><strong>Resting the pointer on a fruit and waiting.</strong> Only a real swipe slices. Keep the mouse or your finger moving through the fruit.</li>
         </ul>
       </section>
 

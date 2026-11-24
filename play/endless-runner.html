@@ -32,30 +32,23 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "VideoGame",
-      "@id": "https://mini-game-arcade-zaim.vercel.app/play/endless-runner#game",
-      "name": "Endless Runner",
+      "@type": "Article",
+      "@id": "https://mini-game-arcade-zaim.vercel.app/play/endless-runner#article",
+      "headline": "How to Play Endless Runner: Rules, Controls & Tips",
       "description": "How to play Endless Runner: jump, double jump and slide controls, spikes, laser drones, energy crystals, score and speed rules, plus beginner tips.",
       "url": "https://mini-game-arcade-zaim.vercel.app/play/endless-runner",
-      "genre": [
-        "Action",
-        "Runner"
-      ],
-      "gamePlatform": "Web browser",
-      "applicationCategory": "Game",
-      "playMode": [
-        "SinglePlayer"
-      ],
+      "mainEntityOfPage": "https://mini-game-arcade-zaim.vercel.app/play/endless-runner",
       "inLanguage": "en",
-      "isAccessibleForFree": true,
+      "about": {
+        "@type": "VideoGame",
+        "@id": "https://mini-game-arcade-zaim.vercel.app/game/endless-runner#game",
+        "name": "Endless Runner",
+        "url": "https://mini-game-arcade-zaim.vercel.app/game/endless-runner"
+      },
       "publisher": {
         "@type": "Organization",
         "name": "Neo Arcade Vault",
         "url": "https://mini-game-arcade-zaim.vercel.app/"
-      },
-      "potentialAction": {
-        "@type": "PlayAction",
-        "target": "https://mini-game-arcade-zaim.vercel.app/game/endless-runner"
       }
     },
     {
@@ -223,6 +216,7 @@
           <li><a href="#features">Special features</a></li>
           <li><a href="#tips">Tips for beginners</a></li>
           <li><a href="#good-to-know">Good to know</a></li>
+          <li><a href="#common-mistakes">Common mistakes</a></li>
           <li><a href="#faq">Endless Runner FAQ</a></li>
         </ol>
       </nav>
@@ -299,6 +293,15 @@
         <h2 id="good-to-know">Good to know</h2>
         <ul>
           <li>Pause with <code>P</code> or <code>Esc</code> and resume with the same key, or click the on-screen Resume button. Either way the run carries on exactly where you stopped.</li>
+        </ul>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="common-mistakes">
+        <h2 id="common-mistakes">Common mistakes in Endless Runner</h2>
+        <ul>
+          <li><strong>Playing with the mouse on a computer.</strong> The game area and the on-screen buttons respond to touch only. Use the keyboard: Space, Up arrow or W to jump, and hold Down arrow or S to slide.</li>
+          <li><strong>Jumping when you should slide.</strong> Orange spikes sit on the ground and are jumped over. Red laser drones hover at head height and must be slid under, so a jump into a drone ends the run.</li>
+          <li><strong>Landing on the next obstacle.</strong> A single jump over a tight spike can drop you onto what follows. The second jump, which you can press while still in the air, lets you stretch the leap.</li>
         </ul>
       </section>
 
