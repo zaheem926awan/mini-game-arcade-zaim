@@ -1094,3 +1094,30 @@ body.vault #main-content { display: block; width: 100%; max-width: none; padding
   #game-portal-view .game-view-header { grid-template-areas: 'back back' 'actions actions' 'badge badge' 'title title'; }
   #game-portal-view .gv-actions { justify-self: start; }
 }
+
+/* Crawlable game links inside cards, hero, recent chips and suggestions: look exactly like the plain titles they wrap. */
+.game-link, .vault .game-link, .vault .game-link:hover, .vault .game-link:visited {
+  color: inherit; font: inherit; letter-spacing: inherit; text-transform: inherit; text-decoration: none;
+  -webkit-text-fill-color: currentColor;
+}
+.vault .game-link:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; border-radius: 2px; }
+
+/* Homepage: "find a game" table and FAQ, placed inside the existing .home-info block */
+.vault .home-extra { grid-column: 1 / -1; margin-top: clamp(40px, 5vw, 72px); }
+.vault .home-extra h2 { margin: 0 0 14px; }
+.vault .home-extra > p { margin: 0 0 22px; font-size: 18px; line-height: 1.65; color: #3a3228; max-width: 70ch; }
+.vault .home-extra .table-scroll { overflow-x: auto; margin: 0 0 clamp(40px, 5vw, 72px); border: 0; border-radius: 0; background: none; }
+.vault .home-extra .table-scroll table { width: 100%; min-width: 560px; border-collapse: collapse; }
+.vault .home-extra .table-scroll th { background: none; color: var(--paper-muted); font: 700 11px var(--f-mono); letter-spacing: 0.14em; text-transform: uppercase; text-align: left; padding: 0 14px 12px 0; border-bottom: 2px solid var(--paper-ink); }
+.vault .home-extra .table-scroll td { color: #3a3228; font-size: 15.5px; line-height: 1.5; padding: 13px 14px 13px 0; border-bottom: 1px solid var(--bone-line); vertical-align: baseline; }
+.vault .home-extra .table-scroll td:first-child { font-weight: 700; white-space: nowrap; }
+.vault .home-extra .faq-item { padding: 18px 0; border-bottom: 1px solid var(--bone-line); max-width: 70ch; background: none; border-radius: 0; }
+.vault .home-extra .faq-item:first-of-type { border-top: 1px solid var(--bone-line); }
+.vault .home-extra .faq-item h3 { margin: 0 0 6px; font: 700 18px/1.35 var(--f-body); letter-spacing: 0; text-transform: none; color: var(--paper-ink); }
+.vault .home-extra .faq-item p { margin: 0; font-size: 16px; line-height: 1.6; color: #3a3228; }
+
+/* FAQ blocks on the playable game pages (same look as the guide pages) */
+.vault-game .faq-item { padding: 18px 0; border-bottom: 1px solid var(--bone-line); max-width: 66ch; background: none; border-radius: 0; }
+.vault-game .faq-item:first-of-type { border-top: 1px solid var(--bone-line); }
+.vault-game .faq-item h3 { margin: 0 0 6px; font: 700 18px/1.35 var(--f-body); letter-spacing: 0; text-transform: none; color: var(--paper-ink); }
+.vault-game .faq-item p { margin: 0; font-size: 16px; line-height: 1.6; color: #3a3228; }
