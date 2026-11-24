@@ -93,6 +93,14 @@ function categoryLabel(game) {
 }
 
 /**
+ * A real, crawlable link to a game's own page (/game/<slug>). A plain click keeps the existing
+ * in-app behaviour (see ArcadePortal.gameLinkClick); open-in-new-tab, copy-link and crawlers use the URL.
+ */
+function gameLink(game, label) {
+  return `<a class="game-link" href="/game/${game.slug}" onclick="return window.ArcadePortal.gameLinkClick(event, '${game.id}')">${label}</a>`;
+}
+
+/**
  * Reads a saved list of game ids (favorites / recently played) from storage.
  * A brand-new visitor has nothing saved, so the list is empty: these sections only ever show
  * the visitor's own activity. Read-only - it never writes, so saved data is never replaced.
@@ -310,7 +318,7 @@ class ArcadePortal {
         <article class="vx-slide ${i === 0 ? 'is-active' : ''}" style="${marqueeVars(g)}" aria-hidden="${i !== 0}">
           <div class="vx-copy">
             <p class="vx-kicker"><span class="vx-idx">${String(i + 1).padStart(2, '0')}<i>/${total}</i></span><span>Featured · ${categoryLabel(g)}</span></p>
-            <h2 class="vx-title">${g.title}</h2>
+            <h2 class="vx-title">${gameLink(g, g.title)}</h2>
             <p class="vx-desc">${g.description}</p>
             <ul class="vx-chips">
               <li>${ico('trophy', 14)} ${best === null ? 'Set your first score' : 'Your best: ' + formatBestScore(g, best)}</li>
@@ -354,7 +362,7 @@ class ArcadePortal {
       </header>
 
       <main id="main-content">
-      <h1 class="sr-only">Neo Arcade Vault: free online mini-games</h1>
+      <h1 class="sr-only">Free Online Arcade Games at Neo Arcade Vault</h1>
       <section class="vx-hero" aria-roledescription="carousel" aria-label="Featured games">
         <div class="vx-slides">${slides}</div>
         <div class="vx-tabs">
@@ -445,7 +453,7 @@ class ArcadePortal {
           ${recentGames.map(g => `
             <div class="recent-chip" onclick="window.ArcadePortal.openGame('${g.id}')">
               <span class="chip-icon" style="background: ${g.gradient}">${artFor(g.id)}</span>
-              <span class="chip-title">${g.title}</span>
+              <span class="chip-title">${gameLink(g, g.title)}</span>
             </div>`).join('')}
         </div>
       </section>`;
@@ -507,7 +515,7 @@ class ArcadePortal {
             <span class="card-play" aria-hidden="true">${ico('play', 20)}</span>
           </div>
           <div class="card-info">
-            <div class="card-header-row"><h3 class="card-title">${game.title}</h3></div>
+            <div class="card-header-row"><h3 class="card-title">${gameLink(game, game.title)}</h3></div>
             <p class="card-blurb">${game.description}</p>
             <div class="card-footer-row">
               <span class="card-cat-tag">${categoryLabel(game)}</span>
@@ -522,6 +530,18 @@ class ArcadePortal {
     this.searchQuery = '';
     this.selectedCategory = 'all';
     this.renderHome();
+  }
+
+  /** Click handler for gameLink(): plain clicks open the game in the app, modified clicks follow the URL. */
+  gameLinkClick(event, gameId) {
+    if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button > 0) {
+      event.stopPropagation(); // let the browser open /game/<slug> (new tab/window), do not also open it here
+      return true;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    this.openGame(gameId);
+    return false;
   }
 
   openGame(gameId) {
@@ -619,7 +639,7 @@ class ArcadePortal {
             <div class="suggested-card" style="${marqueeVars(other)}" tabindex="0" onclick="window.ArcadePortal.openGame('${other.id}')" onkeydown="if (event.target === this && event.key === 'Enter') window.ArcadePortal.openGame('${other.id}')">
               <span class="sc-icon">${artFor(other.id)}</span>
               <div class="sc-info">
-                <span class="sc-title">${other.title}</span>
+                <span class="sc-title">${gameLink(other, other.title)}</span>
                 <span class="sc-cat">${categoryLabel(other)}</span>
               </div>
               <button class="sc-btn" tabindex="-1">Play ${ico('play', 12)}</button>
