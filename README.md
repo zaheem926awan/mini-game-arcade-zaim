@@ -25,7 +25,7 @@ Zero frameworks, zero external image assets, zero build step overheads. Instant 
 
 ## ✨ Arcade Portal Features
 
-- **Cyber Dark & Neon Design System**: Deep dark glassmorphism surfaces, glowing neon accents, and responsive typography.
+- **Marquee Vault Design System**: Warm-black play areas, bone-paper reading areas and a single signal-lime accent, with a per-game marquee colour pair and the Big Shoulders / Instrument Sans / JetBrains Mono type set. See [Design system ("Marquee Vault")](#design-system-marquee-vault) below.
 - **Dynamic Hash Routing**: Single Page Application (SPA) routing (`#/`, `#/game/<id>`, `#/category/<cat>`, `#/favorites`) with full browser history support.
 - **Hero Featured Showcase**: High-impact banner featuring a highlighted game with quick launch and your own best score.
 - **Instant Search & Category Filters**: Real-time filtering across titles, descriptions, categories (Action, Arcade, Puzzle, Strategy, Casual), and tags.
@@ -158,7 +158,9 @@ mini-game-arcade/
 ├── css/
 │   ├── style.css                  # Base arcade styles & Fruit Slice graphics
 │   ├── arcade.css                 # Arcade portal, hero, catalog, game viewports
-│   └── pages.css                  # Content pages, shared nav/footer, forms, responsive rules
+│   ├── pages.css                  # Content pages, shared nav/footer, forms, responsive rules
+│   ├── tokens.css                 # Marquee Vault design tokens (colours, type, spacing, icons)
+│   └── vault.css                  # Marquee Vault components, loaded after the three files above
 ├── js/
 │   ├── site-shell.js              # Shared nav + footer markup used by the portal
 │   ├── contact.js                 # Contact form submit handler (fetch to form service)
