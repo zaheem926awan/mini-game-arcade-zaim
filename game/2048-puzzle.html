@@ -58,6 +58,44 @@
       }
     },
     {
+      "@type": "FAQPage",
+      "@id": "https://mini-game-arcade-zaim.vercel.app/game/2048-puzzle#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Which keys control 2048 Puzzle?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Arrow keys or W A S D slide the tiles, Z or Backspace undoes your last move, and Space or Enter starts a new game after a game over."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How is the score worked out?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Each merge scores the value of the new tile, so merging two 8s gives +16. Sliding without a merge scores nothing."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I drag tiles with the mouse?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Dragging with the mouse does not move tiles. Use the keyboard or click the on-screen arrow buttons, or swipe on a touch screen."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens if I press a direction that cannot move?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No new tile is added, so nothing is lost. It does count as your latest step for Undo, though, so Undo after a blocked press will not take you back any further."
+          }
+        }
+      ]
+    },
+    {
       "@type": "BreadcrumbList",
       "itemListElement": [
         {
@@ -164,7 +202,7 @@
             <h2 id="about-game">About 2048 Puzzle</h2>
             <p>2048 Puzzle is played on a 4 x 4 board. Each move slides every tile one way and merges equal neighbours into a tile of double the value, and a new tile appears after every move that works.</p>
             <p>Reach 2048 to win, or keep going for a higher score. If a move goes wrong, the one-step undo can take it back.</p>
-            <p>2048 Puzzle is free, runs in your browser and needs no download or account. Only your best score is kept on your own device, not the current board. It is one of 10 free games in the <a href="/games">Neo Arcade Vault games collection</a>.</p>
+            <p>2048 Puzzle is free, runs in your browser and needs no download or account. Only your best score is kept on your own device, not the current board. It is one of 2 puzzle games in the vault, together with Block Puzzle. See the <a href="/games#puzzle">Puzzle games</a> or the full <a href="/games">Neo Arcade Vault games collection</a>.</p>
           </section>
 
           <section class="content-card prose" aria-labelledby="game-quickstart">
@@ -217,6 +255,26 @@
               <li>A new tile appears after every move that works, so avoid filling the board with tiles that do not match.</li>
             </ul>
             <p>Want the full rules, scoring table and answers to common questions? Read the <a href="/play/2048-puzzle">2048 Puzzle guide</a>.</p>
+          </section>
+
+          <section class="content-card prose" aria-labelledby="game-faq">
+            <h2 id="game-faq">2048 Puzzle questions answered</h2>
+            <div class="faq-item">
+              <h3>Which keys control 2048 Puzzle?</h3>
+              <p>Arrow keys or W A S D slide the tiles, Z or Backspace undoes your last move, and Space or Enter starts a new game after a game over.</p>
+            </div>
+            <div class="faq-item">
+              <h3>How is the score worked out?</h3>
+              <p>Each merge scores the value of the new tile, so merging two 8s gives +16. Sliding without a merge scores nothing.</p>
+            </div>
+            <div class="faq-item">
+              <h3>Can I drag tiles with the mouse?</h3>
+              <p>No. Dragging with the mouse does not move tiles. Use the keyboard or click the on-screen arrow buttons, or swipe on a touch screen.</p>
+            </div>
+            <div class="faq-item">
+              <h3>What happens if I press a direction that cannot move?</h3>
+              <p>No new tile is added, so nothing is lost. It does count as your latest step for Undo, though, so Undo after a blocked press will not take you back any further.</p>
+            </div>
           </section>
 
           <section class="content-card prose" aria-labelledby="more-games">

@@ -59,6 +59,44 @@
       }
     },
     {
+      "@type": "FAQPage",
+      "@id": "https://mini-game-arcade-zaim.vercel.app/game/tic-tac-toe#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Which difficulty should I start with?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Easy always plays a random legal move, and Medium plays the best move about 65% of the time. Invincible looks ahead through every continuation, so the best you can get against it is a draw."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who moves first?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "X always moves first. Against the computer you are X, and in 2 Players mode X and O take turns on the same screen."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does the win tally keep track of?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "X wins, ties and O wins while the page stays open. Changing mode or difficulty gives you a fresh board but keeps the tally, and reloading the page resets it."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I know a round is over?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The status line announces the result, and a completed row, column or diagonal is highlighted in gold. A full board with no line is a draw."
+          }
+        }
+      ]
+    },
+    {
       "@type": "BreadcrumbList",
       "itemListElement": [
         {
@@ -165,7 +203,7 @@
             <h2 id="about-game">About Tic-Tac-Toe</h2>
             <p>Tic-Tac-Toe here has two modes: a computer opponent set to Easy, Medium or Invincible, or two players sharing one device. In the computer mode you play X and move first.</p>
             <p>A win tally is kept while the page stays open, and a completed line is highlighted so you can see exactly how the round ended.</p>
-            <p>Tic-Tac-Toe is free, runs in your browser and needs no download or account. The win tally lasts only while the page stays open. It is one of 10 free games in the <a href="/games">Neo Arcade Vault games collection</a>.</p>
+            <p>Tic-Tac-Toe is free, runs in your browser and needs no download or account. The win tally lasts only while the page stays open. It is the only strategy game in the vault. See the <a href="/games#strategy">Strategy games</a> or the full <a href="/games">Neo Arcade Vault games collection</a>.</p>
           </section>
 
           <section class="content-card prose" aria-labelledby="game-quickstart">
@@ -218,6 +256,26 @@
               <li>Against Invincible, aim not to lose. A draw is the best possible result.</li>
             </ul>
             <p>Want the full rules, scoring table and answers to common questions? Read the <a href="/play/tic-tac-toe">Tic-Tac-Toe guide</a>.</p>
+          </section>
+
+          <section class="content-card prose" aria-labelledby="game-faq">
+            <h2 id="game-faq">Tic-Tac-Toe questions answered</h2>
+            <div class="faq-item">
+              <h3>Which difficulty should I start with?</h3>
+              <p>Easy always plays a random legal move, and Medium plays the best move about 65% of the time. Invincible looks ahead through every continuation, so the best you can get against it is a draw.</p>
+            </div>
+            <div class="faq-item">
+              <h3>Who moves first?</h3>
+              <p>X always moves first. Against the computer you are X, and in 2 Players mode X and O take turns on the same screen.</p>
+            </div>
+            <div class="faq-item">
+              <h3>What does the win tally keep track of?</h3>
+              <p>X wins, ties and O wins while the page stays open. Changing mode or difficulty gives you a fresh board but keeps the tally, and reloading the page resets it.</p>
+            </div>
+            <div class="faq-item">
+              <h3>How do I know a round is over?</h3>
+              <p>The status line announces the result, and a completed row, column or diagonal is highlighted in gold. A full board with no line is a draw.</p>
+            </div>
           </section>
 
           <section class="content-card prose" aria-labelledby="more-games">
