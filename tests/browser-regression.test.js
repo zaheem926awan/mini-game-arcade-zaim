@@ -145,6 +145,35 @@ async function test(name, fn) {
     assert.strictEqual(await page.evaluate(() => document.querySelectorAll('.home-info a[href^="/game/"]').length), 10);
   });
 
+  await test('SEO: catalog cards and hero are real /game/<slug> links; a plain click opens in-app, Ctrl-click follows the URL', async () => {
+    await page.goto(`${url}/`);
+    await page.reload();
+    await page.waitForSelector('.game-card');
+    const hrefs = await page.evaluate(() => [...document.querySelectorAll('.game-card a.game-link')].map(a => a.getAttribute('href')).sort());
+    assert.deepStrictEqual(hrefs, Object.values(GAMES).map(([slug]) => `/game/${slug}`).sort(), 'one crawlable link per catalog card');
+    const hero = await page.evaluate(() => [...document.querySelectorAll('.vx-slide a.game-link')].map(a => a.getAttribute('href')));
+    assert(hero.length > 0 && hero.every(h => /^\/game\/[a-z0-9-]+$/.test(h)), 'hero titles are links to game pages');
+    // plain click: the existing in-app behaviour (hash route, game mounted, no full page load)
+    await page.click('.game-card[data-id="snake"] a.game-link');
+    await page.waitForSelector('#snake-btn-play');
+    assert(page.url().endsWith('#/game/snake'), `plain click should open the game in the app, got ${page.url()}`);
+    // modified click: opens the real URL in a new tab and does not also open the game here
+    await page.goto(`${url}/`);
+    await page.reload();
+    await page.waitForSelector('.game-card');
+    const [popup] = await Promise.all([
+      page.context().waitForEvent('page'),
+      page.click('.game-card[data-id="snake"] a.game-link', { modifiers: ['Control'] })
+    ]);
+    await popup.waitForLoadState();
+    assert(popup.url().endsWith('/game/neon-snake'), `Ctrl-click should open /game/neon-snake, got ${popup.url()}`);
+    await popup.close();
+    assert(!page.url().includes('#/game/'), 'Ctrl-click must not also open the game in the original tab');
+    // the favorite button on a card must still not open the game
+    await page.click('.game-card[data-id="snake"] .card-fav-btn');
+    assert(!page.url().includes('#/game/'), 'favorite button must not open the game');
+  });
+
   await test('C1: portal "Open on its own page" link leads to the matching direct page', async () => {
     await page.goto(`${url}/#/game/block-puzzle`);
     await page.reload();
