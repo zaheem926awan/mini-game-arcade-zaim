@@ -32,30 +32,23 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "VideoGame",
-      "@id": "https://mini-game-arcade-zaim.vercel.app/play/whack-a-mole#game",
-      "name": "Whack-a-Mole",
+      "@type": "Article",
+      "@id": "https://mini-game-arcade-zaim.vercel.app/play/whack-a-mole#article",
+      "headline": "How to Play Whack-a-Mole: Rules, Controls & Tips",
       "description": "How to play Whack-a-Mole: click or tap moles and golden stars, avoid bombs, build combos for bonus multipliers and beat the 30-second timer.",
       "url": "https://mini-game-arcade-zaim.vercel.app/play/whack-a-mole",
-      "genre": [
-        "Casual",
-        "Reflex"
-      ],
-      "gamePlatform": "Web browser",
-      "applicationCategory": "Game",
-      "playMode": [
-        "SinglePlayer"
-      ],
+      "mainEntityOfPage": "https://mini-game-arcade-zaim.vercel.app/play/whack-a-mole",
       "inLanguage": "en",
-      "isAccessibleForFree": true,
+      "about": {
+        "@type": "VideoGame",
+        "@id": "https://mini-game-arcade-zaim.vercel.app/game/whack-a-mole#game",
+        "name": "Whack-a-Mole",
+        "url": "https://mini-game-arcade-zaim.vercel.app/game/whack-a-mole"
+      },
       "publisher": {
         "@type": "Organization",
         "name": "Neo Arcade Vault",
         "url": "https://mini-game-arcade-zaim.vercel.app/"
-      },
-      "potentialAction": {
-        "@type": "PlayAction",
-        "target": "https://mini-game-arcade-zaim.vercel.app/game/whack-a-mole"
       }
     },
     {
@@ -223,6 +216,7 @@
           <li><a href="#features">Special features</a></li>
           <li><a href="#tips">Tips for beginners</a></li>
           <li><a href="#good-to-know">Good to know</a></li>
+          <li><a href="#common-mistakes">Common mistakes</a></li>
           <li><a href="#faq">Whack-a-Mole FAQ</a></li>
         </ol>
       </nav>
@@ -295,6 +289,15 @@
         <h2 id="good-to-know">Good to know</h2>
         <ul>
           <li>Pause with <code>P</code> or <code>Esc</code> and resume with the same key, or click the on-screen Resume button. The round carries on where you stopped and the 30-second clock stays frozen while paused. Moles that are showing when you pause may disappear in the meantime.</li>
+        </ul>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="common-mistakes">
+        <h2 id="common-mistakes">Common mistakes in Whack-a-Mole</h2>
+        <ul>
+          <li><strong>Hitting bombs in a rush.</strong> A bomb costs 15 points (never below 0) and resets your combo, which is the only thing that can. Missed moles are free, so skip an uncertain hole.</li>
+          <li><strong>Leaving a golden star until later.</strong> Stars stay up for only 0.75 seconds and are worth 30 points, three times a mole. Hit them first.</li>
+          <li><strong>Letting the pointer wander.</strong> Keep your pointer or finger near the middle of the board so that every hole is within quick reach.</li>
         </ul>
       </section>
 

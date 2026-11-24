@@ -32,31 +32,23 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "VideoGame",
-      "@id": "https://mini-game-arcade-zaim.vercel.app/play/tic-tac-toe#game",
-      "name": "Tic-Tac-Toe",
+      "@type": "Article",
+      "@id": "https://mini-game-arcade-zaim.vercel.app/play/tic-tac-toe#article",
+      "headline": "How to Play Tic-Tac-Toe: Rules, Controls & Tips",
       "description": "How to play Tic-Tac-Toe online: rules, vs Computer and 2 Players modes, Easy, Medium and Invincible difficulty, the win tally and tips for beginners.",
       "url": "https://mini-game-arcade-zaim.vercel.app/play/tic-tac-toe",
-      "genre": [
-        "Strategy",
-        "Board game"
-      ],
-      "gamePlatform": "Web browser",
-      "applicationCategory": "Game",
-      "playMode": [
-        "SinglePlayer",
-        "MultiPlayer"
-      ],
+      "mainEntityOfPage": "https://mini-game-arcade-zaim.vercel.app/play/tic-tac-toe",
       "inLanguage": "en",
-      "isAccessibleForFree": true,
+      "about": {
+        "@type": "VideoGame",
+        "@id": "https://mini-game-arcade-zaim.vercel.app/game/tic-tac-toe#game",
+        "name": "Tic-Tac-Toe",
+        "url": "https://mini-game-arcade-zaim.vercel.app/game/tic-tac-toe"
+      },
       "publisher": {
         "@type": "Organization",
         "name": "Neo Arcade Vault",
         "url": "https://mini-game-arcade-zaim.vercel.app/"
-      },
-      "potentialAction": {
-        "@type": "PlayAction",
-        "target": "https://mini-game-arcade-zaim.vercel.app/game/tic-tac-toe"
       }
     },
     {
@@ -224,6 +216,7 @@
           <li><a href="#features">Special features</a></li>
           <li><a href="#tips">Tips for beginners</a></li>
           <li><a href="#good-to-know">Good to know</a></li>
+          <li><a href="#common-mistakes">Common mistakes</a></li>
           <li><a href="#faq">Tic-Tac-Toe FAQ</a></li>
         </ol>
       </nav>
@@ -297,6 +290,15 @@
         <h2 id="good-to-know">Good to know</h2>
         <ul>
           <li>Only a completed row, column or diagonal is highlighted in gold. The round is over when the status line announces a result.</li>
+        </ul>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="common-mistakes">
+        <h2 id="common-mistakes">Common mistakes in Tic-Tac-Toe</h2>
+        <ul>
+          <li><strong>Playing for a win against Invincible.</strong> Invincible looks ahead through every continuation, so the best result you can get is a draw. Aim not to lose, and practise winning on Easy or Medium.</li>
+          <li><strong>Missing the block.</strong> Before each move, check whether your opponent has two in a line with an empty third cell. A missed block ends the round.</li>
+          <li><strong>Changing mode or difficulty mid-round.</strong> Either change clears the board and starts a fresh round. The win tally is kept, but the position you were playing is gone.</li>
         </ul>
       </section>
 

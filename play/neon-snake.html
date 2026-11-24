@@ -32,30 +32,23 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "VideoGame",
-      "@id": "https://mini-game-arcade-zaim.vercel.app/play/neon-snake#game",
-      "name": "Neon Snake",
+      "@type": "Article",
+      "@id": "https://mini-game-arcade-zaim.vercel.app/play/neon-snake#article",
+      "headline": "How to Play Neon Snake: Rules, Controls & Tips",
       "description": "How to play Neon Snake: arrow key, WASD, swipe and D-pad controls, apple and golden star scoring, speed-ups and what ends a run, plus beginner tips.",
       "url": "https://mini-game-arcade-zaim.vercel.app/play/neon-snake",
-      "genre": [
-        "Arcade",
-        "Classic"
-      ],
-      "gamePlatform": "Web browser",
-      "applicationCategory": "Game",
-      "playMode": [
-        "SinglePlayer"
-      ],
+      "mainEntityOfPage": "https://mini-game-arcade-zaim.vercel.app/play/neon-snake",
       "inLanguage": "en",
-      "isAccessibleForFree": true,
+      "about": {
+        "@type": "VideoGame",
+        "@id": "https://mini-game-arcade-zaim.vercel.app/game/neon-snake#game",
+        "name": "Neon Snake",
+        "url": "https://mini-game-arcade-zaim.vercel.app/game/neon-snake"
+      },
       "publisher": {
         "@type": "Organization",
         "name": "Neo Arcade Vault",
         "url": "https://mini-game-arcade-zaim.vercel.app/"
-      },
-      "potentialAction": {
-        "@type": "PlayAction",
-        "target": "https://mini-game-arcade-zaim.vercel.app/game/neon-snake"
       }
     },
     {
@@ -223,6 +216,7 @@
           <li><a href="#features">Special features</a></li>
           <li><a href="#tips">Tips for beginners</a></li>
           <li><a href="#good-to-know">Good to know</a></li>
+          <li><a href="#common-mistakes">Common mistakes</a></li>
           <li><a href="#faq">Neon Snake FAQ</a></li>
         </ol>
       </nav>
@@ -298,6 +292,15 @@
         <ul>
           <li>Pause with <code>P</code> or <code>Esc</code> and resume with the same key, or click the on-screen Resume button. Either way the run carries on exactly where you stopped.</li>
           <li>A golden star's 6-second timer keeps running while the game is paused.</li>
+        </ul>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="common-mistakes">
+        <h2 id="common-mistakes">Common mistakes in Neon Snake</h2>
+        <ul>
+          <li><strong>Tapping two directions at once.</strong> Only one pending turn is stored per step, so a quick double tap can be wasted. Tap once, wait for the snake to move, then turn again.</li>
+          <li><strong>Chasing the golden star on a crowded board.</strong> The star is worth 50 points but lasts only 6 seconds, and a crash ends the run. If the route is not safe, skip it and wait for the next one.</li>
+          <li><strong>Trying to turn around on the spot.</strong> Pressing the opposite direction is ignored. To double back, turn sideways first and then turn again, leaving room for the whole length of the snake.</li>
         </ul>
       </section>
 

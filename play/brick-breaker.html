@@ -32,30 +32,23 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "VideoGame",
-      "@id": "https://mini-game-arcade-zaim.vercel.app/play/brick-breaker#game",
-      "name": "Brick Breaker",
+      "@type": "Article",
+      "@id": "https://mini-game-arcade-zaim.vercel.app/play/brick-breaker#article",
+      "headline": "How to Play Brick Breaker: Rules, Controls & Tips",
       "description": "How to play Brick Breaker: paddle controls for mouse, keyboard and touch, brick hit points, power-up capsules, 3 stages, 3 lives and scoring explained.",
       "url": "https://mini-game-arcade-zaim.vercel.app/play/brick-breaker",
-      "genre": [
-        "Arcade",
-        "Breakout"
-      ],
-      "gamePlatform": "Web browser",
-      "applicationCategory": "Game",
-      "playMode": [
-        "SinglePlayer"
-      ],
+      "mainEntityOfPage": "https://mini-game-arcade-zaim.vercel.app/play/brick-breaker",
       "inLanguage": "en",
-      "isAccessibleForFree": true,
+      "about": {
+        "@type": "VideoGame",
+        "@id": "https://mini-game-arcade-zaim.vercel.app/game/brick-breaker#game",
+        "name": "Brick Breaker",
+        "url": "https://mini-game-arcade-zaim.vercel.app/game/brick-breaker"
+      },
       "publisher": {
         "@type": "Organization",
         "name": "Neo Arcade Vault",
         "url": "https://mini-game-arcade-zaim.vercel.app/"
-      },
-      "potentialAction": {
-        "@type": "PlayAction",
-        "target": "https://mini-game-arcade-zaim.vercel.app/game/brick-breaker"
       }
     },
     {
@@ -223,6 +216,7 @@
           <li><a href="#features">Special features</a></li>
           <li><a href="#tips">Tips for beginners</a></li>
           <li><a href="#good-to-know">Good to know</a></li>
+          <li><a href="#common-mistakes">Common mistakes</a></li>
           <li><a href="#faq">Brick Breaker FAQ</a></li>
         </ol>
       </nav>
@@ -300,6 +294,15 @@
         <h2 id="good-to-know">Good to know</h2>
         <ul>
           <li>Pause with <code>P</code> or <code>Esc</code> and resume with the same key, or click the on-screen Resume button. Either way the run carries on exactly where you stopped.</li>
+        </ul>
+      </section>
+
+      <section class="content-card prose" aria-labelledby="common-mistakes">
+        <h2 id="common-mistakes">Common mistakes in Brick Breaker</h2>
+        <ul>
+          <li><strong>Not being ready at launch.</strong> The ball moves the moment you press LAUNCH BALL, and the next ball launches straight away after you lose a life. Position the paddle under the launch point first.</li>
+          <li><strong>Returning every ball with the centre of the paddle.</strong> The centre sends the ball almost straight up. Use the edges to send it sideways, which is how you reach bricks in the corners.</li>
+          <li><strong>Leaving multi-hit bricks behind.</strong> A gold brick takes 3 hits and shows the hits remaining as a small number. Skipping it to chase easier bricks only leaves it waiting at the end of the stage.</li>
         </ul>
       </section>
 

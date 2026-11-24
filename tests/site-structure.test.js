@@ -482,19 +482,19 @@ test('Play guides: every guide has the required content sections and 5+ FAQs', (
   }
 });
 
-test('Play guides: structured data (VideoGame, BreadcrumbList, FAQPage) is valid and consistent', () => {
+test('Play guides: structured data (Article about the game, BreadcrumbList, FAQPage) is valid and consistent', () => {
   const origin = collectOrigins()[0].origin;
   for (const slug of Object.values(PLAY_SLUGS)) {
     const h = playHtml(slug), url = `${origin}/play/${slug}`;
     const g = jsonLdOf(h)['@graph'];
-    const game = g.find(x => x['@type'] === 'VideoGame');
+    const game = g.find(x => x['@type'] === 'Article');
+    assert(!g.some(x => x['@type'] === 'VideoGame'), `${slug}: the guide must not declare a VideoGame (the /game page does)`);
     const crumbs = g.find(x => x['@type'] === 'BreadcrumbList');
     const faq = g.find(x => x['@type'] === 'FAQPage');
-    assert(game && crumbs && faq, `${slug}: JSON-LD must contain VideoGame, BreadcrumbList and FAQPage`);
-    assert.strictEqual(game.url, url, `${slug}: VideoGame url`);
-    assert.strictEqual(game.description, metaOf(h).desc, `${slug}: VideoGame description must equal the meta description`);
-    assert.strictEqual(game.isAccessibleForFree, true);
-    assert(game.potentialAction && game.potentialAction.target === `${origin}${h.match(/class="btn-link" href="([^"]+)"/)[1]}`, `${slug}: PlayAction target must be the Play Now route`);
+    assert(game && crumbs && faq, `${slug}: JSON-LD must contain Article, BreadcrumbList and FAQPage`);
+    assert.strictEqual(game.url, url, `${slug}: Article url`);
+    assert.strictEqual(game.description, metaOf(h).desc, `${slug}: Article description must equal the meta description`);
+    assert(game.about && game.about['@type'] === 'VideoGame' && game.about.url === `${origin}${h.match(/class="btn-link" href="([^"]+)"/)[1]}`, `${slug}: Article.about must point at the Play Now route`);
     assert.strictEqual(crumbs.itemListElement.length, 3, `${slug}: breadcrumb length`);
     assert.strictEqual(crumbs.itemListElement[2].item, url, `${slug}: breadcrumb last item`);
     assert.strictEqual(faq.mainEntity.length, (h.match(/class="faq-item"/g) || []).length, `${slug}: FAQ JSON-LD must match the visible FAQs`);
@@ -646,9 +646,9 @@ test('Homepage static HTML: one intro/guide section inside <main>, with a clean 
   const levels = (page.match(/<h([1-6])[ >]/g) || []).map(x => Number(x[2]));
   levels.forEach((lv, i) => assert(i === 0 ? lv === 1 : lv <= levels[i - 1] + 1, `heading level jumps from h${levels[i - 1]} to h${lv}`));
   const h2s = (section.match(/<h2[ >]/g) || []).length, h3s = (section.match(/<h3[ >]/g) || []).length;
-  assert(h2s === 2 && h3s === 10, `expected 2 h2 and 10 h3 in the section, found ${h2s} h2 and ${h3s} h3`);
+  assert(h2s === 4 && h3s === 16, `expected 4 h2 and 16 h3 in the section (about, ten games, find-a-game table, FAQ), found ${h2s} h2 and ${h3s} h3`);
   const words = plain(section).split(' ').length;
-  assert(words >= 300 && words <= 700, `static section should be useful but light (found ${words} words)`);
+  assert(words >= 300 && words <= 1300, `static section should be useful but not bloated (found ${words} words; the cap was raised from 700 when the find-a-game table and FAQ were added)`);
   assert(/free/i.test(section) && /no account|nothing to install/i.test(section), 'intro must explain what the site is and that it is free');
 });
 
@@ -1035,6 +1035,126 @@ test('SEO: AdSense, GA4, Search Console, ads.txt, robots.txt and sitemap configu
     assert.strictEqual((h.match(/googletagmanager\.com\/gtag\/js\?id=G-LJY94260LN/g) || []).length, 1, `${g}: GA4 loader exactly once`);
     assert.strictEqual((h.match(/gtag\('config', 'G-LJY94260LN'\)/g) || []).length, 1, `${g}: GA4 config exactly once`);
     assert(!/pagead2\.googlesyndication|adsbygoogle/.test(h), `${g}: game pages must not gain ad code as part of the SEO change`);
+  }
+});
+
+// ---------------------------------------------------------------------------------------------
+// SEO update: crawlable catalog links, homepage / games / game-page / guide content, sitemap
+// ---------------------------------------------------------------------------------------------
+const sitemapEntries = () => [...read('sitemap.xml').matchAll(/<url>([\s\S]*?)<\/url>/g)].map(m => ({
+  loc: (m[1].match(/<loc>([^<]+)<\/loc>/) || [])[1],
+  lastmod: (m[1].match(/<lastmod>([^<]+)<\/lastmod>/) || [])[1]
+}));
+const faqItems = (h) => [...h.matchAll(/<div class="faq-item">\s*<h3>([\s\S]*?)<\/h3>\s*<p>([\s\S]*?)<\/p>/g)].map(m => [decodeEntities(m[1]), decodeEntities(m[2])]);
+
+test('Catalog links: cards, hero, recent chips and suggestions render real /game/<slug> links', () => {
+  const src = read('js/arcade.js');
+  assert(/function gameLink\(game, label\)/.test(src), 'gameLink helper is missing');
+  assert(src.includes('href="/game/${game.slug}"'), 'gameLink must point at /game/<slug>');
+  assert(src.includes('<h3 class="card-title">${gameLink(game, game.title)}</h3>'), 'catalog card title must be a link');
+  assert(src.includes('<h2 class="vx-title">${gameLink(g, g.title)}</h2>'), 'hero title must be a link');
+  assert(src.includes('<span class="chip-title">${gameLink(g, g.title)}</span>'), 'recent chip title must be a link');
+  assert(src.includes('<span class="sc-title">${gameLink(other, other.title)}</span>'), 'suggested card title must be a link');
+  assert(/event\.ctrlKey \|\| event\.metaKey \|\| event\.shiftKey \|\| event\.altKey \|\| event\.button > 0/.test(src), 'modified clicks must follow the URL');
+});
+
+test('Homepage SEO: arcade keywords in title, description and H1; FAQ matches its JSON-LD', () => {
+  const h = read('index.html'), m = metaOf(h);
+  assert(/free online arcade games/i.test(m.title) && /browser games/i.test(m.title), `title: ${m.title}`);
+  assert(/free online arcade games/i.test(m.desc), 'description should name free online arcade games');
+  assert(/free online arcade games/i.test(m.h1), `h1: ${m.h1}`);
+  assert(/free online arcade games/i.test(read('js/arcade.js').match(/<h1 class="sr-only">([^<]+)<\/h1>/)[1]), 'rendered sr-only h1 must match the static topic');
+  const g = jsonLdOf(h)['@graph'];
+  for (const t of ['WebSite', 'Organization', 'ItemList', 'FAQPage']) assert(g.some(n => n['@type'] === t), `homepage JSON-LD needs ${t}`);
+  const list = g.find(n => n['@type'] === 'ItemList');
+  assert.strictEqual(list.itemListElement.length, 10);
+  list.itemListElement.forEach(i => assert(i.url.startsWith(`${ORIGIN}/game/`) && resolves(i.url.slice(ORIGIN.length))));
+  const faq = g.find(n => n['@type'] === 'FAQPage'), visible = faqItems(liveHtml('index.html'));
+  assert.strictEqual(faq.mainEntity.length, visible.length, 'FAQ JSON-LD must match the visible FAQ');
+  visible.forEach(([q, a], i) => { assert.strictEqual(faq.mainEntity[i].name, q); assert.strictEqual(faq.mainEntity[i].acceptedAnswer.text, a); });
+  assert(!/aggregateRating|ratingValue|reviewCount/.test(h), 'no fake ratings');
+});
+
+test('Homepage SEO: the find-a-game table lists all 10 games with controls and run endings', () => {
+  const { section } = homeInfo();
+  const rows = [...section.matchAll(/<tr><td>([^<]+)<\/td><td>([^<]+)<\/td><td>([^<]+)<\/td><\/tr>/g)];
+  assert.strictEqual(rows.length, 10, `expected 10 rows, found ${rows.length}`);
+  const { ARCADE_GAMES } = require('../js/arcade.js');
+  for (const g of ARCADE_GAMES) assert(rows.some(r => r[1] === g.title), `table is missing ${g.title}`);
+});
+
+test('Games page: category sections are crawlable and structured data lists all 10 games', () => {
+  const h = read('games.html'), { ARCADE_GAMES } = require('../js/arcade.js');
+  assert(!/<p class="page-meta">[^]*?href="\/#\/category/.test(h.split('</section>')[0]), 'category links in the page header must be real in-page anchors');
+  for (const cat of ['action', 'arcade', 'puzzle', 'strategy', 'casual']) {
+    assert(h.includes(`<h3 id="${cat}">`), `missing category section #${cat}`);
+    const n = ARCADE_GAMES.filter(g => g.category === cat).length;
+    assert(h.includes(`${cat.charAt(0).toUpperCase() + cat.slice(1)} games (${n})</h3>`), `${cat}: heading count must be ${n}`);
+    for (const g of ARCADE_GAMES.filter(x => x.category === cat)) {
+      const sec = h.slice(h.indexOf(`<h3 id="${cat}">`)); const block = sec.slice(0, sec.indexOf('</p>', sec.indexOf('Play ')) + 4);
+      assert(block.includes(`/game/${g.slug}`) && block.includes(`/play/${g.slug}`), `${cat}: must link ${g.slug} and its guide`);
+    }
+  }
+  const ld = jsonLdOf(h)['@graph'];
+  assert(ld.some(n => n['@type'] === 'CollectionPage') && ld.some(n => n['@type'] === 'BreadcrumbList'));
+  assert.strictEqual(ld.find(n => n['@type'] === 'ItemList').itemListElement.length, 10);
+});
+
+test('Game pages: 4 game-specific FAQs each, matching FAQPage JSON-LD, unique across the site', () => {
+  const seen = new Set();
+  for (const slug of Object.values(PLAY_SLUGS)) {
+    const h = gameHtml(slug), faqs = faqItems(h);
+    assert.strictEqual(faqs.length, 4, `${slug}: expected 4 FAQs`);
+    const node = jsonLdOf(h)['@graph'].find(n => n['@type'] === 'FAQPage');
+    assert(node, `${slug}: FAQPage JSON-LD missing`);
+    assert.strictEqual(node.mainEntity.length, 4, `${slug}: JSON-LD must match the visible FAQs`);
+    faqs.forEach(([q, a], i) => {
+      assert.strictEqual(node.mainEntity[i].name, q); assert.strictEqual(node.mainEntity[i].acceptedAnswer.text, a);
+      assert(a.length >= 60, `${slug}: FAQ answer too thin: ${q}`);
+      assert(!seen.has(q), `duplicate FAQ question across game pages: ${q}`); seen.add(q);
+    });
+    const guideQs = new Set(faqItems(playHtml(slug)).map(x => x[0]));
+    faqs.forEach(([q]) => assert(!guideQs.has(q), `${slug}: game-page FAQ repeats a guide FAQ: ${q}`));
+  }
+});
+
+test('Game pages: closing paragraph is unique per game and links its category on /games', () => {
+  const { ARCADE_GAMES } = require('../js/arcade.js'), closings = new Set();
+  for (const g of ARCADE_GAMES) {
+    const h = gameHtml(g.slug), m = h.match(/id="about-game">[\s\S]*?<\/section>/)[0];
+    assert(m.includes(`href="/games#${g.category}"`), `${g.slug}: must link /games#${g.category}`);
+    const last = plain(m).split('. ').slice(-3).join('. ');
+    assert(!closings.has(last), `${g.slug}: closing paragraph is not unique`); closings.add(last);
+  }
+});
+
+test('Play guides: a Common mistakes section (3 items) is linked from the contents list', () => {
+  for (const slug of Object.values(PLAY_SLUGS)) {
+    const h = playHtml(slug);
+    assert(h.includes('<li><a href="#common-mistakes">Common mistakes</a></li>'), `${slug}: contents link`);
+    const sec = h.match(/aria-labelledby="common-mistakes">[\s\S]*?<\/section>/);
+    assert(sec, `${slug}: section missing`);
+    assert.strictEqual((sec[0].match(/<li><strong>/g) || []).length, 3, `${slug}: expected 3 mistakes`);
+    assert(h.indexOf('id="common-mistakes"') < h.indexOf('id="faq"'), `${slug}: mistakes come before the FAQ`);
+  }
+});
+
+test('Sitemap: every indexable page is listed once; lastmod is a real ISO date, never in the future', () => {
+  const entries = sitemapEntries(), locs = entries.map(e => e.loc);
+  assert.strictEqual(new Set(locs).size, locs.length, 'duplicate sitemap entries');
+  const expected = Object.keys(PAGES).filter(f => f !== '404.html').map(f => ORIGIN + (PAGES[f] === '/' ? '/' : PAGES[f]))
+    .concat(Object.values(PLAY_SLUGS).map(s => `${ORIGIN}/play/${s}`), Object.values(PLAY_SLUGS).map(s => `${ORIGIN}/game/${s}`));
+  assert.deepStrictEqual([...locs].sort(), expected.sort(), 'sitemap must list exactly the indexable pages');
+  // every listed URL must be the page's own canonical
+  for (const l of locs) {
+    const rel = l.slice(ORIGIN.length) || '/', file = rel === '/' ? 'index.html' : (fs.existsSync(path.join(ROOT, rel.slice(1) + '.html')) ? rel.slice(1) + '.html' : null);
+    assert(file, `${l}: no file`); assert.strictEqual(metaOf(read(file)).canonical, l, `${l}: sitemap URL must equal the canonical`);
+    assert(!/noindex/.test(read(file)), `${l}: noindex page in sitemap`);
+  }
+  const today = new Date().toISOString().slice(0, 10);
+  for (const e of entries.filter(e => e.lastmod)) {
+    assert(/^\d{4}-\d{2}-\d{2}$/.test(e.lastmod) && !isNaN(Date.parse(e.lastmod)), `${e.loc}: bad lastmod ${e.lastmod}`);
+    assert(e.lastmod <= today, `${e.loc}: lastmod is in the future`);
   }
 });
 
