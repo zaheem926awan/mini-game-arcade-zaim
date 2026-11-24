@@ -83,18 +83,18 @@ const GAMES = {
     tips: ['Hit the ball with the paddle edge to send it sideways and reach bricks in the corners.', 'With multi-ball you only lose a life when the last ball falls, so it is the safest capsule to chase.', 'Check the numbers on bricks. A 3-hit gold brick takes three hits, so do not leave it behind.']
   },
   'space-shooter': {
-    seoTitle: 'Play Space Shooter: Free Arcade Shooter',
-    metaDesc: 'Play Space Shooter free online: fly a starfighter, blast drones, cruisers and asteroids and grab triple-shot, shield and bomb power-ups. No download needed.',
-    quickStart: 'Your ship starts at the bottom centre with twin cannons. In the first wave enemies arrive about every 1.4 seconds, which leaves time to line up each orange cruiser: three hits, 50 points, and the only enemy that shoots back. Waves speed up the arrivals as your score rises.',
-    deviceNote: 'On a computer, fly with the keyboard and fire with Space. The mouse flies the ship but cannot fire. On a phone, dragging fires automatically.',
-    closing: 'Space Shooter is free, runs in your browser and needs no download or account. Your best score is saved on your own device when a run ends.',
+    seoTitle: 'Play Space Shooter: Free Arcade Campaign',
+    metaDesc: 'Play Space Shooter free online: fly five unlockable ships through six sectors, fight six bosses, earn coins and upgrade your fighter. No download needed.',
+    quickStart: 'Press Launch and your Vanguard starts at the bottom centre with twin cannons and a shield of 3 points. The first mission asks you to destroy 25 enemies. Pick up the gold coins enemies drop, then spend them in the hangar on new ships and upgrades before the next sector.',
+    deviceNote: 'On a computer, fly with the arrow keys or WASD, hold Space to fire and press Shift or E for your special ability. The mouse also flies the ship, and holding the left button fires. On a phone, drag to fly (the ship fires automatically) and use the on-screen Ability button.',
+    closing: 'Space Shooter is free, runs in your browser and needs no download or account. Your coins, ships, upgrades, missions and medals are saved on your own device.',
     intro: [
-      'Space Shooter puts you in a starfighter with three shield points. Drones, heavy cruisers and asteroids come down the screen in busier and busier waves, and only the cruisers shoot back.',
-      'Rare power-ups add a triple shot, a shield point or a bomb that clears the screen the moment you touch it.'
+      'Space Shooter is a vertical shooter campaign. Fly a starfighter through six sectors, from the Dust Belt to the Void Core, shooting drones, weavers, kamikazes, gunships, snipers, asteroids and carriers. Every sector ends with a boss fight that has its own attack patterns.',
+      'Coins from enemies and missions unlock five ships and upgrade damage, fire rate, shield, speed and your special ability. Power-ups add rapid fire, spread shots, an overshield, repairs and ability charges.'
     ],
-    facts: [['Category', 'Action'], ['Shield', '3 points'], ['Enemy types', '3'], ['Best score', 'Saved in this browser']],
-    controls: [['Arrow keys or W A S D', 'Fly in any direction.'], ['Space or Enter', 'Fire. Hold for continuous fire.'], ['P or Esc', 'Pause and resume.'], ['Touch', 'Drag to fly. The ship fires automatically while you drag.']],
-    tips: ['Shoot cruisers first. They are the only enemies that fire back, and they take three hits.', 'Do not ram enemies. A collision costs a shield point and scores nothing.', 'Letting an enemy slip off the bottom is free, so never risk your shield for a drone you cannot reach.']
+    facts: [['Category', 'Action'], ['Shield', '3 points'], ['Campaign', '6 sectors, 18 missions'], ['Progress', 'Saved in this browser']],
+    controls: [['Arrow keys or W A S D', 'Fly in any direction.'], ['Space or Enter', 'Fire. Hold for continuous fire.'], ['Shift, E or Q', 'Use your ship\'s special ability.'], ['P or Esc', 'Pause and resume.'], ['Touch', 'Drag to fly. The ship fires automatically while you drag. Use the on-screen Ability button.']],
+    tips: ['Shoot snipers and gunships first. They are the enemies that fire back, and snipers show a warning line before they shoot.', 'Do not ram enemies. A collision costs a shield point, so slip past anything you cannot destroy in time.', 'Spend your first coins on a Shield Strength upgrade: more shield points forgive early mistakes while you learn each boss pattern.']
   },
   'puzzle-2048': {
     seoTitle: 'Play 2048 Puzzle: Free Tile Merge Game',
@@ -187,7 +187,7 @@ const BLURB = {
   'fruit-slice': 'A 60-second blade game with combos and bombs.',
   'snake': 'Steer a growing snake around a 22 x 22 board.',
   'brick-breaker': 'Clear three stages of bricks with a paddle and a ball.',
-  'space-shooter': 'A vertical shooter with three enemy types and power-ups.',
+  'space-shooter': 'A campaign shooter with five ships, six sectors, bosses and upgrades.',
   'puzzle-2048': 'Slide and merge tiles on a 4 x 4 board.',
   'tic-tac-toe': 'Play the computer or a friend on a 3 x 3 grid.',
   'memory-match': 'Match eight pairs of cards in as few moves as you can.',
